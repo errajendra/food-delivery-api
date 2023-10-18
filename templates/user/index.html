@@ -1,0 +1,79 @@
+{% extends 'base/base.html' %}
+{% block bs %}
+<li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+{% endblock bs %}
+{% load static %}
+{% block content %}
+
+<div class="card">
+    <div class="card-header my-0 py-1 d-flex">
+        <p class="card-title mx-3">OverView</p> 
+        {% comment %} <input type="date" id="idOverViewDate" name="OverViewDate" class="border-0"> {% endcomment %}
+    </div>
+    <div class="card-body cus_form row">
+        <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
+            <span class="fa fa-money-check-alt text-primary col text-center align-self-center text-lg p-1"></span>
+            <div class="col p-1">
+                <h6>{{today_add_money}} </h6>
+                <p class="mb-0">Today add Money</p>
+            </div>
+        </div>
+
+        <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
+            <span class="text-success fa-coins fa col text-center align-self-center text-lg p-1"></span>
+            <div class="col p-1">
+                <h6>{{total_wallet_amount}} </h6>
+                <p class="mb-0">Wallet Amount</p>
+            </div>
+        </div>
+
+        <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
+            <span class="text-danger fa-coins fa col text-center align-self-center text-lg p-1"></span>
+            <div class="col p-1">
+                <h6>{{today_with_drow_amount}} </h6>
+                <p class="mb-0">Today Withdrow</p>
+            </div>
+        </div>
+
+        
+        <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
+            <span class="fa fa-download text-primary col text-center align-self-center text-lg p-1"></span>
+            <div class="col p-1">
+                <h6>{{today_withdrowal_no}} </h6>
+                <p class="mb-0">Today Withdrow No</p>
+            </div>
+        </div>
+
+        <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
+            <span class="fa-coins fa text-primary col text-center align-self-center text-lg p-1"></span>
+            <div class="col p-1">
+                <h6>{{today_winning}} </h6>
+                <p class="mb-0">Today Winning</p>
+            </div>
+        </div>
+
+        <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
+            <span class="text-danger fa-users fa col text-center align-self-center text-lg p-1"></span>
+            <div class="col p-1">
+                <h6>{{new_player}} </h6>
+                <p class="mb-0">New Player</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% comment %} Recent Wallet Activity {% endcomment %}
+<div class="card">
+    <!-- Card header -->
+    <div class="card-header border-0">
+        <h6 class="mb-0"> Recent Wallet Activity </h6>
+    </div>
+    <!-- Light table -->
+    <div class="table-responsive">
+        
+    </div>
+  
+</div>  
+
+{% endblock content %}

@@ -6,8 +6,8 @@ import dotenv
 
 def main():
     """Run administrative tasks."""
-    dotenv.load_dotenv()
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FoodDelivery.settings')
+    dotenv.read_dotenv()
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
