@@ -11,6 +11,7 @@ admin.site.site_title = 'Food Delivery Admin'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include("user.urls")),
+    path('meal/', include("meal.urls")),
     path("", render_index_page),
 ]
 

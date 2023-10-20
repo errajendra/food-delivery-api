@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="row">
+    <div class="col">
+        <div class="card ">
+            <!-- Card header -->
+            <div class="card-header border-0 mx-md-7 mx-lg-8 mx-3">
+                <h3 class="mb-0">{{title}} </h3>
+            </div>
+            <!-- Light table -->
+            <div class="mx-md-7 mx-lg-8 mx-3">
+                <form method="post">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                        <button type="button" onclick="history.back()" class="btn btn-gray-400">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>  
+    </div>
+</div>
+
+{% endblock content %}

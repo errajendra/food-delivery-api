@@ -1,10 +1,10 @@
 from rest_framework import serializers
 from user.otp import send_otp, verify_otp
 from user.utils import validate_password
-from django.db.models import Q
 from ..models import (
     CustomUser as User,
-    Wallet, Notification, NotificationSetting,
+    Notification, NotificationSetting,
+    Address,
 )
 from datetime import datetime, timedelta
 import pytz
@@ -17,7 +17,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
     class Meta:
         model = User
-        fields = ('name', 'email', 'password')
+        fields = ('name', 'email', 'password', 'mobile_number')
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -66,7 +66,7 @@ class UserVerifyAccountSerializer(serializers.Serializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('name', 'mobile_number', 'image')
+        fields = ('id', 'name', 'mobile_number', 'image')
         
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -177,14 +177,6 @@ class ChangePasswordSerializer(LoginSerializer):
 
 
 # Wallet History Serializer
-class WalletHistrySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Wallet
-        fields = '__all__'
-
-
-
-# Wallet History Serializer
 class NotificationSettingSerializer(serializers.ModelSerializer):
     class Meta:
         model = NotificationSetting
@@ -197,3 +189,22 @@ class UserNotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = "__all__"
+
+
+
+# User Address Serializer
+class UserAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = "__all__"
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['full_address'] = instance.full_address
+        return data
+    
+# User Address Update Serializer
+class UserAddressUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        exclude = ('user',)

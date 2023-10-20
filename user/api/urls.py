@@ -6,9 +6,8 @@ from .views import (
     UserVerifyAccountView,
     NotificationSettingView, NotificationView,
     ForgetPasswordView, ConfirmForgetPasswordView,
-    get_wallet_amount,
-    WalletHistoryView,
     DeleteUserAccountView,
+    UserAddressView,
 )
 
 router = DefaultRouter()
@@ -27,10 +26,11 @@ router.register('forget-password', ForgetPasswordView,
                 basename="user-forget-password-api")
 router.register('confirm-forget-password', ConfirmForgetPasswordView,
                 basename="user-confirm-forget-password-api")
+router.register(
+    'user-address', UserAddressView, basename="uaser-address-api"
+)
 
 """ Wallete or Coins URLs"""
-router.register('wallet-history', WalletHistoryView,
-                basename="wallet-history-api")
 router.register('notification-setting', NotificationSettingView,
                 basename="notification-setting-api")
 router.register('notification', NotificationView,
@@ -40,5 +40,4 @@ router.register('notification', NotificationView,
 urlpatterns = [
     path('', include(router.urls)),
     path('logout/', user_logout, name='user-logout-api'),
-    path('get-wallet-amount/', get_wallet_amount, name="get-wallet-amount-wallet"),
 ]

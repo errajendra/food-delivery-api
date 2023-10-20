@@ -74,15 +74,6 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return str(self.name)+" - "+str(self.mobile_number)
     
-    @property
-    def wallet_amount(self):
-        amount = self.wallet.filter(
-            status="Success"
-        ).aggregate(models.Sum('coins'))['coins__sum']
-        if amount:
-            return amount
-        return 0.00
-    
     def save(self, *args, **kwargs):
         """ This method is used to modify the password field
         converting text into hashed key"""
@@ -93,57 +84,13 @@ class CustomUser(AbstractUser):
 
 
 """
-    Wallete or Coin Table
-"""
-class Wallet(models.Model):
-    user = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE,
-        related_name="wallet"
-    )
-    t_type = models.CharField(
-        verbose_name="Transaction Type",
-        choices=[("Credit", "Credit"), ("Debit", "Debit")],
-        max_length=6
-    )
-    coin_type = models.CharField(
-        verbose_name="Coin Type",
-        choices=[("GOLD", "GOLD"), ("SILVER", "SILVER")],
-        max_length=6
-    )
-    coins = models.FloatField(
-        help_text="Use positive number for Credit and negative number for Debit"
-    )
-    status = models.CharField(
-        choices=[
-            ("Pending", "Pending"),
-            ("Success", "Success"),
-            ("Failed", "Failed"),
-        ],
-        max_length=10,
-        default = "Success"
-    )
-    remark = models.CharField(
-        max_length=50,
-        null=True, blank=True
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    def __str__(self) -> str:
-        return str(self.user)+" > "+str(self.coins)
-
-    class Meta:
-        ordering = ('-created_at',)
-
-
-
-"""
     Notification Setting Table
 """
 class NotificationSetting(BaseModel):
     user = models.OneToOneField(
         CustomUser, on_delete=models.CASCADE,
-        related_name="notification_setting"
+        related_name="notification_setting",
+        editable=False
     )
     push = models.BooleanField(default=True)
     email = models.BooleanField(default=True)
@@ -163,3 +110,56 @@ class Notification(BaseModel):
 
     def __str__(self) -> str:
         return "%s - %s".format(self.user, self.title)
+
+
+
+""" User Address Model """
+class Address(BaseModel):
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name="address"
+    )
+    house_number = models.CharField(
+        verbose_name="House/Street Number",
+        default="",
+        max_length=20
+    )
+    address1 = models.CharField(
+        verbose_name="Address 1",
+        default="",
+        max_length=36
+    )
+    address2 = models.CharField(
+        verbose_name="Address 2",
+        default="",
+        max_length=36
+    )
+    city = models.CharField(
+        verbose_name="City",
+        max_length=36
+    )
+    state = models.CharField(
+        verbose_name="State",
+        max_length=20
+    )
+    zip = models.CharField(
+        verbose_name="Zip/Pin Code",
+        validators=[zip_validator]
+    )
+    latitude = models.DecimalField(
+        max_digits=16, decimal_places=10,
+        null=True, blank=True
+    )
+    longitude = models.DecimalField(
+        max_digits=16, decimal_places=10,
+        null=True, blank=True
+    )
+    def __str__(self):
+        return self.user
+
+    @property
+    def full_address(self):
+        return "%s %s %s, %s %s -%s" % (
+            self.house_number, self.address1, self.address2,
+            self.city, self.state, self.zip)

@@ -20,7 +20,6 @@ class UserRegisterView(viewsets.ModelViewSet):
     
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        print(serializer.is_valid())
         if serializer.is_valid():
             serializer.save()
             return Response(
@@ -100,11 +99,7 @@ class LoginView(viewsets.ModelViewSet):
                 {   'status': status.HTTP_200_OK,
                     'message': "Login Success.",
                     'token': token.key,
-                    'data': {
-                        'id' : user.id,
-                        'name' : str(user.name),
-                        'email': str(user.email)
-                    }
+                    'data': UserProfileSerializer(user).data
                 }
             )
         errors = serializer.errors
@@ -260,33 +255,6 @@ def user_logout(request):
             return Response({'status': 500, 'errors': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-# Get Wallet total amount
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_wallet_amount(request):
-    response = {
-        'status': status.HTTP_200_OK,
-        'message': "OK",
-        'data': {
-            'total_wallet_amount': request.user.wallet_amount,
-            'total_gold_coins': request.user.total_gold_coins,
-            'total_silver_coins': request.user.total_silver_coins,
-        }
-    }
-    return Response(response)
-
-
-
-""" Wallet History View. """
-class WalletHistoryView(viewsets.ModelViewSet):
-    http_method_names = ('get',)
-    permission_classes = [IsAuthenticated]
-    serializer_class = WalletHistrySerializer
-    
-    def get_queryset(self):
-        return Wallet.objects.filter(user=self.request.user)
-
-
 
 """ User Profile View. """
 class ProfileView(viewsets.ModelViewSet):
@@ -385,3 +353,61 @@ class NotificationView(viewsets.ModelViewSet):
         return Notification.objects.filter(user=self.request.user)
 
 
+
+""" User Address View. """
+class UserAddressView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserAddressSerializer
+    
+    
+    def get_queryset(self):
+        return Address.objects.filter(user=self.request.user)
+    
+    
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        try:
+            request.data['user'] = user.id
+        except:
+            request.data._mutable = True
+            request.data['user'] = user.id
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    "status": 200,
+                    "message": "OK",
+                    "data": serializer.data
+                }
+            )
+        return Response(
+            {
+                "status": 400,
+                "message": "BAD REQUEST",
+                "errors": serializer.errors
+            }
+        )
+    
+    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = UserAddressUpdateSerializer(
+            instance=instance, data=request.data
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    "status": 200,
+                    "message": "OK",
+                    "data": serializer.data
+                }
+            )
+        return Response(
+            {
+                "status": 400,
+                "message": "BAD REQUEST",
+                "errors": serializer.errors
+            }
+        )

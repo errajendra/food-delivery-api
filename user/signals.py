@@ -5,7 +5,7 @@ from random import randint
 from django.conf import settings
 from django.template.loader import render_to_string
 from .models import (
-    Wallet, CustomUser as User,
+    CustomUser as User,
     NotificationSetting,
 )
 

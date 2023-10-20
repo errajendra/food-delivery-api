@@ -15,6 +15,17 @@ phone_validator = RegexValidator(
     message = phone_invalid_message,
 )
 
+
+"""pin or zip code validation"""
+zip_regex_formate = r"^[1-9]\d{5}$"
+zip_invalid_message = "Enter a 6 digit valid ZIP code."
+
+# zip number validator
+zip_validator = RegexValidator(
+    regex = zip_regex_formate,
+    message = zip_invalid_message,
+)
+
 name_validator = RegexValidator(
     regex = r"^[A-Z][a-zA-Z '.-]*[A-Za-z][^-]$",
     # message="Enter valid name."

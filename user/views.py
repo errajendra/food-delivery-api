@@ -3,9 +3,7 @@ from .models import CustomUser as User
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
-from.models import (
-    Wallet,
-)
+
 
 
 
@@ -24,7 +22,7 @@ def admin_login(request):
         password = request.POST['password']
         try:
             user = User.objects.get(email=email, is_staff=True)
-        except:
+        except User.DoesNotExist:
             user = None
         if user:
             if user.check_password(password):
