@@ -67,7 +67,7 @@ class PlanListingView(viewsets.ModelViewSet):
 
 
 """ Plan Puchage View """
-class PlanListingView(viewsets.ModelViewSet):
+class PlanPurcheseView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     http_method_names = ('post',)
     
