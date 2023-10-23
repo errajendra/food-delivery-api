@@ -125,7 +125,10 @@ def meal_edit(request, id):
     }
     return render(request, 'meal/form.html', context)
 
-
+def meal_delete(request, id):
+    instance = get_object_or_404(Meal, id=id)
+    instance.delete()
+    return redirect('meal_list')
 
 """
     Plan View Functions

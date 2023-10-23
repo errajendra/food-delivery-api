@@ -36,9 +36,30 @@
                         </td>
                         <td>
                             <a class="" href="{% url "edit_meal" meal.id %}"><i class="fa fa-edit " title="Update" ></i></a>
-                            <i class="fa fa-trash-alt" type="button" data-toggle="modal" data-target="#deleteModal{{meal.id}}" style="background:transparent;"></i>
+                            <i class="fa fa-trash-alt" type="button" data-bs-toggle="modal" href="#deletemealModal{{meal.id}}" style="background:transparent;"></i>
                         </td>
                     </tr>
+                     <!-- Modal -->
+                    
+                     <div class="modal fade" id="deletemealModal{{meal.id}}" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel{{meal.id}}">Delete Meal</h5>
+
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure want to delete ?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <a class="btn btn-danger" href="{% url 'delete_meal' meal.id %}">Delete</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <!-- end Model -->
                     {% endfor %}
                 </tbody>
                 </table>
