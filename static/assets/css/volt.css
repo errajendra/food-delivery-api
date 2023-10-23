@@ -19,7 +19,16 @@
   display: none; }
   .datepicker.active {
     display: block; }
-
+  div#example1_filter {
+      float: right !important;
+  }
+  div#example1_paginate {
+    float: right !important;
+    margin-top: 10px !important;
+}
+div#example1_info {
+  margin-top: 10px !important;
+}
 .datepicker-dropdown {
   position: absolute;
   top: 0;
