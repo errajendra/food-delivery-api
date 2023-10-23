@@ -29,15 +29,21 @@ def payment_verify(request):
         plan = PlanPurchase.objects.get(transaction=order)
         plan.status = True
         plan.save()
-        return redirect("keyparking://pay-success")
+        return Response({
+            'message': 'Payment Successful',
+        })
     elif order_status == "Aborted":
         order.status="Aborted"
         order.save()
-        return redirect("keyparking://pay-failed")
+        return Response({
+            'message': 'Payment Aborted',
+        })
     elif order_status == "Failure":
         order.status="Failed"
         order.save()
-        return redirect("keyparking://pay-failed")
+        return Response({
+            'message': 'Payment Failed',
+        })
     
     return Response({
         'status': 200,

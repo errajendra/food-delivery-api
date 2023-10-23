@@ -103,20 +103,16 @@ class PlanPurchase(BaseModel):
     plan = models.ForeignKey(
         Plan,
         related_name='planpurchases',
-        on_delete=models.CASCADE,
-        editable=False
+        on_delete=models.CASCADE
     )
     user = models.ForeignKey(
         User,
         related_name='userplans',
-        on_delete=models.CASCADE,
-        editable=False
+        on_delete=models.CASCADE
     )
     transaction = models.OneToOneField(
         Transaction,
-        on_delete=models.CASCADE,
-        # editable=False,
-        null=True, blank=True
+        on_delete=models.CASCADE
     )
     remaining_meals = models.PositiveIntegerField(
         verbose_name="Number of Meals Remaining",

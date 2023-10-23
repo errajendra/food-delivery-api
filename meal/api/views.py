@@ -3,6 +3,8 @@ from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from cc_avenue.utils import *
+from pay_ccavenue import CCAvenue
 from ..models import (
     Category, SubCategory, Meal, Plan, PlanPurchase, Transaction
 )
@@ -72,27 +74,59 @@ class PlanPurcheseView(viewsets.ModelViewSet):
     http_method_names = ('post',)
     
     def create(self, request, *args, **kwargs):
-        serializer = PlanPurcheseSerializer(data=request.data)
+        serializer = PlanPurcheseSerializer(data=request.data, context={'request':request})
         if serializer.is_valid():
-            plan = get_object_or_404(Plan, id=serializer.validated_data['plan'])
-            return Response(serializer.data)
+            plan = serializer.validated_data['plan']
+            address = serializer.validated_data['address']
+            tnx = Transaction.objects.create(
+                user = request.user,
+                amount = plan.price
+            )
+            plan_purchage = PlanPurchase.objects.create(
+                plan = plan,
+                user = request.user,
+                transaction = tnx,
+                remaining_meals = plan.duration,
+                address = address
+            )
+            # Create payment urls here
+            ccavenue = CCAvenue(WORKING_KEY, ACCESS_CODE, MERCHANT_CODE, REDIRECT_URL, CANCEL_URL)
+            p_currency = CURRENCY
+            p_amount = str(tnx.amount)
+            redirect_url = f"{request.scheme}://{request.META['HTTP_HOST']}{REDIRECT_URL}"
+            cancel_url = f"{request.scheme}://{request.META['HTTP_HOST']}{CANCEL_URL}"
+            p_customer_identifier = str(tnx.user.mobile_number)
+
+            merchant_data={
+                "currency" : p_currency ,
+                'amount': p_amount,
+                'redirect_url':redirect_url,
+                'cancel_url': cancel_url,
+                'order_id': str(tnx.id),
+                'billing_name': tnx.user.name,
+                'billing_tel': str(tnx.user.mobile_number),
+                'billing_email':  tnx.user.email,
+                'billing_country':  "India",
+                'customer_identifier': p_customer_identifier
+            }
+            encryption = ccavenue.encrypt(merchant_data)
+            cc_pay_url = f'https://{CC_PAY_MODE}.ccavenue.com/transaction/transaction.do?command=initiateTransaction&merchant_id={MERCHANT_CODE}&encRequest={encryption}&access_code={ACCESS_CODE}'
+            # cc pay end
+            
+            return Response(
+                data={
+                    "status": status.HTTP_200_OK,
+                    "message": "Complete your payment.",
+                    "data": {
+                        "pay_url": cc_pay_url
+                    }
+                }
+            )
         return Response(
             status=status.HTTP_400_BAD_REQUEST,
             data={
                 "status": status.HTTP_400_BAD_REQUEST,
-                "message": "Select Plan.",
+                "message": "BAD REQUEST",
                 "errors": serializer.errors
             }
-        )
-        # tnx = Transaction.objects.create(
-        #     user = request.user,
-        #     amount = plan.price
-        # )
-        # plan_purchage = PlanPurchase(
-        #     plan = plan,
-        #     user = request.user,
-        #     transaction = tnx,
-        #     remaining_meals = plan.duration,
-        #     address = ""
-        # )
-        
+        )       

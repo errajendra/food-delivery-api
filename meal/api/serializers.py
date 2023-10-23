@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.fields import empty
 from ..models import (
     Category, SubCategory, Meal, Plan, PlanPurchase
 )
@@ -46,6 +47,7 @@ class PlanSerializer(serializers.ModelSerializer):
 
 
 """ Plan Purchese Serilizer. """
-class PlanPurcheseSerializer(serializers.Serializer):
-    plan = serializers.ChoiceField(choices=Plan.objects.all())
-    # address = serializers.ChoiceField(choices=Address.objects.all())
+class PlanPurcheseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlanPurchase
+        fields = ('plan', 'address')
