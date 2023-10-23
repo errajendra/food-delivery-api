@@ -3,6 +3,7 @@ from .forms import (
     CategoryForm, Category,
     SubCategory, SubCategoryForm,
     Meal, MealForm,
+    Plan, PlanForm
 )
 
 
@@ -120,6 +121,50 @@ def meal_edit(request, id):
             return redirect('meal_list')
     context = {
         "title": "Update Meal",
+        "form": form,
+    }
+    return render(request, 'meal/form.html', context)
+
+
+
+"""
+    Plan View Functions
+"""
+def plan_add(request):
+    # Add Category Method
+    form = PlanForm(data=request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('plan_list')
+    context = {
+        "form": form,
+        "title": "Add Plan Form",
+    }
+    return render(request, 'meal/form.html', context)
+
+
+def plan_list(request):
+    plans = Plan.objects.select_related().all()
+    context = {"plans": plans, 'title': "Plans"}
+    return render(request, 'meal/plan-list.html', context)
+
+
+def plan_delete(request, id):
+    instance = get_object_or_404(Plan, id=id)
+    instance.delete()
+    return redirect('plan_list')
+
+
+def plan_edit(request, id):
+    instance = get_object_or_404(Plan, id=id)
+    form = PlanForm(instance=instance, data=request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return redirect('plan_list')
+    context = {
+        "title": "Update Plan",
         "form": form,
     }
     return render(request, 'meal/form.html', context)

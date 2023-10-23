@@ -27,5 +27,5 @@ class SubCategoryAdmin(admin.ModelAdmin):
 @admin.register(PlanPurchase)
 class MealAdmin(admin.ModelAdmin):
     list_display = (
-        'user', 'plan', 'remaining_meals', 'status', 'address'
+        'user', 'plan', 'remaining_meals', 'transaction', 'status', 'address'
     )

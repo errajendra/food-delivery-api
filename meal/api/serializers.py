@@ -2,6 +2,7 @@ from rest_framework import serializers
 from ..models import (
     Category, SubCategory, Meal, Plan, PlanPurchase
 )
+from user.models import Address
 
 
 
@@ -32,3 +33,19 @@ class MealSerializer(serializers.ModelSerializer):
             'sub_category', 'image'
         )
 
+
+
+""" Plan Listing Serializer."""
+class PlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Plan
+        fields = (
+            'id', 'name', 'price', 'duration', 'saving_per_day', 'tag', 'eating_type'
+        )
+
+
+
+""" Plan Purchese Serilizer. """
+class PlanPurcheseSerializer(serializers.Serializer):
+    plan = serializers.ChoiceField(choices=Plan.objects.all())
+    # address = serializers.ChoiceField(choices=Address.objects.all())

@@ -19,4 +19,10 @@ urlpatterns = [
     path('meal-list/', meal_list, name='meal_list'),
     path('add-meal/', meal_add, name='add_meal'),
     path('edit-meal/<int:id>/', meal_edit, name='edit_meal'),
+    
+    # Plan Urls
+    path('plan-list/', plan_list, name='plan_list'),
+    path('add-plan/', plan_add, name='add_plan'),
+    path('edit-plan/<int:id>/', plan_edit, name='edit_plan'),
+    path('delete-plan/<int:id>/', plan_delete, name='delete_plan'),
 ]

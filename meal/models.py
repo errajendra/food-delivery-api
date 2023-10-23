@@ -1,6 +1,8 @@
 from django.db import models
+from django.utils import timezone
 from user.models import (
-    BaseModel, CustomUser as User
+    BaseModel, CustomUser as User,
+    Transaction,
 )
 
 
@@ -101,12 +103,20 @@ class PlanPurchase(BaseModel):
     plan = models.ForeignKey(
         Plan,
         related_name='planpurchases',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        editable=False
     )
     user = models.ForeignKey(
         User,
         related_name='userplans',
         on_delete=models.CASCADE,
+        editable=False
+    )
+    transaction = models.OneToOneField(
+        Transaction,
+        on_delete=models.CASCADE,
+        # editable=False,
+        null=True, blank=True
     )
     remaining_meals = models.PositiveIntegerField(
         verbose_name="Number of Meals Remaining",
@@ -126,3 +136,45 @@ class PlanPurchase(BaseModel):
 
     def __str__(self) -> str:
         return self.user.name
+
+
+
+""""
+    Meal (Menu) Daily Request base on purhese plan. 
+    Select Menu Option Daily.
+"""
+class MealRequestDaily(BaseModel):
+    requester = models.ForeignKey(
+        User,
+        related_name='requested_meals',
+        on_delete=models.CASCADE,
+    )
+    plan = models.ForeignKey(
+        PlanPurchase,
+        related_name='requested_meals',
+        on_delete=models.CASCADE,
+        limit_choices_to={
+            'status': True,
+            'remaining_meals__gt' : 0
+        }
+    )
+    meal = models.ForeignKey(
+        Meal, related_name="requested_meals",
+        on_delete=models.CASCADE,
+    )
+    date = models.DateField(default=timezone.now)
+    delivered = models.BooleanField(
+        verbose_name="Is Meal Delivered ?",
+        default=False,
+        help_text="""
+            This will make True by Delivery boy or admin
+            when Meal has been delivered to Customer
+        """
+    )
+
+    def __str__(self) -> str:
+        return str(self.requester) + " - "+ str(self.meal)
+
+    class Meta:
+        ordering = ['-date']
+        unique_together = ('requester', 'meal', 'date')

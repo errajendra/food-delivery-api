@@ -163,3 +163,41 @@ class Address(BaseModel):
         return "%s %s %s, %s %s -%s" % (
             self.house_number, self.address1, self.address2,
             self.city, self.state, self.zip)
+
+
+
+""" User Transaction Detail. """
+class Transaction(BaseModel):
+    
+    PENDING = "Pending"
+    SUCCESS = "Success"
+    FAILED = "Failed"
+    ABORTED = "Aborted"
+    REFUNDED = "Refunded"
+    
+    PAYMENT_STATUS_CHOICES = [
+        (PENDING, "Pending"),
+        (SUCCESS, "Success"),
+        (FAILED, "Failed"),
+        (REFUNDED, "Refunded"),
+        (ABORTED, "Aborted"),
+    ]
+    
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    amount = models.FloatField()
+    tracking_id = models.CharField(
+        verbose_name="CC Avenue Tracking ID",
+        max_length=56, null=True, blank=True
+    )
+    bank_id = models.CharField(max_length=56, null=True, blank=True)
+    card_name = models.CharField(max_length=100, null=True, blank=True)
+    status = models.CharField(
+        max_length=12, choices=PAYMENT_STATUS_CHOICES,
+        default=PENDING)
+    remark = models.CharField(max_length=100, null=True, blank=True)
+    status_message = models.CharField(
+        verbose_name="CC Avenue order status message",
+        max_length=100, null=True, blank=True)
+    
+    def __str__(self) -> str:
+        return f"{self.user} - {self.amount} - {self.status}"

@@ -2,11 +2,13 @@ from rest_framework.response import Response
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 from ..models import (
-    Category, SubCategory, Meal, Plan, PlanPurchase,
+    Category, SubCategory, Meal, Plan, PlanPurchase, Transaction
 )
 from .serializers import (
     CategorySerilizer, SubCategorySerilizer, MealSerializer,
+    PlanSerializer, PlanPurcheseSerializer,
 )
 
 
@@ -53,3 +55,44 @@ class MealView(viewsets.ModelViewSet):
         if search:
             qs = qs.filter(Q(name__icontains=search)| Q(description__icontains=search))
         return qs
+
+
+
+""" Plan View """
+class PlanListingView(viewsets.ModelViewSet):
+    http_method_names = ('get',)
+    queryset = Plan.objects.all().order_by('-created_at')
+    serializer_class = PlanSerializer
+
+
+
+""" Plan Puchage View """
+class PlanListingView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    http_method_names = ('post',)
+    
+    def create(self, request, *args, **kwargs):
+        serializer = PlanPurcheseSerializer(data=request.data)
+        if serializer.is_valid():
+            plan = get_object_or_404(Plan, id=serializer.validated_data['plan'])
+            return Response(serializer.data)
+        return Response(
+            status=status.HTTP_400_BAD_REQUEST,
+            data={
+                "status": status.HTTP_400_BAD_REQUEST,
+                "message": "Select Plan.",
+                "errors": serializer.errors
+            }
+        )
+        # tnx = Transaction.objects.create(
+        #     user = request.user,
+        #     amount = plan.price
+        # )
+        # plan_purchage = PlanPurchase(
+        #     plan = plan,
+        #     user = request.user,
+        #     transaction = tnx,
+        #     remaining_meals = plan.duration,
+        #     address = ""
+        # )
+        
