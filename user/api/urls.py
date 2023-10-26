@@ -8,6 +8,7 @@ from .views import (
     ForgetPasswordView, ConfirmForgetPasswordView,
     DeleteUserAccountView,
     UserAddressView,
+    TransactionListView,
 )
 
 router = DefaultRouter()
@@ -36,6 +37,9 @@ router.register('notification-setting', NotificationSettingView,
 router.register('notification', NotificationView,
                 basename="notification-api")
 
+""" Transactions Url"""
+router.register('transactions', TransactionListView, 
+                basename="user-transaction-list-api")
 
 urlpatterns = [
     path('', include(router.urls)),

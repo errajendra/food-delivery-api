@@ -1,8 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound
-from rest_framework import status, viewsets
-from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
@@ -13,7 +12,7 @@ from .exceptions import *
 
 
 # User Registration Api
-class UserRegisterView(viewsets.ModelViewSet):
+class UserRegisterView(ModelViewSet):
     serializer_class = UserRegisterSerializer
     queryset = User.objects.all()
     http_method_names = ('post',)
@@ -48,7 +47,7 @@ class UserRegisterView(viewsets.ModelViewSet):
 
 
 # User Verify Account with otp after Registration Api View
-class UserVerifyAccountView(viewsets.ModelViewSet):
+class UserVerifyAccountView(ModelViewSet):
     serializer_class = UserVerifyAccountSerializer
     http_method_names = ('post',)
     
@@ -82,7 +81,7 @@ class UserVerifyAccountView(viewsets.ModelViewSet):
 
 
 # User Login Api Views
-class LoginView(viewsets.ModelViewSet):
+class LoginView(ModelViewSet):
     serializer_class = LoginSerializer
     http_method_names = ('post',)
     
@@ -119,7 +118,7 @@ class LoginView(viewsets.ModelViewSet):
 
 
 # Delete User account permanentaly Views
-class DeleteUserAccountView(viewsets.ModelViewSet):
+class DeleteUserAccountView(ModelViewSet):
     http_method_names = ('post',)
     permission_classes = [IsAuthenticated]
     
@@ -138,7 +137,7 @@ class DeleteUserAccountView(viewsets.ModelViewSet):
 
 
 # Forget User Password Api Views
-class ForgetPasswordView(viewsets.ModelViewSet):
+class ForgetPasswordView(ModelViewSet):
     serializer_class = ForgetPasswordSerializer
     http_method_names = ('post',)
     
@@ -168,7 +167,7 @@ class ForgetPasswordView(viewsets.ModelViewSet):
 
 
 # Forget User Password Api Views
-class ConfirmForgetPasswordView(viewsets.ModelViewSet):
+class ConfirmForgetPasswordView(ModelViewSet):
     serializer_class = ConfirmForgetPasswordSerializer
     http_method_names = ('post',)
     
@@ -200,7 +199,7 @@ class ConfirmForgetPasswordView(viewsets.ModelViewSet):
 
 
 # User Change Password
-class ChangePasswordView(viewsets.ModelViewSet):
+class ChangePasswordView(ModelViewSet):
     serializer_class = ChangePasswordSerializer
     http_method_names = ('post',)
     permission_classes = (IsAuthenticated,)
@@ -257,7 +256,7 @@ def user_logout(request):
 
 
 """ User Profile View. """
-class ProfileView(viewsets.ModelViewSet):
+class ProfileView(ModelViewSet):
     http_method_names = ('get', 'post')
     permission_classes = [IsAuthenticated]
     serializer_class = UserProfileSerializer
@@ -299,7 +298,7 @@ class ProfileView(viewsets.ModelViewSet):
 """
     Notification Setting View.
 """
-class NotificationSettingView(viewsets.ModelViewSet):
+class NotificationSettingView(ModelViewSet):
     http_method_names = ('get', 'post')
     permission_classes = [IsAuthenticated]
     serializer_class = NotificationSettingSerializer
@@ -344,7 +343,7 @@ class NotificationSettingView(viewsets.ModelViewSet):
 """
     User Notification List View.
 """
-class NotificationView(viewsets.ModelViewSet):
+class NotificationView(ModelViewSet):
     http_method_names = ("get",)
     permission_classes = [IsAuthenticated]
     serializer_class = UserNotificationSerializer
@@ -355,7 +354,7 @@ class NotificationView(viewsets.ModelViewSet):
 
 
 """ User Address View. """
-class UserAddressView(viewsets.ModelViewSet):
+class UserAddressView(ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = UserAddressSerializer
     
@@ -411,3 +410,14 @@ class UserAddressView(viewsets.ModelViewSet):
                 "errors": serializer.errors
             }
         )
+
+
+
+""" Transaction List View. """
+class TransactionListView(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    http_method_names = ('get',)
+    serializer_class = TransactionSerializer
+    
+    def get_queryset(self):
+        return Transaction.objects.filter(user=self.request.user)

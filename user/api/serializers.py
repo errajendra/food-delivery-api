@@ -5,6 +5,7 @@ from ..models import (
     CustomUser as User,
     Notification, NotificationSetting,
     Address,
+    Transaction,
 )
 from datetime import datetime, timedelta
 import pytz
@@ -208,3 +209,11 @@ class UserAddressUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         exclude = ('user',)
+
+
+
+# Transaction Serializer
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = "__all__"

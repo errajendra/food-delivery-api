@@ -4,6 +4,7 @@ from ..models import (
     Category, SubCategory, Meal, Plan, PlanPurchase
 )
 from user.models import Address
+from user.api.serializers import TransactionSerializer
 
 
 
@@ -51,3 +52,12 @@ class PlanPurcheseSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlanPurchase
         fields = ('plan', 'address')
+
+
+""" User Plan Purchese List Serilizer. """
+class PlanPurcheseListSerializer(serializers.ModelSerializer):
+    plan = PlanSerializer()
+    transaction = TransactionSerializer()
+    class Meta:
+        model = PlanPurchase
+        fields = "__all__"

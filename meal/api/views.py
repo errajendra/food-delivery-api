@@ -10,7 +10,7 @@ from ..models import (
 )
 from .serializers import (
     CategorySerilizer, SubCategorySerilizer, MealSerializer,
-    PlanSerializer, PlanPurcheseSerializer,
+    PlanSerializer, PlanPurcheseSerializer, PlanPurcheseListSerializer,
 )
 
 
@@ -71,7 +71,7 @@ class PlanListingView(viewsets.ModelViewSet):
 """ Plan Puchage View """
 class PlanPurcheseView(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    http_method_names = ('post',)
+    http_method_names = ('post', 'get')
     
     def create(self, request, *args, **kwargs):
         serializer = PlanPurcheseSerializer(data=request.data, context={'request':request})
@@ -107,7 +107,8 @@ class PlanPurcheseView(viewsets.ModelViewSet):
                 'billing_tel': str(tnx.user.mobile_number),
                 'billing_email':  tnx.user.email,
                 'billing_country':  "India",
-                'customer_identifier': p_customer_identifier
+                'customer_identifier': p_customer_identifier,
+                'merchant_param1': "PlanPurchase"
             }
             encryption = ccavenue.encrypt(merchant_data)
             cc_pay_url = f'https://{CC_PAY_MODE}.ccavenue.com/transaction/transaction.do?command=initiateTransaction&merchant_id={MERCHANT_CODE}&encRequest={encryption}&access_code={ACCESS_CODE}'
@@ -130,3 +131,40 @@ class PlanPurcheseView(viewsets.ModelViewSet):
                 "errors": serializer.errors
             }
         )       
+
+    def list(self, request, *args, **kwargs):
+        self.serializer_class = PlanPurcheseListSerializer
+        self.queryset = PlanPurchase.objects.filter(
+            user = request.user,
+            status = True
+        ).order_by('-remaining_meals')
+        return super().list(request, *args, **kwargs)
+
+
+
+""" 
+    Plan Menu List 
+    Meal list acording to user plan puchese
+    Return Perticular meal list of plan
+"""
+class MenuListOfPlan(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    http_method_names = ("get",)
+    serializer_class = MealSerializer
+        
+    def list(self, request, *args, **kwargs):
+        plan_id = self.request.GET.get('plan', None)
+        if not plan_id:
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={
+                    "status": status.HTTP_400_BAD_REQUEST,
+                    "message": "Give 'plan' Purchese plan id in parms"
+                }
+            )
+        plan = get_object_or_404(PlanPurchase, id=plan_id)
+        meals = Meal.objects.filter(
+            eating_type = plan.plan.eating_type,
+        )
+        self.queryset = meals
+        return super().list(request, *args, **kwargs)

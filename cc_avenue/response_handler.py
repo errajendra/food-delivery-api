@@ -26,9 +26,13 @@ def payment_verify(request):
     if order_status == "Success":
         order.status="Success"
         order.save()
-        plan = PlanPurchase.objects.get(transaction=order)
-        plan.status = True
-        plan.save()
+        if dict_resp['merchant_param1'] == "PlanPurchase":
+            plan = PlanPurchase.objects.get(transaction=order)
+            plan.status = True
+            plan.save()
+            return Response({
+                'message': 'Plan Purchese Successful',
+            })
         return Response({
             'message': 'Payment Successful',
         })

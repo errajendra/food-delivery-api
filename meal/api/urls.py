@@ -4,6 +4,7 @@ from .views import(
     CategoryView, SubCategoryView,
     MealView,
     PlanListingView, PlanPurcheseView,
+    MenuListOfPlan,
 )
 
 router = DefaultRouter()
@@ -13,6 +14,7 @@ router.register('sub-category', SubCategoryView, basename='sub-category-api')
 router.register('meals', MealView, basename='meal-api')
 router.register('plans', PlanListingView, basename='plan-listing-api')
 router.register('plan-purchese', PlanPurcheseView, basename='plan-purchese-api')
+router.register('plan-menu-meal', MenuListOfPlan, basename='plan-menu-meal-api')
 
 
 urlpatterns = [
