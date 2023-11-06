@@ -184,3 +184,10 @@ def plan_purchase_list(request):
     plan_purchase = PlanPurchase.objects.select_related().all()
     context = {"plan_purchase": plan_purchase, 'title': "Plan Purchase List"}
     return render(request, 'meal/plan-purchase-list.html', context)
+
+def daily_meal_request_list(request):
+    daily_meal_request = MealRequestDaily.objects.select_related().all()
+    context = {"daily_meal_request": daily_meal_request, 'title': "Daily Meal Request"}
+    return render(request, 'meal/daily-meal-request.html', context)
+
+    

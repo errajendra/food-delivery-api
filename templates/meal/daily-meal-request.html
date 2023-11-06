@@ -1,0 +1,100 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <!-- Card header -->
+            <div class="card-header border-0">
+                <h3 class="mb-0">{{title}} </h3>
+               
+            </div>
+            {% csrf_token %}
+            <!-- Light table -->
+            <div class="table-responsive">
+                <table class="table table-hover" id="example1">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col" class="sort">SN</th>
+                        <th scope="col" class="sort">User</th>
+                        <th scope="col" class="sort">Plan</th>
+                        <th scope="col" class="sort">Meal</th>
+                        <th scope="col" class="sort">Date</th>
+                        <th scope="col" class="sort">Delivered</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                    {% for meal in daily_meal_request %}
+                    <tr>
+                        <td class="budget">
+                            {{forloop.counter}}
+                        </td>
+                        <td>
+                            {{meal.requester}}
+                        </td>
+                        <td>
+                            {{meal.plan}}
+                        </td>
+                        <td>
+                            {{meal.meal}}
+                        </td>
+                        <td>
+                            {{meal.date}}
+                        </td>
+                       
+                            <td>
+                                {% if meal.delivered %}
+                                <select class="border-0 mealRequestStatus" data-meal-id="{{ meal.id }}">
+                                    <option value="1" {% if meal.delivered %}selected{% endif %}>Yes</option>
+                                    <option value="0" {% if not meal.delivered %}selected{% endif %}>No</option>
+                                </select>
+                              {% else %}
+                               <select class="border-0 mealRequestStatus" data-meal-id="{{ meal.id }}">
+                                    <option value="1" {% if meal.delivered %}selected{% endif %}>Yes</option>
+                                    <option value="0" {% if not meal.delivered %}selected{% endif %}>No</option>
+                                </select>
+                                {% endif %}
+                                </td>
+                         
+                      
+                    </tr>
+                   
+                    {% endfor %}
+                </tbody>
+                </table>
+            </div>
+        </div>  
+    </div>
+</div>
+
+{% endblock content %}
+{% block javascripts %}
+   
+    <script>
+        $(document).on('change', '.mealRequestStatus', function(e) {
+            var meal_id = $(this).data('meal-id');
+            var new_status = $(this).val();
+            var url = "{% url 'update-meal-active-ajax' %}";
+            
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: {
+                    'meal_id': meal_id,
+                    'new_status': new_status,
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if (data.success) {
+                        console.log('User status updated successfully');
+                    
+                    } else {
+                        console.error('Error updating user status:', data.error);
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock javascripts %}

@@ -30,4 +30,8 @@ urlpatterns = [
     
     
     path('plan-purchase-list/', plan_purchase_list, name='plan_purchase_list'),
+    
+    path('daily-meal-request-list/', daily_meal_request_list, name='daily_meal_request_list'),
+    
+    
 ]
