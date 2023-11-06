@@ -165,7 +165,7 @@ class MealRequestDaily(BaseModel):
         Meal, related_name="requested_meals",
         on_delete=models.CASCADE,
     )
-    date = models.DateField(default=timezone.now)
+    date = models.DateTimeField(default=timezone.now)
     delivered = models.BooleanField(
         verbose_name="Is Meal Delivered ?",
         default=False,
