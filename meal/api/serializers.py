@@ -42,8 +42,13 @@ class PlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
         fields = (
-            'id', 'name', 'price', 'duration', 'saving_per_day', 'tag', 'eating_type'
+            'id', 'name', 'price', 'duration', 'tag', 'eating_type'
         )
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['price_per_meal'] = instance.price_per_meal
+        return data
 
 
 
@@ -52,6 +57,15 @@ class PlanPurcheseSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlanPurchase
         fields = ('plan', 'address')
+    
+    def validate_address(self, data):
+        if not bool(data):
+            raise serializers.ValidationError("Address is required.")
+        elif Address.objects.filter(id=data).exists():
+            return Address.objects.filter(id=int(data)).first()
+        else:
+            raise serializers.ValidationError('Invalid address id.')
+
 
 
 """ User Plan Purchese List Serilizer. """

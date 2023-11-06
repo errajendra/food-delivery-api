@@ -78,6 +78,7 @@ class PlanPurcheseView(viewsets.ModelViewSet):
         if serializer.is_valid():
             plan = serializer.validated_data['plan']
             address = serializer.validated_data['address']
+            
             tnx = Transaction.objects.create(
                 user = request.user,
                 amount = plan.price
@@ -87,7 +88,7 @@ class PlanPurcheseView(viewsets.ModelViewSet):
                 user = request.user,
                 transaction = tnx,
                 remaining_meals = plan.duration,
-                address = address
+                address = address.full_address
             )
             # Create payment urls here
             ccavenue = CCAvenue(WORKING_KEY, ACCESS_CODE, MERCHANT_CODE, REDIRECT_URL, CANCEL_URL)
@@ -105,8 +106,12 @@ class PlanPurcheseView(viewsets.ModelViewSet):
                 'order_id': str(tnx.id),
                 'billing_name': tnx.user.name,
                 'billing_tel': str(tnx.user.mobile_number),
-                'billing_email':  tnx.user.email,
-                'billing_country':  "India",
+                'billing_email': tnx.user.email,
+                'billing_address': str(address.address1) + " " + str(address.address2),
+                'billing_city': address.city,
+                'billing_state': address.state,
+                'billing_zip': address.zip,
+                'billing_country': "India",
                 'customer_identifier': p_customer_identifier,
                 'merchant_param1': "PlanPurchase"
             }

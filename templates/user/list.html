@@ -99,42 +99,41 @@
         </div>  
     </div>
 </div>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
-  <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
-  <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
- <script>
- new DataTable('#example1', {
-    responsive: true,
-   
-});
- </script>
-<script>
-$(document).on('change', '.userStatus', function(e) {
-    var user_id = $(this).data('user-id');
-    var new_status = $(this).val();
-    var url = "{% url 'update-user-active-ajax' %}";
-    
-    $.ajax({
-        url: url,
-        type: 'post',
-        data: {
-            'user_id': user_id,
-            'new_status': new_status,
-            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
-        },
-        dataType: 'json',
-        success: function(data) {
-            if (data.success) {
-                console.log('User status updated successfully');
-               
-            } else {
-                console.error('Error updating user status:', data.error);
-            }
-        }
-    });
-});
-</script>
 {% endblock content %}
+{% block javascripts %}
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
+    <script>
+    new DataTable('#example1', {
+        responsive: true,
+    });
+    </script>
+    <script>
+        $(document).on('change', '.userStatus', function(e) {
+            var user_id = $(this).data('user-id');
+            var new_status = $(this).val();
+            var url = "{% url 'update-user-active-ajax' %}";
+            
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: {
+                    'user_id': user_id,
+                    'new_status': new_status,
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if (data.success) {
+                        console.log('User status updated successfully');
+                    
+                    } else {
+                        console.error('Error updating user status:', data.error);
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock javascripts %}

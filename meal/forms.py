@@ -57,9 +57,9 @@ class PlanForm(forms.ModelForm):
         
         widgets = {
             'name': forms.TextInput(attrs={'class':'form-control'}),
-            'duration': forms.Textarea(attrs={'class':'form-control'}),
+            'duration': forms.NumberInput(attrs={'class':'form-control'}),
             'price': forms.NumberInput(attrs={'class': 'form-control'}),
             'eating_type': forms.Select(attrs={'class':'form-control'}),
-            'saving_per_day': forms.NumberInput(attrs={'class':'form-control'}),
+            # 'saving_per_day': forms.NumberInput(attrs={'class':'form-control'}),
             'tag': forms.Select(attrs={'class':'form-control'}),
         }

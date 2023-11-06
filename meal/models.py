@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from ckeditor.fields import RichTextField
 from user.models import (
     BaseModel, CustomUser as User,
     Transaction,
@@ -74,7 +75,7 @@ class Plan(BaseModel):
     )
     price = models.FloatField(verbose_name="Plan Price")
     duration = models.PositiveIntegerField(verbose_name="Number of Meals")
-    saving_per_day = models.FloatField("Per Day Saving Price", default=0)
+    # saving_per_day = models.FloatField("Per Day Saving Price", default=0)
     tag = models.CharField(
         verbose_name="Select- Recommended/Most Popular",
         choices=(('Recommended', 'Recommended'), ('Most Popular', 'Most Popular')),
@@ -90,9 +91,15 @@ class Plan(BaseModel):
         ],
         default='Lunch',
         max_length=10)
-        
+    items = RichTextField(null=True, blank=True)
+    benifits = RichTextField(null=True, blank=True)
+    
     def __str__(self):
         return self.name
+    
+    @property
+    def price_per_meal(self):
+        return round(self.price / self.duration, 2)
 
 
 

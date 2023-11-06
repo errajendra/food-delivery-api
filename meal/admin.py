@@ -20,7 +20,7 @@ class MealAdmin(admin.ModelAdmin):
 class SubCategoryAdmin(admin.ModelAdmin):
     list_display = (
         'name', 'price', 'duration',
-        'saving_per_day', 'eating_type', 'tag'
+        'eating_type', 'tag'
     )
     list_editable = ('tag',)
 
