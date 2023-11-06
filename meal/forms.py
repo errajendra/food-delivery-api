@@ -51,6 +51,15 @@ class MealForm(forms.ModelForm):
 
 """ Plan Form. """
 class PlanForm(forms.ModelForm):
+    EATING_TYPE_CHOICES = [
+        ('Breakfast', 'Breakfast'),
+        ('Lunch', 'Lunch'),
+        ('Dinner', 'Dinner')
+    ]
+    eating_type = forms.MultipleChoiceField(
+        choices=EATING_TYPE_CHOICES,
+        widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
+    )
     class Meta:
         model = Plan
         fields = "__all__"
@@ -59,7 +68,7 @@ class PlanForm(forms.ModelForm):
             'name': forms.TextInput(attrs={'class':'form-control'}),
             'duration': forms.NumberInput(attrs={'class':'form-control'}),
             'price': forms.NumberInput(attrs={'class': 'form-control'}),
-            'eating_type': forms.Select(attrs={'class':'form-control'}),
+           
             # 'saving_per_day': forms.NumberInput(attrs={'class':'form-control'}),
             'tag': forms.Select(attrs={'class':'form-control'}),
         }

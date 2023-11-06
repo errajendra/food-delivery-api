@@ -134,18 +134,23 @@ def meal_delete(request, id):
     Plan View Functions
 """
 def plan_add(request):
-    # Add Category Method
-    form = PlanForm(data=request.POST or None)
     if request.method == 'POST':
+        form = PlanForm(request.POST)
         if form.is_valid():
+            eating_type = ', '.join(request.POST.getlist('eating_type'))
+            form.instance.eating_type = eating_type
+            # Convert the eating_type field to a list
+           
             form.save()
             return redirect('plan_list')
+    else:
+        form = PlanForm()
+
     context = {
         "form": form,
         "title": "Add Plan Form",
     }
     return render(request, 'meal/form.html', context)
-
 
 def plan_list(request):
     plans = Plan.objects.select_related().all()
@@ -164,6 +169,8 @@ def plan_edit(request, id):
     form = PlanForm(instance=instance, data=request.POST or None)
     if request.method == "POST":
         if form.is_valid():
+            eating_type = ', '.join(request.POST.getlist('eating_type'))
+            form.instance.eating_type = eating_type
             form.save()
             return redirect('plan_list')
     context = {

@@ -1,7 +1,9 @@
 {% extends 'base/base.html' %}
 {% load static %}
 {% block content %}
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+<link rel="stylesheet" href="{% static 'choices.min.css' %}">
 <div class="row">
     <div class="col">
         <div class="card ">
@@ -24,5 +26,24 @@
         </div>  
     </div>
 </div>
+ <!-- Include jQuery using a CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<script src="{% static 'choices.min.js' %}"></script>
+
+
+<script>
+    $(document).ready(function(){
+
+    
+       
+         var multipleCancelButton1 = new Choices('#id_eating_type', {
+            removeItemButton: true,
+            renderChoiceLimit:500
+          }); 
+
+          
+        
+    });
+</script>
 {% endblock content %}

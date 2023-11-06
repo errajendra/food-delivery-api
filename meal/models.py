@@ -84,13 +84,9 @@ class Plan(BaseModel):
     )
     eating_type = models.CharField(
         verbose_name="Eating Type",
-        choices=[
-            ('Breakfast', 'Breakfast'), 
-            ('Lunch', 'Lunch'),
-            ('Dinner', 'Dinner')
-        ],
+       
         default='Lunch',
-        max_length=10)
+        max_length=50)
     items = RichTextField(null=True, blank=True)
     benifits = RichTextField(null=True, blank=True)
     
