@@ -5,7 +5,7 @@ from .forms import (
     Meal, MealForm,
     Plan, PlanForm
 )
-
+from .models import *
 
 """
     Category View Functions
@@ -178,3 +178,9 @@ def plan_edit(request, id):
         "form": form,
     }
     return render(request, 'meal/form.html', context)
+
+
+def plan_purchase_list(request):
+    plan_purchase = PlanPurchase.objects.select_related().all()
+    context = {"plan_purchase": plan_purchase, 'title': "Plan Purchase List"}
+    return render(request, 'meal/plan-purchase-list.html', context)

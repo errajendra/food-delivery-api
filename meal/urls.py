@@ -26,4 +26,8 @@ urlpatterns = [
     path('add-plan/', plan_add, name='add_plan'),
     path('edit-plan/<int:id>/', plan_edit, name='edit_plan'),
     path('delete-plan/<int:id>/', plan_delete, name='delete_plan'),
+    
+    
+    
+    path('plan-purchase-list/', plan_purchase_list, name='plan_purchase_list'),
 ]
