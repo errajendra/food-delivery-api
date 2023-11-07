@@ -8,7 +8,7 @@
             <!-- Card header -->
             <div class="card-header border-0">
                 <h3 class="mb-0">{{title}} </h3>
-               
+                <a href="{% url "add_daily_meal" %}" class="bg-success btn float-end">+Add</a>
             </div>
             {% csrf_token %}
             <!-- Light table -->
@@ -70,7 +70,15 @@
 
 {% endblock content %}
 {% block javascripts %}
-   
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
+<script>
+new DataTable('#example1', {
+    responsive: true,
+});
+</script>
     <script>
         $(document).on('change', '.mealRequestStatus', function(e) {
             var meal_id = $(this).data('meal-id');

@@ -168,8 +168,12 @@ class MenuListOfPlan(viewsets.ModelViewSet):
                 }
             )
         plan = get_object_or_404(PlanPurchase, id=plan_id)
+        eating_types = plan.plan.eating_type.split(',')
+        eating_type_list = [eating.strip() for eating in eating_types]
+        print(eating_type_list)
+        print(eating_types)
         meals = Meal.objects.filter(
-            eating_type = plan.plan.eating_type,
+            eating_type__in = eating_type_list,
         )
         self.queryset = meals
         return super().list(request, *args, **kwargs)

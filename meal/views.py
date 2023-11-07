@@ -3,7 +3,7 @@ from .forms import (
     CategoryForm, Category,
     SubCategory, SubCategoryForm,
     Meal, MealForm,
-    Plan, PlanForm
+    Plan, PlanForm, MealRequestForm
 )
 from .models import *
 
@@ -190,4 +190,15 @@ def daily_meal_request_list(request):
     context = {"daily_meal_request": daily_meal_request, 'title': "Daily Meal Request"}
     return render(request, 'meal/daily-meal-request.html', context)
 
-    
+
+def add_daily_meal(request):
+    form = MealRequestForm(data=request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('daily_meal_request_list')
+    context = {
+        "form": form,
+        "title": "Add Daily Meal",
+    }
+    return render(request, 'meal/add_daily_meal.html', context)
