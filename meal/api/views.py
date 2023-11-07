@@ -12,6 +12,7 @@ from .serializers import (
     CategorySerilizer, SubCategorySerilizer, MealSerializer,
     PlanSerializer, PlanPurcheseSerializer, PlanPurcheseListSerializer,DailyMealRequestSerializer
 )
+from datetime import timedelta  # Import timedelta from the datetime module
 
 
 """ Category Listing View."""
@@ -182,6 +183,7 @@ class MenuListOfPlan(viewsets.ModelViewSet):
 class DailyRequestMeal(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     http_method_names = ('post', 'get')
+
      
     def create(self, request, *args, **kwargs):
         serializer = DailyMealRequestSerializer(data=request.data, context={'request':request})
@@ -193,7 +195,8 @@ class DailyRequestMeal(viewsets.ModelViewSet):
             meal = serializer.validated_data['meal']
             date_from = serializer.validated_data['date_from']
             date_to = serializer.validated_data['date_to']
-            
+            date_range = [date_from + timedelta(days=x) for x in range((date_to - date_from).days + 1)]
+
             return Response(
                 data={
                     "status": status.HTTP_200_OK,
