@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.fields import empty
 from ..models import (
-    Category, SubCategory, Meal, Plan, PlanPurchase
+    Category, SubCategory, Meal, Plan, PlanPurchase, MealRequestDaily
 )
 from user.models import Address
 from user.api.serializers import TransactionSerializer
@@ -74,4 +74,12 @@ class PlanPurcheseListSerializer(serializers.ModelSerializer):
     transaction = TransactionSerializer()
     class Meta:
         model = PlanPurchase
+        fields = "__all__"
+
+
+""" Meal Request Serilizer. """
+class DailyMealRequestSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = MealRequestDaily
         fields = "__all__"

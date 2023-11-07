@@ -10,7 +10,7 @@ from ..models import (
 )
 from .serializers import (
     CategorySerilizer, SubCategorySerilizer, MealSerializer,
-    PlanSerializer, PlanPurcheseSerializer, PlanPurcheseListSerializer,
+    PlanSerializer, PlanPurcheseSerializer, PlanPurcheseListSerializer,DailyMealRequestSerializer
 )
 
 
@@ -177,3 +177,38 @@ class MenuListOfPlan(viewsets.ModelViewSet):
         )
         self.queryset = meals
         return super().list(request, *args, **kwargs)
+
+
+class DailyRequestMeal(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    http_method_names = ('post', 'get')
+     
+    def create(self, request, *args, **kwargs):
+        serializer = DailyMealRequestSerializer(data=request.data, context={'request':request})
+        if serializer.is_valid():
+            user = request.user
+            print(user)
+            requester = request.user
+            plan = serializer.validated_data['plan']
+            meal = serializer.validated_data['meal']
+            date_from = serializer.validated_data['date_from']
+            date_to = serializer.validated_data['date_to']
+            
+            return Response(
+                data={
+                    "status": status.HTTP_200_OK,
+                    "message": "Meal Request submited successfully.",
+                    "data": {
+                        "plan": plan,
+                         "meal":meal
+                    }
+                }
+            )
+        return Response(
+            status=status.HTTP_400_BAD_REQUEST,
+            data={
+                "status": status.HTTP_400_BAD_REQUEST,
+                "message": "BAD REQUEST",
+                "errors": serializer.errors
+            }
+        )        
