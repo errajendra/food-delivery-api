@@ -51,14 +51,14 @@ class Meal(BaseModel):
         ],
         default='Lunch',
         max_length=10)
-    category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL,
-        null=True, blank=True
-    )
-    sub_category = models.ForeignKey(
-        SubCategory, on_delete=models.SET_NULL,
-        null=True, blank=True
-    )
+    # category = models.ForeignKey(
+    #     Category, on_delete=models.SET_NULL,
+    #     null=True, blank=True
+    # )
+    # sub_category = models.ForeignKey(
+    #     SubCategory, on_delete=models.SET_NULL,
+    #     null=True, blank=True
+    # )
     image = models.ImageField(upload_to="meals", blank=True)
     
     def __str__(self):
