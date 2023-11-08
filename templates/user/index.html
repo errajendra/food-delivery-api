@@ -14,51 +14,55 @@
         <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
             <span class="fa fa-money-check-alt text-primary col text-center align-self-center text-lg p-1"></span>
             <div class="col p-1">
-                <h6>{{today_add_money}} </h6>
-                <p class="mb-0">Today add Money</p>
+                <h6>{{total_user}} </h6>
+                <p class="mb-0">Today User</p>
             </div>
         </div>
 
         <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
-            <span class="text-success fa-coins fa col text-center align-self-center text-lg p-1"></span>
+            <span class="fa fa-money-check-alt text-primary col text-center align-self-center text-lg p-1"></span>
+
             <div class="col p-1">
-                <h6>{{total_wallet_amount}} </h6>
-                <p class="mb-0">Wallet Amount</p>
+                <h6>{{total_plan}} </h6>
+                <p class="mb-0">Total Plan</p>
             </div>
         </div>
 
         <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
-            <span class="text-danger fa-coins fa col text-center align-self-center text-lg p-1"></span>
+            <span class="fa fa-money-check-alt text-primary col text-center align-self-center text-lg p-1"></span>
+
+            {% comment %} <span class="text-danger fa-coins fa col text-center align-self-center text-lg p-1"></span> {% endcomment %}
             <div class="col p-1">
-                <h6>{{today_with_drow_amount}} </h6>
-                <p class="mb-0">Today Withdrow</p>
+                <h6>{{total_meal}} </h6>
+                <p class="mb-0">Today Meal</p>
             </div>
         </div>
 
         
         <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
-            <span class="fa fa-download text-primary col text-center align-self-center text-lg p-1"></span>
+            <span class="fa fa-money-check-alt text-primary col text-center align-self-center text-lg p-1"></span>
+
             <div class="col p-1">
-                <h6>{{today_withdrowal_no}} </h6>
-                <p class="mb-0">Today Withdrow No</p>
+                <h6>{{total_plan_purchase}} </h6>
+                <p class="mb-0">Total Plan Purchase</p>
             </div>
         </div>
 
         <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
             <span class="fa-coins fa text-primary col text-center align-self-center text-lg p-1"></span>
             <div class="col p-1">
-                <h6>{{today_winning}} </h6>
-                <p class="mb-0">Today Winning</p>
+                <h6>{{today_meal_request}}</h6>
+                <p class="mb-0">Today Meal Request</p>
             </div>
         </div>
 
-        <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
+        {% comment %} <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
             <span class="text-danger fa-users fa col text-center align-self-center text-lg p-1"></span>
             <div class="col p-1">
                 <h6>{{new_player}} </h6>
                 <p class="mb-0">New Player</p>
             </div>
-        </div>
+        </div> {% endcomment %}
     </div>
 </div>
 
@@ -67,13 +71,64 @@
 <div class="card">
     <!-- Card header -->
     <div class="card-header border-0">
-        <h6 class="mb-0"> Recent Wallet Activity </h6>
+        <h6 class="mb-0"> Recent Meal Request </h6>
     </div>
     <!-- Light table -->
     <div class="table-responsive">
-        
+        <table class="table table-hover" id="example1">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="sort">SN</th>
+                <th scope="col" class="sort">User</th>
+                <th scope="col" class="sort">Plan</th>
+                <th scope="col" class="sort">Meal</th>
+                <th scope="col" class="sort">Date</th>
+                <th scope="col" class="sort">Status</th>
+            </tr>
+        </thead>
+        <tbody class="list">
+            {% for meal in meal_requests %}
+            <tr>
+                <td class="budget">
+                    {{forloop.counter}}
+                </td>
+                <td>
+                    {{meal.requester}}
+                </td>
+                <td>
+                    {{meal.plan.address}}
+                </td>
+                <td>
+                    {{meal.meal}}
+                </td>
+                <td>
+                    {{meal.date}}
+                </td>
+               
+                    
+                <td>
+                    {{meal.status}}
+                </td>
+                
+              
+            </tr>
+           
+            {% endfor %}
+        </tbody>
+        </table>
     </div>
   
 </div>  
 
 {% endblock content %}
+{% block javascripts %}
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
+<script>
+new DataTable('#example1', {
+    responsive: true,
+});
+</script>
+{% endblock javascripts %}
