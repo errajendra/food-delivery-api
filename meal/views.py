@@ -202,3 +202,10 @@ def add_daily_meal(request):
         "title": "Add Daily Meal",
     }
     return render(request, 'meal/add_daily_meal.html', context)
+
+
+
+def transaction_list(request):
+    transaction = Transaction.objects.select_related().all()
+    context = {"transaction": transaction, 'title': "Transaction List"}
+    return render(request, 'user/transaction-list.html', context)
