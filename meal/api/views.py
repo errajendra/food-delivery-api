@@ -171,8 +171,6 @@ class MenuListOfPlan(viewsets.ModelViewSet):
         plan = get_object_or_404(PlanPurchase, id=plan_id)
         eating_types = plan.plan.eating_type.split(',')
         eating_type_list = [eating.strip() for eating in eating_types]
-        print(eating_type_list)
-        print(eating_types)
         meals = Meal.objects.filter(
             eating_type__in = eating_type_list,
         )
@@ -196,7 +194,7 @@ class DailyRequestMeal(viewsets.ModelViewSet):
             date_from = serializer.validated_data['date_from']
             date_to = serializer.validated_data['date_to']
             date_range = [date_from + timedelta(days=x) for x in range((date_to - date_from).days + 1)]
-
+            
             return Response(
                 data={
                     "status": status.HTTP_200_OK,

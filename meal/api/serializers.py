@@ -26,13 +26,12 @@ class SubCategorySerilizer(serializers.ModelSerializer):
 
 """ Meal Listing and Detail Serializer"""
 class MealSerializer(serializers.ModelSerializer):
-    category = CategorySerilizer()
-    sub_category = SubCategorySerilizer()
+    # category = CategorySerilizer()
+    # sub_category = SubCategorySerilizer()
     class Meta:
         model = Meal
         fields = (
-            'id', 'name', 'description', 'price', 'eating_type', 'category',
-            'sub_category', 'image'
+            'id', 'name', 'description', 'price', 'eating_type', 'image'
         )
 
 
