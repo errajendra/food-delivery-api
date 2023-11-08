@@ -1,7 +1,7 @@
 from django import forms
 from .models import (
     Category, SubCategory, Meal, Meal,
-    Plan,
+    Plan, MealRequestDaily
 )
 
 
@@ -72,3 +72,21 @@ class PlanForm(forms.ModelForm):
             # 'saving_per_day': forms.NumberInput(attrs={'class':'form-control'}),
             'tag': forms.Select(attrs={'class':'form-control'}),
         }
+
+
+
+""" Meal Request Form. """
+class MealRequestForm(forms.ModelForm):
+    class Meta:
+        model = MealRequestDaily
+        fields = ["requester", "plan", "meal", "delivered"]
+        
+        widgets = {
+            
+            'requester': forms.Select(attrs={'class':'form-control'}),
+            'plan': forms.Select(attrs={'class':'form-control'}),
+            'meal': forms.Select(attrs={'class':'form-control'}),
+            'delivered': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+
+        }
+

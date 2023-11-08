@@ -1,0 +1,30 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+<link rel="stylesheet" href="{% static 'choices.min.css' %}">
+<div class="row">
+    <div class="col">
+        <div class="card ">
+            <!-- Card header -->
+            <div class="card-header border-0 mx-md-7 mx-lg-8 mx-3">
+                <h3 class="mb-0">{{title}} </h3>
+            </div>
+            <!-- Light table -->
+            <div class="mx-md-7 mx-lg-8 mx-3">
+                <form method="post">
+                    {% csrf_token %}
+                    {{form.media}}
+                    {{form.as_p}}
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                        <button type="button" onclick="history.back()" class="btn btn-gray-400">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>  
+    </div>
+</div>
+
+{% endblock content %}

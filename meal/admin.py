@@ -12,8 +12,8 @@ class SubCategoryAdmin(admin.ModelAdmin):
 @admin.register(Meal)
 class MealAdmin(admin.ModelAdmin):
     list_display = (
-        'name', 'description', 'price', 'eating_type',
-        'category', 'sub_category'
+        'name', 'description', 'price', 'eating_type'
+        
     )
     
 @admin.register(Plan)

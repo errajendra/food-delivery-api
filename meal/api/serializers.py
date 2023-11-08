@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.fields import empty
 from ..models import (
-    Category, SubCategory, Meal, Plan, PlanPurchase
+    Category, SubCategory, Meal, Plan, PlanPurchase, MealRequestDaily
 )
 from user.models import Address
 from user.api.serializers import TransactionSerializer
@@ -26,13 +26,12 @@ class SubCategorySerilizer(serializers.ModelSerializer):
 
 """ Meal Listing and Detail Serializer"""
 class MealSerializer(serializers.ModelSerializer):
-    category = CategorySerilizer()
-    sub_category = SubCategorySerilizer()
+    # category = CategorySerilizer()
+    # sub_category = SubCategorySerilizer()
     class Meta:
         model = Meal
         fields = (
-            'id', 'name', 'description', 'price', 'eating_type', 'category',
-            'sub_category', 'image'
+            'id', 'name', 'description', 'price', 'eating_type', 'image'
         )
 
 
@@ -74,4 +73,12 @@ class PlanPurcheseListSerializer(serializers.ModelSerializer):
     transaction = TransactionSerializer()
     class Meta:
         model = PlanPurchase
+        fields = "__all__"
+
+
+""" Meal Request Serilizer. """
+class DailyMealRequestSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = MealRequestDaily
         fields = "__all__"
