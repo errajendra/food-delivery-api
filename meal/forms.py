@@ -43,8 +43,8 @@ class MealForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class':'form-control'}),
             'price': forms.NumberInput(attrs={'class': 'form-control'}),
             'eating_type': forms.Select(attrs={'class':'form-control'}),
-            'category': forms.Select(attrs={'class':'form-control'}),
-            'sub_category': forms.Select(attrs={'class':'form-control'}),
+            # 'category': forms.Select(attrs={'class':'form-control'}),
+            # 'sub_category': forms.Select(attrs={'class':'form-control'}),
         }
 
 
@@ -79,14 +79,14 @@ class PlanForm(forms.ModelForm):
 class MealRequestForm(forms.ModelForm):
     class Meta:
         model = MealRequestDaily
-        fields = ["requester", "plan", "meal", "delivered"]
+        fields = ["requester", "plan", "meal", "status"]
         
         widgets = {
             
             'requester': forms.Select(attrs={'class':'form-control'}),
             'plan': forms.Select(attrs={'class':'form-control'}),
             'meal': forms.Select(attrs={'class':'form-control'}),
-            'delivered': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
 
         }
 

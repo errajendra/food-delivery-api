@@ -162,19 +162,20 @@ class MealRequestDaily(BaseModel):
         on_delete=models.CASCADE,
     )
     date = models.DateTimeField(default=timezone.now)
-    delivered = models.BooleanField(
-        verbose_name="Is Meal Delivered ?",
-        default=False,
-        help_text="""
-            This will make True by Delivery boy or admin
-            when Meal has been delivered to Customer
-            If someone cancel the request delete this entry.
-        """
+    status = models.CharField(
+        choices=(
+            ('Success', 'Success'),
+            ('Requested', 'Requested'), 
+            ('Cancelled', 'Cancelled')
+        ),
+        max_length=20,
+        default="Requested"
     )
+    
 
     def __str__(self) -> str:
         return str(self.requester) + " - "+ str(self.meal)
 
     class Meta:
         ordering = ['-date']
-        unique_together = ('requester', 'meal', 'date')
+        unique_together = ('requester', 'date')

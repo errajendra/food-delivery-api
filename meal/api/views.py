@@ -6,13 +6,13 @@ from django.shortcuts import get_object_or_404
 from cc_avenue.utils import *
 from pay_ccavenue import CCAvenue
 from ..models import (
-    Category, SubCategory, Meal, Plan, PlanPurchase, Transaction
+    Category, SubCategory, Meal, Plan, PlanPurchase, Transaction, MealRequestDaily
 )
 from .serializers import (
     CategorySerilizer, SubCategorySerilizer, MealSerializer,
     PlanSerializer, PlanPurcheseSerializer, PlanPurcheseListSerializer,DailyMealRequestSerializer
 )
-from datetime import timedelta  # Import timedelta from the datetime module
+from django.db.utils import IntegrityError
 
 
 """ Category Listing View."""
@@ -178,38 +178,95 @@ class MenuListOfPlan(viewsets.ModelViewSet):
         return super().list(request, *args, **kwargs)
 
 
-class DailyRequestMeal(viewsets.ModelViewSet):
+
+class PlanMeal(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     http_method_names = ('post', 'get')
 
-     
     def create(self, request, *args, **kwargs):
-        serializer = DailyMealRequestSerializer(data=request.data, context={'request':request})
+        created_meal_requests = []
+        
+        # Deserialize the input data using the serializer
+        serializer = DailyMealRequestSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             user = request.user
-            print(user)
-            requester = request.user
-            plan = serializer.validated_data['plan']
-            meal = serializer.validated_data['meal']
-            date_from = serializer.validated_data['date_from']
-            date_to = serializer.validated_data['date_to']
-            date_range = [date_from + timedelta(days=x) for x in range((date_to - date_from).days + 1)]
+            requester = user
             
-            return Response(
-                data={
-                    "status": status.HTTP_200_OK,
-                    "message": "Meal Request submited successfully.",
-                    "data": {
-                        "plan": plan,
-                         "meal":meal
+            plan_purchese_id = serializer.validated_data['plan_purchese_id']
+            meal_plan_data = serializer.validated_data['meal_plan_data']
+
+            # Fetch the PlanPurchase instance based on plan_purchese_id
+            try:
+                plan_purchase = PlanPurchase.objects.get(pk=plan_purchese_id)
+            except PlanPurchase.DoesNotExist:
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST,
+                    data={
+                        "status": status.HTTP_400_BAD_REQUEST,
+                        "message": "BAD REQUEST",
+                        "errors": {"plan_purchese_id": ["Invalid plan purchase ID."]}
                     }
+                )
+
+            for meal_data in meal_plan_data:
+                datetime = meal_data['datetime']
+                meal_id = meal_data['meal']
+
+                # Fetch the Meal instance based on meal_id
+                try:
+                    meal = Meal.objects.get(pk=meal_id)
+                except Meal.DoesNotExist:
+                    return Response(
+                        status=status.HTTP_400_BAD_REQUEST,
+                        data={
+                            "status": status.HTTP_400_BAD_REQUEST,
+                            "message": "BAD REQUEST",
+                            "errors": {"meal_id": ["Invalid meal ID."]}
+                        }
+                    )
+                try:
+                    meal_request = MealRequestDaily(
+                        requester=requester,
+                        plan=plan_purchase,
+                        meal=meal,
+                        date=datetime
+                    )
+                    meal_request.save()
+                    created_meal_requests.append({
+                        "requester": meal_request.requester.id,
+                        "plan": meal_request.plan.id,
+                        "meal": meal_request.meal.id,
+                        "date": meal_request.date,
+                        "status": meal_request.status,
+                    })
+                except IntegrityError:
+                    # Handle the integrity error and provide a custom message
+                    return Response(
+                        status=status.HTTP_400_BAD_REQUEST,
+                        data={
+                            "status": status.HTTP_400_BAD_REQUEST,
+                            "message": "Meal request already exists for this date and requester.",
+                            "errors": {"meal_request": ["Meal request already exists for this date and requester."]}
+                        }
+                    )    
+        else:
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={
+                    "status": status.HTTP_400_BAD_REQUEST,
+                    "message": "BAD REQUEST",
+                    "errors": serializer.errors
                 }
             )
+        
         return Response(
-            status=status.HTTP_400_BAD_REQUEST,
             data={
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": "BAD REQUEST",
-                "errors": serializer.errors
-            }
-        )        
+                "status": status.HTTP_200_OK,
+                "message": "Meal Requests submitted successfully.",
+                "data": {
+                    "meal_requests": created_meal_requests,
+                }
+            },
+            status=status.HTTP_200_OK
+        )
+
