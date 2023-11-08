@@ -76,9 +76,12 @@ class PlanPurcheseListSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-""" Meal Request Serilizer. """
-class DailyMealRequestSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = MealRequestDaily
-        fields = "__all__"
+
+
+class MealPlanDataSerializer(serializers.Serializer):
+    datetime = serializers.DateTimeField()
+    meal = serializers.IntegerField()
+
+class DailyMealRequestSerializer(serializers.Serializer):
+    plan_purchese_id = serializers.IntegerField()
+    meal_plan_data = MealPlanDataSerializer(many=True)        

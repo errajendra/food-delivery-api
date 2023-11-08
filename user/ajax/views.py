@@ -34,10 +34,10 @@ def update_plan_purchase_active(request):
     
 def update_meal_active_ajax(request):
     meal_id = request.POST.get('meal_id')
-    new_status = int(request.POST.get('new_status'))
+    new_status = request.POST.get('new_status')
     try:
         meal = MealRequestDaily.objects.get(pk=meal_id)
-        meal.delivered = bool(new_status)
+        meal.status = new_status
         meal.save()
         return JsonResponse({'success': True})
     except User.DoesNotExist:
