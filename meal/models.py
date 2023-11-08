@@ -168,6 +168,7 @@ class MealRequestDaily(BaseModel):
         help_text="""
             This will make True by Delivery boy or admin
             when Meal has been delivered to Customer
+            If someone cancel the request delete this entry.
         """
     )
 
