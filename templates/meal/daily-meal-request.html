@@ -21,7 +21,7 @@
                         <th scope="col" class="sort">Plan</th>
                         <th scope="col" class="sort">Meal</th>
                         <th scope="col" class="sort">Date</th>
-                        <th scope="col" class="sort">Delivered</th>
+                        <th scope="col" class="sort">Status</th>
                     </tr>
                 </thead>
                 <tbody class="list">
@@ -43,20 +43,15 @@
                             {{meal.date}}
                         </td>
                        
-                            <td>
-                                {% if meal.delivered %}
-                                <select class="border-0 mealRequestStatus" data-meal-id="{{ meal.id }}">
-                                    <option value="1" {% if meal.delivered %}selected{% endif %}>Yes</option>
-                                    <option value="0" {% if not meal.delivered %}selected{% endif %}>No</option>
-                                </select>
-                              {% else %}
-                               <select class="border-0 mealRequestStatus" data-meal-id="{{ meal.id }}">
-                                    <option value="1" {% if meal.delivered %}selected{% endif %}>Yes</option>
-                                    <option value="0" {% if not meal.delivered %}selected{% endif %}>No</option>
-                                </select>
-                                {% endif %}
-                                </td>
-                         
+                            
+                        <td>
+                            <select class="border-0 mealRequestStatus" data-meal-id="{{ meal.id }}">
+                                <option value="Requested" {% if meal.status == 'Requested' %}selected{% endif %}>Requested</option>
+                                <option value="Success" {% if meal.status == 'Success' %}selected{% endif %}>Success</option>
+                                <option value="Cancelled" {% if meal.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                            </select>
+                        </td>
+                        
                       
                     </tr>
                    
