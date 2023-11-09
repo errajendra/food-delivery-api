@@ -1,59 +1,141 @@
 {% extends 'base/base.html' %}
+
 {% block bs %}
 <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
 {% endblock bs %}
 {% load static %}
 {% block content %}
-
+<style>
+    .cc.col.row.m-1.bg-gradient-lighter.rounded.p-1.pb-2 {
+        border: 1px solid lightgray !important;
+    }
+    .card-counter{
+        box-shadow: 2px 2px 10px #DADADA;
+        margin: 5px;
+        padding: 20px 10px;
+        background-color: #fff;
+        height: 100px;
+        border-radius: 5px;
+        transition: .3s linear all;
+      }
+    
+      .card-counter:hover{
+        box-shadow: 4px 4px 20px #DADADA;
+        transition: .3s linear all;
+      }
+    
+      .card-counter.primary{
+        background-color: #007bff;
+        color: #FFF;
+      }
+    
+      .card-counter.danger{
+        background-color: #ef5350;
+        color: #FFF;
+      }  
+    
+      .card-counter.success{
+        background-color: #66bb6a;
+        color: #FFF;
+      }  
+    
+      .card-counter.info{
+        background-color: #26c6da;
+        color: #FFF;
+      }  
+    
+      .card-counter i{
+        font-size: 4em;
+        opacity: 0.2;
+      }
+    
+      .card-counter .count-numbers{
+        position: absolute;
+        margin-left: 29px;
+        font-size: 32px;
+      }
+    
+      .card-counter .count-name{
+        position: absolute;
+        margin-left: 74px !important;
+        margin-top: -12px;
+        font-style: italic;
+        text-transform: capitalize;
+        opacity: 0.5;
+        font-size: 16px;
+      }
+</style>
 <div class="card">
     <div class="card-header my-0 py-1 d-flex">
         <p class="card-title mx-3">OverView</p> 
         {% comment %} <input type="date" id="idOverViewDate" name="OverViewDate" class="border-0"> {% endcomment %}
     </div>
     <div class="card-body cus_form row">
+        
         <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
            
-            <span class="text-primary col text-center align-self-center text-lg p-1"> <i class="fas fa-user"></i></span>
+            {% comment %} <span class="text-primary col text-center align-self-center text-lg p-1"> <i class="fas fa-user"></i></span> {% endcomment %}
             <div class="col p-1">
-                <h6>{{total_user}} </h6>
-                <p class="mb-0">Today User</p>
+                <div class="card-counter info">
+                    <i class="fa fa-users"></i>
+                    <span class="count-numbers">{{total_user}}</span><br/>
+                    <span class="count-name">Total Users</span>
+                  </div>
+            </div>
+        </div>
+
+
+        <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
+            {% comment %} <span class="text-success col text-center align-self-center text-lg p-1"><i class="fas fa-calendar"></i> </span> {% endcomment %}
+
+            <div class="col p-1">
+                <div class="card-counter danger">
+                    <i class="fas fa-calendar"></i>
+                    <span class="count-numbers">{{total_plan}}</span><br/>
+                    <span class="count-name">Total Plan</span>
+                  </div>
+                
             </div>
         </div>
 
         <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
-            <span class="text-success col text-center align-self-center text-lg p-1"><i class="fas fa-calendar"></i> </span>
-
-            <div class="col p-1">
-                <h6>{{total_plan}} </h6>
-                <p class="mb-0">Total Plan</p>
-            </div>
-        </div>
-
-        <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
-            <span class="text-secondary col text-center align-self-center text-lg p-1"><i class="fas fa-utensils"></i></span>
 
             {% comment %} <span class="text-danger fa-coins fa col text-center align-self-center text-lg p-1"></span> {% endcomment %}
             <div class="col p-1">
-                <h6>{{total_meal}} </h6>
-                <p class="mb-0">Today Meal</p>
+                <div class="card-counter success">
+                    <i class="fas fa-utensils"></i>
+                    <span class="count-numbers">{{total_meal}}</span><br/>
+                    <span class="count-name">Total Meal</span>
+                  </div>
+               
             </div>
         </div>
 
         
         <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
-            <span class="text-danger fa fa-money-check-alt text-primary col text-center align-self-center text-lg p-1"></span>
+            {% comment %} <span class="text-danger fa fa-money-check-alt text-primary col text-center align-self-center text-lg p-1"></span> {% endcomment %}
 
             <div class="col p-1">
-                <h6>{{total_plan_purchase}} </h6>
-                <p class="mb-0">Total Plan Purchase</p>
+                <div class="card-counter primary">
+                    <i class="fas fa-calendar"></i>
+
+                    <span class="count-numbers">{{total_plan_purchase}}</span><br/>
+                    <span class="count-name">Plan Purchase</span>
+                  </div>
+               
             </div>
         </div>
 
         <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
-            <span class="fa-coins fa text-primary col text-center align-self-center text-lg p-1"></span>
+            {% comment %} <span class="fa-coins fa text-primary col text-center align-self-center text-lg p-1"></span> {% endcomment %}
             <div class="col p-1">
-                <h6>{{today_meal_request}}</h6>
-                <p class="mb-0">Today Meal Request</p>
+                <div class="card-counter info">
+                    <i class="fas fa-utensils"></i>
+                    <span class="count-numbers">{{today_meal_request}}</span><br/>
+                    <span class="count-name">Meal Request</span>
+                  </div>
+               
+                
             </div>
         </div>
 
