@@ -145,9 +145,7 @@ USE_TZ = True
 
 LOGIN_URL = "/user/login/"
 
-# CORS_ALLOW_ALL_ORIGINS = True
-
-CORS_URLS_REGEX = r"^/api/.*$"
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
