@@ -45,7 +45,6 @@ class UserRegisterView(ModelViewSet):
 
 
 
-
 # User Verify Account with otp after Registration Api View
 class UserVerifyAccountView(ModelViewSet):
     serializer_class = UserVerifyAccountSerializer
