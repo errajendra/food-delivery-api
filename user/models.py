@@ -62,6 +62,7 @@ class CustomUser(AbstractUser):
             "Unselect this instead of deleting accounts."
         ),
     )
+    fcm_token = models.TextField(null=True, blank=True)
     username = None
     first_name = None
     last_name = None

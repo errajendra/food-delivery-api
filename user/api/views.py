@@ -91,6 +91,8 @@ class LoginView(ModelViewSet):
             user = User.objects.get(
                 email=serializer.validated_data['email']
             )
+            user.fcm_token = serializer.validated_data['fcm_token']
+            user.save()
             token, _created = Token.objects.get_or_create(
                 user = user
             )

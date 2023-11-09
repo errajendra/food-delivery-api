@@ -18,7 +18,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
     class Meta:
         model = User
-        fields = ('name', 'email', 'password', 'mobile_number')
+        fields = ('name', 'email', 'password', 'mobile_number', 'fcm_token')
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -67,7 +67,7 @@ class UserVerifyAccountSerializer(serializers.Serializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'name', 'mobile_number', 'image')
+        fields = ('id', 'name', 'mobile_number', 'image', 'fcm_token')
         
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -89,6 +89,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     email = serializers.CharField()
     password = serializers.CharField()
+    fcm_token = serializers.CharField(required=False)
 
     def validate_email(self, data):
         try:
