@@ -13,6 +13,7 @@ urlpatterns = [
     path('user/', include("user.urls")),
     path('meal/', include("meal.urls")),
     path('payment/', include("cc_avenue.urls")),
+    path('delivery/', include("delivery.urls")),
     path("", render_index_page),
 ]
 

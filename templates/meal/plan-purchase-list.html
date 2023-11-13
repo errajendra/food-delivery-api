@@ -21,7 +21,7 @@
                         <th scope="col" class="sort">User</th>
                         <th scope="col" class="sort">Transaction</th>
                         <th scope="col" class="sort">Reamining Meal</th>
-                        <th scope="col" class="sort">Active</th>
+                        <th scope="col" class="sort">Status</th>
                         <th scope="col" class="sort">Address</th>
                         <th scope="col">Date</th>
                     </tr>
@@ -45,16 +45,10 @@
                             {{plan.remaining_meals}}
                         </td>
                         <td>
-                            {% if plan.is_active %}
-                            <select class="border-0 planPurchaseStatus" data-plan-id="{{ plan.id }}">
-                                <option value="1" {% if plan.status %}selected{% endif %}>Yes</option>
-                                <option value="0" {% if not plan.status %}selected{% endif %}>No</option>
-                            </select>
-                          {% else %}
-                           <select class="border-0 planPurchaseStatus" data-plan-id="{{ plan.id }}">
-                                <option value="1" {% if plan.status %}selected{% endif %}>Yes</option>
-                                <option value="0" {% if not plan.status %}selected{% endif %}>No</option>
-                            </select>
+                            {% if plan.status %}
+                                Active
+                             {% else %}
+                            InActive
                             {% endif %}
                             </td>
                         <td>
