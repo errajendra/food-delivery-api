@@ -162,6 +162,15 @@ class MealRequestDaily(BaseModel):
         on_delete=models.CASCADE,
     )
     date = models.DateTimeField(default=timezone.now)
+    delivery_person = models.ForeignKey(
+        User,
+        related_name='delivery',
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        limit_choices_to={
+            "is_delivery_person":True
+        }
+    )
     status = models.CharField(
         choices=(
             ('Success', 'Success'),
