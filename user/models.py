@@ -62,6 +62,14 @@ class CustomUser(AbstractUser):
             "Unselect this instead of deleting accounts."
         ),
     )
+    is_delivery_person = models.BooleanField(
+        _("Delivery Person"),
+        default=False,
+        help_text=_(
+            "Designates whether this user should be treated as Delivery Person. "
+            "Unselect this instead of Delivery Person accounts has removed."
+        ),
+    )
     fcm_token = models.TextField(null=True, blank=True)
     username = None
     first_name = None

@@ -4,8 +4,8 @@ from .models import *
 
 @admin.register(CustomUser)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'email', 'date_joined', 'is_active')
-    list_editable = ('is_active',)
+    list_display = ('id', 'name', 'email', 'date_joined', 'is_active', 'is_delivery_person')
+    list_editable = ('is_active', 'is_delivery_person')
 
 
 @admin.register(Notification)
