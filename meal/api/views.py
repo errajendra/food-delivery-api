@@ -270,3 +270,4 @@ class PlanMeal(viewsets.ModelViewSet):
             status=status.HTTP_200_OK
         )
 
+
