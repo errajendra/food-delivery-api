@@ -27,8 +27,6 @@ urlpatterns = [
     path('edit-plan/<int:id>/', plan_edit, name='edit_plan'),
     path('delete-plan/<int:id>/', plan_delete, name='delete_plan'),
     
-    
-    
     path('plan-purchase-list/', plan_purchase_list, name='plan_purchase_list'),
     
     path('daily-meal-request-list/', daily_meal_request_list, name='daily_meal_request_list'),
@@ -36,6 +34,11 @@ urlpatterns = [
     
     path('transaction-list/', transaction_list, name='transaction_list'),
     
+    path('update-delivery-person/', update_delivery_person, name='update_delivery_person'),
+    
+    path('get-delivery-person-list-popup/', get_delivery_person_list_popup, name='get_delivery_person_list_popup'),
+    
+   
     
     
 ]

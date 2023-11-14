@@ -4,7 +4,7 @@ from .views import(
     CategoryView, SubCategoryView,
     MealView,
     PlanListingView, PlanPurcheseView,
-    MenuListOfPlan, PlanMeal
+    MenuListOfPlan, PlanMeal,
 )
 
 router = DefaultRouter()

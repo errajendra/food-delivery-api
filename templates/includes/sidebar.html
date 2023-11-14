@@ -48,6 +48,7 @@
 <!--                  <span class="mt-1 ms-1 sidebar-text">Volt Overview</span>-->
 <!--                </a>-->
 <!--              </li>-->
+
       <li class="nav-item {% if 'index' in segment %} active {% endif %}">
         <a href="{% url 'index' %}" class="nav-link">
           <span class="sidebar-icon">
@@ -56,6 +57,7 @@
           <span class="sidebar-text">Dashboard</span>
         </a>
       </li>
+      {% if request.user.is_staff %}
       <li class="nav-item {% if 'users' in segment %} active {% endif %}">
         <a href="{% url 'users' %}" class="nav-link">
           <span class="sidebar-icon">
@@ -150,7 +152,16 @@
           <span class="sidebar-text">Delivery Person</span>
         </a>
       </li>
-
+ {% elif request.user.is_delivery_person %}
+ <li class="nav-item {% if 'daily_meal_request_list' in segment %} active {% endif %}">
+  <a href="{% url 'daily_meal_request_list' %}" class="nav-link">
+      <span class="sidebar-icon">
+          <i class="fas fa-utensils"></i>
+      </span>
+      <span class="sidebar-text">Daily Meal Request</span>
+  </a>
+</li>
+{% endif %}
     </ul>
   </div>
 </nav>
