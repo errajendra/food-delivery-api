@@ -45,16 +45,10 @@ class MealView(viewsets.ModelViewSet):
     def get_queryset(self):
         data = self.request.GET
         eating_type = data['eating_type'] if 'eating_type' in data else None
-        cat = data['category'] if 'category' in data else None
-        subcat = data['sub_category'] if 'sub_category' in data else None
         search = data['search'] if 'search' in data else None
         qs = Meal.objects.select_related().all()
         if eating_type:
             qs = qs.filter(eating_type=eating_type)
-        if cat:
-            qs = qs.filter(category__id=cat)
-        if subcat:
-            qs = qs.filter(sub_category__id=subcat)
         if search:
             qs = qs.filter(Q(name__icontains=search)| Q(description__icontains=search))
         return qs
