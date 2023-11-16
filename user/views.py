@@ -6,7 +6,7 @@ from datetime import datetime
 from .models import *
 from meal.models import *
 from datetime import date
-
+from .forms import ProfileForm
 
 
 @login_required
@@ -21,6 +21,9 @@ def index(request):
     # Count the MealRequestDaily objects with the date field matching today's date
     today_meal_request = MealRequestDaily.objects.filter(date__date=today).count()
     meal_requests = MealRequestDaily.objects.filter(date__date=today).order_by('date')
+    meal_requests_delivery_person = MealRequestDaily.objects.filter(date__date=today, delivery_person = request.user).order_by('date')
+    
+    total_meal_request_delivery_person = MealRequestDaily.objects.filter(date__date=today, delivery_person = request.user).count()
 
     context = {
         "total_user":total_user,
@@ -28,7 +31,9 @@ def index(request):
         "total_plan":total_plan,
         "total_plan_purchase":total_plan_purchase,
         "today_meal_request":today_meal_request,
-        "meal_requests":meal_requests
+        "meal_requests":meal_requests,
+        "meal_requests_delivery_person":meal_requests_delivery_person,
+        "total_meal_request_delivery_person":total_meal_request_delivery_person
     }
     return render(request, 'user/index.html', context)
 
@@ -115,3 +120,16 @@ def user_list(request):
         'users': User.objects.filter(is_staff=False)
     }
     return render(request, 'user/list.html', context)
+
+
+def user_profile(request):
+    if request.method == 'POST' or request.FILES:
+        form = ProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            # Redirect to the profile page or any other appropriate page after a successful update.
+            return redirect('profile')
+    else:
+        form = ProfileForm(instance=request.user)
+    
+    return render(request, 'user/profile.html', {'form': form})

@@ -191,12 +191,15 @@ def daily_meal_request_list(request):
     user = request.user
     if request.user.is_staff:
         daily_meal_request = MealRequestDaily.objects.select_related().all()
+        context = {"daily_meal_request": daily_meal_request, 'title': "Daily Meal Request"}
+        return render(request, 'meal/daily-meal-request.html', context)
     else:
         daily_meal_request = MealRequestDaily.objects.select_related().filter(delivery_person=user)
+        context = {"daily_meal_request": daily_meal_request, 'title': "Daily Meal Request"}
+        return render(request, 'meal/daily-meal-request-delivery-person.html', context)
     
             
-    context = {"daily_meal_request": daily_meal_request, 'title': "Daily Meal Request"}
-    return render(request, 'meal/daily-meal-request.html', context)
+   
 
 
 def add_daily_meal(request):

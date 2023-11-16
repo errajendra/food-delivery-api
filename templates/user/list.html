@@ -21,7 +21,7 @@
                         <th scope="col" class="sort" data-sort="name">SN</th>
                         <th scope="col" class="sort" data-sort="name">Name</th>
                         <th scope="col" class="sort" data-sort="budget">Mobile</th>
-                        <th scope="col" class="sort" data-sort="status">Balance</th>
+                        {% comment %} <th scope="col" class="sort" data-sort="status">Balance</th> {% endcomment %}
                         <th scope="col">Active</th>
                         <th scope="col">Date</th>
                     </tr>
@@ -46,9 +46,9 @@
                         <td>
                             {{user.mobile_number}}
                         </td>
-                        <td>
+                        {% comment %} <td>
                             {{user.wallet_amount}}
-                        </td>
+                        </td> {% endcomment %}
                         <td>
                         {% if user.is_active %}
                         <select class="border-0 userStatus" data-user-id="{{ user.id }}">
