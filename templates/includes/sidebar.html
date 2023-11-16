@@ -49,21 +49,21 @@
 <!--                </a>-->
 <!--              </li>-->
 
-      <li class="nav-item {% if 'index' in segment %} active {% endif %}">
+      <li class="nav-item {% if request.resolver_match.view_name == 'index' %} active {% endif %}">
         <a href="{% url 'index' %}" class="nav-link">
           <span class="sidebar-icon">
-            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg>
+            <i class="fas fa-tachometer-alt"></i>
+
           </span>
           <span class="sidebar-text">Dashboard</span>
         </a>
       </li>
       {% if request.user.is_staff %}
-      <li class="nav-item {% if 'users' in segment %} active {% endif %}">
+      <li class="nav-item {% if request.resolver_match.view_name == 'users' %} active {% endif %}">
         <a href="{% url 'users' %}" class="nav-link">
           <span class="sidebar-icon">
             <i class="fas fa-user"></i>
 
-          {% comment %} <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 640 512"><path d="M144 0a80 80 0 1 1 0 160A80 80 0 1 1 144 0zM512 0a80 80 0 1 1 0 160A80 80 0 1 1 512 0zM0 298.7C0 239.8 47.8 192 106.7 192h42.7c15.9 0 31 3.5 44.6 9.7c-1.3 7.2-1.9 14.7-1.9 22.3c0 38.2 16.8 72.5 43.3 96c-.2 0-.4 0-.7 0H21.3C9.6 320 0 310.4 0 298.7zM405.3 320c-.2 0-.4 0-.7 0c26.6-23.5 43.3-57.8 43.3-96c0-7.6-.7-15-1.9-22.3c13.6-6.3 28.7-9.7 44.6-9.7h42.7C592.2 192 640 239.8 640 298.7c0 11.8-9.6 21.3-21.3 21.3H405.3zM224 224a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zM128 485.3C128 411.7 187.7 352 261.3 352H378.7C452.3 352 512 411.7 512 485.3c0 14.7-11.9 26.7-26.7 26.7H154.7c-14.7 0-26.7-11.9-26.7-26.7z"/></svg> {% endcomment %}
           </span>
           <span class="sidebar-text">Users</span>
         </a>
@@ -96,35 +96,32 @@
         </a>
       </li> {% endcomment %}
 
-      <li class="nav-item {% if 'plan_list' in segment %} active {% endif %}">
+      <li class="nav-item {% if request.resolver_match.view_name == 'plan_list' %} active {% endif %}">
         <a href="{% url 'plan_list' %}" class="nav-link">
           <span class="sidebar-icon">
             <i class="fas fa-calendar"></i>
-            {% comment %} <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"></path></svg> {% endcomment %}
           </span>
           <span class="sidebar-text">Plan</span>
         </a>
       </li>
-      <li class="nav-item {% if 'meal_list' in segment %} active {% endif %}">
+      <li class="nav-item {% if request.resolver_match.view_name == 'meal_list' %} active {% endif %}">
         <a href="{% url 'meal_list' %}" class="nav-link">
           <span class="sidebar-icon">
             <i class="fas fa-utensils"></i>
-            {% comment %} <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"></path></svg> {% endcomment %}
           </span>
           <span class="sidebar-text">Meal</span>
         </a>
       </li>
 
-      <li class="nav-item {% if 'plan_purchase_list' in segment %} active {% endif %}">
+      <li class="nav-item {% if request.resolver_match.view_name == 'plan_purchase_list' %} active {% endif %}">
         <a href="{% url 'plan_purchase_list' %}" class="nav-link">
           <span class="sidebar-icon">
             <i class="fas fa-calendar"></i>
-            {% comment %} <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"></path></svg> {% endcomment %}
           </span>
           <span class="sidebar-text">Plan Purchase</span>
         </a>
       </li>
-      <li class="nav-item {% if 'daily_meal_request_list' in segment %} active {% endif %}">
+      <li class="nav-item {% if request.resolver_match.view_name == 'daily_meal_request_list' %} active {% endif %}">
         <a href="{% url 'daily_meal_request_list' %}" class="nav-link">
             <span class="sidebar-icon">
                 <i class="fas fa-utensils"></i>
@@ -134,17 +131,16 @@
     </li>
     
       
-      <li class="nav-item {% if 'transaction_list' in segment %} active {% endif %}">
+      <li class="nav-item {% if request.resolver_match.view_name == 'transaction_list'  %} active {% endif %}">
         <a href="{% url 'transaction_list' %}" class="nav-link">
           <span class="sidebar-icon">
             <i class="fas fa-exchange-alt"></i>
 
-            {% comment %} <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"></path></svg> {% endcomment %}
           </span>
           <span class="sidebar-text">Transaction</span>
         </a>
       </li>
-      <li class="nav-item {% if 'delivery_person_list' in segment %} active {% endif %}">
+      <li class="nav-item {% if request.resolver_match.view_name == 'delivery_person_list'  %} active {% endif %}">
         <a href="{% url 'delivery_person_list' %}" class="nav-link">
           <span class="sidebar-icon">
             <i class="fas fa-truck"></i>
@@ -153,7 +149,7 @@
         </a>
       </li>
  {% elif request.user.is_delivery_person %}
- <li class="nav-item {% if 'daily_meal_request_list' in segment %} active {% endif %}">
+ <li class="nav-item {% if request.resolver_match.view_name == 'daily_meal_request_list' %} active {% endif %}">
   <a href="{% url 'daily_meal_request_list' %}" class="nav-link">
       <span class="sidebar-icon">
           <i class="fas fa-utensils"></i>

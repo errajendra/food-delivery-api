@@ -140,18 +140,11 @@
                 </div>
             </div>
 
-        {% comment %} <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
-            <span class="text-danger fa-users fa col text-center align-self-center text-lg p-1"></span>
-            <div class="col p-1">
-                <h6>{{new_player}} </h6>
-                <p class="mb-0">New Player</p>
-            </div>
-        </div> {% endcomment %}
+       
     </div>
 </div>
 
 
-{% comment %} Recent Wallet Activity {% endcomment %}
 <div class="card">
     <!-- Card header -->
     <div class="card-header border-0">
@@ -172,6 +165,102 @@
         </thead>
         <tbody class="list">
             {% for meal in meal_requests %}
+            <tr>
+                <td class="budget">
+                    {{forloop.counter}}
+                </td>
+                <td>
+                    {{meal.requester}}
+                </td>
+                <td>
+                    {{meal.plan.address}}
+                </td>
+                <td>
+                    {{meal.meal}}
+                </td>
+                <td>
+                    {{meal.date}}
+                </td>
+               
+                    
+                <td>
+                    {{meal.status}}
+                </td>
+                
+              
+            </tr>
+           
+            {% endfor %}
+        </tbody>
+        </table>
+    </div>
+  
+</div>  
+
+{% elif request.user.is_delivery_person %}
+<div class="card">
+    <div class="card-header my-0 py-1 d-flex">
+        <p class="card-title mx-3">OverView</p> 
+        {% comment %} <input type="date" id="idOverViewDate" name="OverViewDate" class="border-0"> {% endcomment %}
+    </div>
+    <div class="card-body cus_form row">
+        
+            <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
+            
+                {% comment %} <span class="text-primary col text-center align-self-center text-lg p-1"> <i class="fas fa-user"></i></span> {% endcomment %}
+                <div class="col p-1">
+                    <div class="card-counter info">
+                        <i class="fas fa-utensils"></i>
+                        <span class="count-numbers">{{total_meal_request_delivery_person}}</span><br/>
+                        <span class="count-name">Meal Request </span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
+
+            </div>
+
+            <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
+
+            </div>
+
+        
+            <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
+
+                
+            </div>
+
+            <div class="col row m-1 bg-gradient-lighter rounded p-1 pb-2">
+                
+            </div>
+
+        
+    </div>
+</div>
+
+
+<div class="card">
+    <!-- Card header -->
+    <div class="card-header border-0">
+        <h6 class="mb-0"> Recent Meal Request </h6>
+    </div>
+    <!-- Light table -->
+    <div class="table-responsive">
+        <table class="table table-hover" id="example1">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="sort">SN</th>
+                <th scope="col" class="sort">User</th>
+                <th scope="col" class="sort">Plan</th>
+                <th scope="col" class="sort">Meal</th>
+                <th scope="col" class="sort">Date</th>
+                <th scope="col" class="sort">Status</th>
+            </tr>
+        </thead>
+        <tbody class="list">
+            {% for meal in meal_requests_delivery_person %}
             <tr>
                 <td class="budget">
                     {{forloop.counter}}
