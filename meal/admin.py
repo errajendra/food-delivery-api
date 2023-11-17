@@ -33,5 +33,5 @@ class MealAdmin(admin.ModelAdmin):
 @admin.register(MealRequestDaily)
 class MealRequestDailyAdmin(admin.ModelAdmin):
     list_display = (
-        'plan', 'meal', 'date', 'delivery_person'
+       'id', 'plan', 'meal', 'date', 'delivery_person', 'status'
     )
