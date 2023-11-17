@@ -85,9 +85,9 @@ def change_order_status(request):
         meal_id = int(meal_id)  # Convert order_id to an integer
         order = get_object_or_404(MealRequestDaily, id=meal_id)
 
-        auth_status_list = ['Success', 'Requested', 'Cancelled']
+        auth_status_list = ['Success','Cancelled']
         if ord_status in auth_status_list:
-            if order.status in ['Success', 'Requested', 'Cancelled']:
+            if order.status in ['Requested','Success','Cancelled']:
                 order.status = ord_status
                 order.save()
                 return Response(
