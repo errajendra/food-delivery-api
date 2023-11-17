@@ -9,5 +9,6 @@ urlpatterns = [
     path('add-delivery-person/', add_delivery_person, name='add-delivery-person'),
     path('delete-delivery-person/<int:id>/', delete_delivery_person, name='delete-delivery-person'),
     
+    path('api/', include('delivery.api.urls'))
       
 ]

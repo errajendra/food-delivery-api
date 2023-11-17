@@ -54,3 +54,6 @@ def delete_delivery_person(request,id):
     user.is_delivery_person = False
     user.save()
     return redirect('delivery_person_list') 
+
+
+
