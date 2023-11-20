@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
-    UserRegisterView, LoginView, ChangePasswordView, user_logout,
+    UserRegisterView, SendLoginOtpView, LoginView, ChangePasswordView, user_logout,
     ProfileView,
     UserVerifyAccountView,
     NotificationSettingView, NotificationView,
@@ -17,6 +17,7 @@ router = DefaultRouter()
 router.register('register', UserRegisterView, basename="user-register-api")
 router.register('verify-account-with-otp', UserVerifyAccountView,
                 basename="verify-account-with-otp")
+router.register('send-login-otp', SendLoginOtpView, basename="send-login-otp-api")
 router.register('login', LoginView, basename="user-login-api")
 router.register('delete-account-permanentaly',
                 DeleteUserAccountView, basename="delete-account-permanentaly")

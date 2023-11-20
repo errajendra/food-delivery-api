@@ -15,20 +15,20 @@ utc = pytz.UTC
 
 """" User Registration Serializer."""
 class UserRegisterSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField()
+    mobile_number = serializers.CharField()
     class Meta:
         model = User
-        fields = ('name', 'email', 'password', 'mobile_number', 'fcm_token')
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
+        fields = ('name', 'email', 'mobile_number', 'fcm_token')
+        # extra_kwargs = {
+        #     'password': {'write_only': True}
+        # }
     
-    def validate_email(self, data):
-        users = User.objects.filter(email=data)
+    def validate_mobile_number(self, data):
+        users = User.objects.filter(mobile_number=data)
         if users.exists():
             user = users.first()
             if user.is_active:
-                raise serializers.ValidationError('Email already exists.')
+                raise serializers.ValidationError('Mobile Number already exists.')
             user.delete()
         return data
 
@@ -90,11 +90,11 @@ class UserVerifyAccountSerializer(serializers.Serializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'name', 'mobile_number', 'image', 'fcm_token')
+        fields = ('id', 'name', 'email', 'image', 'fcm_token')
         
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['email'] = instance.email
+        data['mobile_number'] = instance.mobile_number
         return data
 
 
@@ -109,19 +109,33 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
 
 # User Login Serializer
-class LoginSerializer(serializers.Serializer):
+class SendOtpSerializer(serializers.Serializer):
     mobile_number = serializers.CharField()
-    password = serializers.CharField()
-    fcm_token = serializers.CharField(required=False)
 
-    def validate_email(self, data):
+    def validate_mobile_number(self, data):
         try:
-            qs = User.objects.get(mobile_number=data, is_active=True)
-            return data
+            qs = User.objects.get(mobile_number=data)
+            return qs
         except:
             raise serializers.ValidationError("No active user found with this mobile number.")
 
-    def validate_password(self, data):
+
+
+
+# User Login Serializer
+class LoginSerializer(serializers.Serializer):
+    mobile_number = serializers.CharField()
+    otp = serializers.CharField()
+    fcm_token = serializers.CharField(required=False)
+
+    def validate_mobile_number(self, data):
+        try:
+            qs = User.objects.get(mobile_number=data)
+            return qs
+        except:
+            raise serializers.ValidationError("No active user found with this mobile number.")
+
+    def validate_otp(self, data):
         try:
             mob = self.context['request'].data['mobile_number']
         except:
@@ -129,11 +143,11 @@ class LoginSerializer(serializers.Serializer):
         if mob:
             try:
                 user = User.objects.get(mobile_number=mob)
-                if user.check_password(data):
+                if verify_otp(user, data):
                     return data
             except:
                 pass
-        raise serializers.ValidationError("Invalid password.")
+        raise serializers.ValidationError("Invalid otp.")
 
 
 

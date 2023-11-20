@@ -40,7 +40,6 @@ class CustomUser(AbstractUser):
     email = LowercaseEmailField(null=True, blank=True)
     mobile_number = models.CharField(
         _("Mobile Number"), max_length=100, validators=[phone_validator],unique=True,
-        
     )
     password = models.CharField(
         _("Password"), max_length=128, validators=[password_validator]

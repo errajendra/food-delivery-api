@@ -14,7 +14,7 @@ from .exceptions import *
 # User Registration Api
 class UserRegisterView(ModelViewSet):
     serializer_class = UserRegisterSerializer
-    queryset = User.objects.all()
+    # queryset = User.objects.all()
     http_method_names = ('post',)
     
     def create(self, request, *args, **kwargs):
@@ -32,7 +32,7 @@ class UserRegisterView(ModelViewSet):
         errors = serializer.errors
         error_message = ""
         for key in list(errors):
-            error_message += f"{key} - {errors[key][0]}"
+            error_message += f"{errors[key][0]}"
             break
         return Response(
             data={
@@ -79,6 +79,40 @@ class UserVerifyAccountView(ModelViewSet):
 
 
 
+# Send Otp to User Login Api Views
+class SendLoginOtpView(ModelViewSet):
+    serializer_class = SendOtpSerializer
+    http_method_names = ('post',)
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['mobile_number']
+            if send_otp(user):
+                return Response(
+                    {   'status': status.HTTP_200_OK,
+                        'message': "Otp sent.",
+                    }
+                )
+            return Response(
+                status = status.HTTP_500_INTERNAL_SERVER_ERROR,
+                data = {   
+                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    'message': "Unable to send otp.",
+                }
+            )
+        
+        return Response(
+            data={
+                "status": status.HTTP_400_BAD_REQUEST,
+                "message": "User not found.",
+                "errors": serializer.errors
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+
+
 # User Login Api Views
 class LoginView(ModelViewSet):
     serializer_class = LoginSerializer
@@ -87,10 +121,9 @@ class LoginView(ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            user = User.objects.get(
-                mobile_number=serializer.validated_data['mobile_number']
-            )
-            user.fcm_token = serializer.validated_data['fcm_token']
+            user = serializer.validated_data['mobile_number']
+            user.fcm_token = serializer.validated_data.get('fcm_token', user.fcm_token)
+            user.is_active = True
             user.save()
             token, _created = Token.objects.get_or_create(
                 user = user
