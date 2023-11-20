@@ -270,7 +270,6 @@ class BannerView(APIView):
     def get(self, request, format=None):
         banners = [
             {'image_url': self.request.build_absolute_uri('/static/banners/banner1.jpg'), 'alt_text': 'Banner 1'},
-            {'image_url': self.request.build_absolute_uri('/static/banners/banner2.png'), 'alt_text': 'Banner 2'},
             # Add more banners as needed
         ]
 
