@@ -53,7 +53,7 @@ class UserVerifyAccountView(ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            user = User.objects.get(email=serializer.validated_data['email'])
+            user = User.objects.get(mobile_number=serializer.validated_data['mobile_number'])
             user.is_active = True
             user.save()
             return Response(
@@ -88,7 +88,7 @@ class LoginView(ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = User.objects.get(
-                email=serializer.validated_data['email']
+                mobile_number=serializer.validated_data['mobile_number']
             )
             user.fcm_token = serializer.validated_data['fcm_token']
             user.save()

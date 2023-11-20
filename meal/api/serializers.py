@@ -85,3 +85,8 @@ class MealPlanDataSerializer(serializers.Serializer):
 class DailyMealRequestSerializer(serializers.Serializer):
     plan_purchese_id = serializers.IntegerField()
     meal_plan_data = MealPlanDataSerializer(many=True)        
+    
+    
+class BannerSerializer(serializers.Serializer):
+    image_url = serializers.CharField()
+    alt_text = serializers.CharField()    

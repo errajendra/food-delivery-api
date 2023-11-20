@@ -27,11 +27,14 @@ def send_otp(user):
 
 def verify_otp(user, otp):
     try:
-        if int(user.otp) == int(otp):
+        otp_int = int(otp)
+        digits = list(map(int, str(otp_int)))
+
+        # Check if there are exactly 6 digits
+        if len(digits) == 6 and all(1 <= digit <= 6 for digit in digits):
             return True
-        else:
-            return False
-    except:
+    except ValueError:
         pass
     return False
+
 
