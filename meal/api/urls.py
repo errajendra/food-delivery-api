@@ -4,7 +4,7 @@ from .views import(
     CategoryView, SubCategoryView,
     MealView,
     PlanListingView, PlanPurcheseView,
-    MenuListOfPlan, PlanMeal,
+    MenuListOfPlan, PlanMeal, BannerView
 )
 
 router = DefaultRouter()
@@ -20,4 +20,6 @@ router.register('plan-your-meal', PlanMeal, basename='plan-your-meal-api')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('banners/', BannerView.as_view(), name='banner-api'),
+
 ]

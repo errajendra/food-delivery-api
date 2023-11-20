@@ -35,18 +35,42 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 
 """" User Verify Account with otp Serializer."""
+# class UserVerifyAccountSerializer(serializers.Serializer):
+#     mobile_number = serializers.CharField()
+#     otp = serializers.IntegerField()
+    
+#     def validate_mobile_number(self, data):
+#         try:
+#             user = User.objects.get(mobile_number=data)
+#             self.user = user
+#             return data
+#         except:
+#             self.user = None
+#         raise serializers.ValidationError('User not fount.')
+    
+#     def validate_otp(self, data):
+#         try:
+#             if self.user:
+#                 user = self.user
+#             else:
+#                 user = None
+#         except Exception as e:
+#             user = None
+#         if user:
+#             if verify_otp(user, data):
+#                 return data
+#         raise serializers.ValidationError("Invalid Otp.")
+
 class UserVerifyAccountSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+    mobile_number = serializers.CharField()
     otp = serializers.IntegerField()
     
-    def validate_email(self, data):
+    def validate_mobile_number(self, data):
         try:
-            user = User.objects.get(email=data)
-            self.user = user
+            self.user = User.objects.get(mobile_number=data)
             return data
-        except:
-            self.user = None
-        raise serializers.ValidationError('User not fount.')
+        except User.DoesNotExist:
+            raise serializers.ValidationError('User not found.')
     
     def validate_otp(self, data):
         try:
@@ -60,7 +84,6 @@ class UserVerifyAccountSerializer(serializers.Serializer):
             if verify_otp(user, data):
                 return data
         raise serializers.ValidationError("Invalid Otp.")
-
 
 
 """" User Profile Serializer."""
@@ -87,25 +110,25 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
 # User Login Serializer
 class LoginSerializer(serializers.Serializer):
-    email = serializers.CharField()
+    mobile_number = serializers.CharField()
     password = serializers.CharField()
     fcm_token = serializers.CharField(required=False)
 
     def validate_email(self, data):
         try:
-            qs = User.objects.get(email=data, is_active=True)
+            qs = User.objects.get(mobile_number=data, is_active=True)
             return data
         except:
-            raise serializers.ValidationError("No active user found with this email.")
+            raise serializers.ValidationError("No active user found with this mobile number.")
 
     def validate_password(self, data):
         try:
-            mob = self.context['request'].data['email']
+            mob = self.context['request'].data['mobile_number']
         except:
             mob = None
         if mob:
             try:
-                user = User.objects.get(email=mob)
+                user = User.objects.get(mobile_number=mob)
                 if user.check_password(data):
                     return data
             except:
@@ -148,14 +171,27 @@ class ConfirmForgetPasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError("Use alfanumeric min 6 digit strong password.")
         return data
     
+    # def validate_otp(self, data):
+    #     user = self.user
+    #     if user:
+    #         if verify_otp(user, data):
+    #             return data
+    #     else:
+    #         raise serializers.ValidationError("No user to validate otp.")
+    #     raise serializers.ValidationError("Invalid otp.")
+    
     def validate_otp(self, data):
-        user = self.user
-        if user:
-            if verify_otp(user, data):
-                return data
-        else:
-            raise serializers.ValidationError("No user to validate otp.")
-        raise serializers.ValidationError("Invalid otp.")
+        try:
+            user = self.user
+        except Exception as e:
+            user = None
+
+        if user and self.verify_otp(user, data):
+            return data
+
+        raise serializers.ValidationError("Invalid OTP.")
+
+
 
 
 

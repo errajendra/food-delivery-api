@@ -37,22 +37,22 @@ class LowercaseEmailField(models.EmailField):
 
 
 class CustomUser(AbstractUser):
-    email = LowercaseEmailField(unique=True)
+    email = LowercaseEmailField(null=True, blank=True)
     mobile_number = models.CharField(
-        _("Mobile Number"), max_length=100, validators=[phone_validator],
-        null=True, blank=True
+        _("Mobile Number"), max_length=100, validators=[phone_validator],unique=True,
+        
     )
     password = models.CharField(
         _("Password"), max_length=128, validators=[password_validator]
     )
     name = models.CharField(
-        _("Full Name"), max_length=100, validators=[name_validator]
+        _("Full Name"), max_length=100, validators=[name_validator], null=True, blank=True
     )
     otp = models.CharField(max_length=8, null=True, blank=True)
     image = models.ImageField(
         default="default.png",
         upload_to="user/image/",
-        verbose_name="User Profile Image",
+        verbose_name="User Profile Image", null=True, blank=True
     )
     is_active = models.BooleanField(
         _("active"),
@@ -75,8 +75,7 @@ class CustomUser(AbstractUser):
     first_name = None
     last_name = None
 
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ('name',)
+    USERNAME_FIELD = "mobile_number"
 
     objects = CustomUserManager()
 

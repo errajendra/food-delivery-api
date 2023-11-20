@@ -42,11 +42,12 @@ def admin_login(request):
     message = None
 
     if request.method == "POST":
-        email = request.POST['email']
+        mobile_number = request.POST['mobile_number']
+        print(mobile_number)
         password = request.POST['password']
 
         try:
-            user = User.objects.get(email=email, is_staff=True)
+            user = User.objects.get(mobile_number=mobile_number, is_staff=True)
         except User.DoesNotExist:
             user = None
 
@@ -60,7 +61,7 @@ def admin_login(request):
         else:
             # User is not an admin, check if they are a delivery person
             try:
-                user1 = CustomUser.objects.get(email=email, is_delivery_person=True, is_active=True)
+                user1 = CustomUser.objects.get(mobile_number=mobile_number, is_delivery_person=True, is_active=True)
             except CustomUser.DoesNotExist:
                 user1 = None
 
@@ -74,35 +75,6 @@ def admin_login(request):
         message = "Invalid Credentials."
 
     return render(request, 'user/login.html', {'message': message})
-# def admin_login(request):
-#     """ Admin Login Method. """
-#     message = None
-#     if request.method == "POST":
-#         email = request.POST['email']
-#         password = request.POST['password']
-#         try:
-#             user = User.objects.get(email=email, is_staff=True)
-#             user1 = User.objects.filter(email=email, is_active=True)
-#         except User.DoesNotExist:
-#             user = None
-#         if user:
-#             if user.check_password(password):
-#                 login(request, user)
-#                 next = request.GET.get('next', None)
-#                 if next:
-#                     return redirect(next)
-#                 return redirect('index')
-#         elif user1.is_delivery_person:
-#             if user.check_password(password):
-#                 login(request, user)
-#                 next = request.GET.get('next', None)
-#                 if next:
-#                     return redirect(next)
-#                 return redirect('index')
-#                 # Redirect to the delivery person dashboard or other relevant page
-#                 # return redirect('delivery_person_dashboard')    
-#         message = "Invalid Credentials."
-#     return render(request, 'user/login.html', {'message': message})
 
 
 @login_required
