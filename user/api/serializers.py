@@ -117,7 +117,7 @@ class SendOtpSerializer(serializers.Serializer):
             qs = User.objects.get(mobile_number=data)
             return qs
         except:
-            raise serializers.ValidationError("No active user found with this mobile number.")
+            raise serializers.ValidationError("Please Register first.")
 
 
 
