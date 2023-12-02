@@ -114,10 +114,14 @@ class SendOtpSerializer(serializers.Serializer):
 
     def validate_mobile_number(self, data):
         try:
-            qs = User.objects.get(mobile_number=data)
-            return qs
-        except:
-            raise serializers.ValidationError("Please Register first.")
+            qs = User.objects.filter(mobile_number=data)
+            if qs.exists():
+                return qs.first()
+            else:
+                user = User.objects.create(mobile_number=data)
+            return user
+        except Exception as ex:
+            raise serializers.ValidationError(f"Error - {ex}")
 
 
 
