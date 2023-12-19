@@ -134,7 +134,7 @@ class PlanPurchase(BaseModel):
     )
 
     def __str__(self):
-        return self.user
+        return f"{self.plan.name}"
 
 
 
