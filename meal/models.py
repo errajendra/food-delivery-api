@@ -133,8 +133,8 @@ class PlanPurchase(BaseModel):
         max_length=255, verbose_name="User Address to Deliver Meal",
     )
 
-    def __str__(self) -> str:
-        return self.user.name
+    def __str__(self):
+        return self.user
 
 
 
