@@ -87,32 +87,32 @@ class PlanPurcheseView(viewsets.ModelViewSet):
                 address = address.full_address
             )
             # Create payment urls here
-            ccavenue = CCAvenue(WORKING_KEY, ACCESS_CODE, MERCHANT_CODE, REDIRECT_URL, CANCEL_URL)
-            p_currency = CURRENCY
-            p_amount = str(tnx.amount)
-            redirect_url = f"{request.scheme}://{request.META['HTTP_HOST']}{REDIRECT_URL}"
-            cancel_url = f"{request.scheme}://{request.META['HTTP_HOST']}{CANCEL_URL}"
-            p_customer_identifier = str(tnx.user.mobile_number)
+            # ccavenue = CCAvenue(WORKING_KEY, ACCESS_CODE, MERCHANT_CODE, REDIRECT_URL, CANCEL_URL)
+            # p_currency = CURRENCY
+            # p_amount = str(tnx.amount)
+            # redirect_url = f"{request.scheme}://{request.META['HTTP_HOST']}{REDIRECT_URL}"
+            # cancel_url = f"{request.scheme}://{request.META['HTTP_HOST']}{CANCEL_URL}"
+            # p_customer_identifier = str(tnx.user.mobile_number)
 
-            merchant_data={
-                "currency" : p_currency ,
-                'amount': p_amount,
-                'redirect_url':redirect_url,
-                'cancel_url': cancel_url,
-                'order_id': str(tnx.id),
-                'billing_name': tnx.user.name,
-                'billing_tel': str(tnx.user.mobile_number),
-                'billing_email': tnx.user.email,
-                'billing_address': str(address.address1) + " " + str(address.address2),
-                'billing_city': address.city,
-                'billing_state': address.state,
-                'billing_zip': address.zip,
-                'billing_country': "India",
-                'customer_identifier': p_customer_identifier,
-                'merchant_param1': "PlanPurchase"
-            }
-            encryption = ccavenue.encrypt(merchant_data)
-            cc_pay_url = f'https://{CC_PAY_MODE}.ccavenue.com/transaction/transaction.do?command=initiateTransaction&merchant_id={MERCHANT_CODE}&encRequest={encryption}&access_code={ACCESS_CODE}'
+            # merchant_data={
+            #     "currency" : p_currency ,
+            #     'amount': p_amount,
+            #     'redirect_url':redirect_url,
+            #     'cancel_url': cancel_url,
+            #     'order_id': str(tnx.id),
+            #     'billing_name': tnx.user.name,
+            #     'billing_tel': str(tnx.user.mobile_number),
+            #     'billing_email': tnx.user.email,
+            #     'billing_address': str(address.address1) + " " + str(address.address2),
+            #     'billing_city': address.city,
+            #     'billing_state': address.state,
+            #     'billing_zip': address.zip,
+            #     'billing_country': "India",
+            #     'customer_identifier': p_customer_identifier,
+            #     'merchant_param1': "PlanPurchase"
+            # }
+            # encryption = ccavenue.encrypt(merchant_data)
+            # cc_pay_url = f'https://{CC_PAY_MODE}.ccavenue.com/transaction/transaction.do?command=initiateTransaction&merchant_id={MERCHANT_CODE}&encRequest={encryption}&access_code={ACCESS_CODE}'
             # cc pay end
             
             return Response(
@@ -120,7 +120,7 @@ class PlanPurcheseView(viewsets.ModelViewSet):
                     "status": status.HTTP_200_OK,
                     "message": "Complete your payment.",
                     "data": {
-                        "pay_url": cc_pay_url
+                        "pay_url": "cc_pay_url"
                     }
                 }
             )
