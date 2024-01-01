@@ -182,3 +182,8 @@ CC_A_ACCESS_CODE =  os.environ.get("CC_A_ACCESS_CODE")
 CC_A_WORKING_KEY =  os.environ.get("CC_A_WORKING_KEY")
 CC_A_MERCHANT_ID =  os.environ.get("CC_A_MERCHANT_ID")
 CC_A_CURRENCY = "INR"
+
+RAZOR_PAY_MURCHENT_ID =  os.environ.get("RAZOR_PAY_MURCHENT_ID")
+RAZOR_PAY_API_KEY =  os.environ.get("RAZOR_PAY_API_KEY")
+RAZOR_PAY_API_SECRET =  os.environ.get("RAZOR_PAY_API_SECRET")
+RAZOR_PAY_APP_TITLE =  os.environ.get("RAZOR_PAY_APP_TITLE")

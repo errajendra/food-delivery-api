@@ -193,8 +193,16 @@ class Transaction(BaseModel):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     amount = models.FloatField()
     tracking_id = models.CharField(
-        verbose_name="CC Avenue Tracking ID",
-        max_length=56, null=True, blank=True
+        verbose_name="RazorPay Order ID",
+        max_length=100, null=True, blank=True
+    )
+    razorpay_payment_id = models.CharField(
+        verbose_name="RazorPay Payment ID",
+        max_length=100, null=True, blank=True
+    )
+    razorpay_signature = models.CharField(
+        verbose_name="RazorPay Signature ID",
+        max_length=100, null=True, blank=True
     )
     bank_id = models.CharField(max_length=56, null=True, blank=True)
     card_name = models.CharField(max_length=100, null=True, blank=True)
