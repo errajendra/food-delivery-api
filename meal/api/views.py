@@ -215,6 +215,8 @@ class PlanMeal(viewsets.ModelViewSet):
                         date=datetime
                     )
                     meal_request.save()
+                    plan_purchase.remaining_meals = plan_purchase.remaining_meals - 1
+                    plan_purchase.save()
                     created_meal_requests.append({
                         "requester": meal_request.requester.id,
                         "plan": meal_request.plan.id,

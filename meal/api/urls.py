@@ -17,8 +17,8 @@ router.register('plans', PlanListingView, basename='plan-listing-api')
 router.register('plan-purchese', PlanPurcheseView, basename='plan-purchese-api')
 router.register('plan-menu-meal', MenuListOfPlan, basename='plan-menu-meal-api')
 router.register('plan-your-meal', PlanMeal, basename='plan-your-meal-api')
-# router.register('requested-meal-history', RequestedPlanMealHistory, 
-#                 basename='equested-meal-history-api')
+router.register('requested-meal-history', RequestedPlanMealHistory, 
+                basename='equested-meal-history-api')
 
 
 urlpatterns = [
