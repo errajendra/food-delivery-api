@@ -19,6 +19,7 @@ from .serializers import (
 )
 from django.db.utils import IntegrityError
 from rest_framework.views import APIView
+from .exceptions import *
 
 
 """ Category Listing View."""
@@ -182,15 +183,9 @@ class PlanMeal(viewsets.ModelViewSet):
             try:
                 plan_purchase = PlanPurchase.objects.get(pk=plan_purchese_id)
             except PlanPurchase.DoesNotExist:
-                return Response(
-                    status=status.HTTP_400_BAD_REQUEST,
-                    data={
-                        "status": status.HTTP_400_BAD_REQUEST,
-                        "message": "BAD REQUEST",
-                        "errors": {"plan_purchese_id": ["Invalid plan purchase ID."]}
-                    }
-                )
-
+                raise PlanPurchaseDoesNotExist()
+            if meal_plan_data.count() < plan_purchase.remaining_meals:
+                raise NoRemainMealsAvlSubscription()
             for meal_data in meal_plan_data:
                 datetime = meal_data['datetime']
                 meal_id = meal_data['meal']
@@ -199,14 +194,7 @@ class PlanMeal(viewsets.ModelViewSet):
                 try:
                     meal = Meal.objects.get(pk=meal_id)
                 except Meal.DoesNotExist:
-                    return Response(
-                        status=status.HTTP_400_BAD_REQUEST,
-                        data={
-                            "status": status.HTTP_400_BAD_REQUEST,
-                            "message": "BAD REQUEST",
-                            "errors": {"meal_id": ["Invalid meal ID."]}
-                        }
-                    )
+                    raise MealDoesNotExist()
                 try:
                     meal_request = MealRequestDaily(
                         requester=requester,
