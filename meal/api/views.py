@@ -270,7 +270,7 @@ class BannerView(APIView):
 """ Requested Plan Meal History. """
 class RequestedPlanMealHistory(viewsets.ModelViewSet):
     http_method_names = ('get',)
-    authentication_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     
     def get_queryset(self):
         user = self.request.user
