@@ -276,6 +276,7 @@ class RequestedPlanMealHistory(viewsets.ModelViewSet):
         user = self.request.user
         return MealRequestDaily.objects.filter(requester=user)
     
+    
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         requested = queryset.filter(status="Requested")
@@ -283,7 +284,7 @@ class RequestedPlanMealHistory(viewsets.ModelViewSet):
         canceled = queryset.filter(status="Cancelled")
         data = {
             "requested": MealRequestDailySerializer(requested, many=True).data,
-            "requested": MealRequestDailySerializer(completed, many=True).data,
+            "completed": MealRequestDailySerializer(completed, many=True).data,
             "canceled": MealRequestDailySerializer(canceled, many=True).data
         }
         return Response(data)
