@@ -111,6 +111,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 # User Login Serializer
 class SendOtpSerializer(serializers.Serializer):
     mobile_number = serializers.CharField()
+    email = serializers.EmailField()
 
     def validate_mobile_number(self, data):
         try:

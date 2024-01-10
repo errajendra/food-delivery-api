@@ -14,7 +14,8 @@ from ..models import (
 )
 from .serializers import (
     CategorySerilizer, SubCategorySerilizer, MealSerializer,
-    PlanSerializer, PlanPurcheseSerializer, PlanPurcheseListSerializer,DailyMealRequestSerializer, BannerSerializer
+    PlanSerializer, PlanPurcheseSerializer, PlanPurcheseListSerializer,
+    DailyMealRequestSerializer, BannerSerializer, MealRequestDailySerializer
 )
 from django.db.utils import IntegrityError
 from rest_framework.views import APIView
@@ -253,6 +254,8 @@ class PlanMeal(viewsets.ModelViewSet):
         )
 
 
+
+""" Home Page View. """
 class BannerView(APIView):
     def get(self, request, format=None):
         banners = [
@@ -271,3 +274,26 @@ class BannerView(APIView):
             },
             status=status.HTTP_200_OK
         )
+
+
+
+""" Requested Plan Meal History. """
+class RequestedPlanMealHistory(viewsets.ModelViewSet):
+    http_method_names = ('get',)
+    authentication_classes = (IsAuthenticated,)
+    
+    def get_queryset(self):
+        user = self.request.user
+        return MealRequestDaily.objects.filter(requester=user)
+    
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        requested = queryset.filter(status="Requested")
+        completed = queryset.filter(status="Success")
+        canceled = queryset.filter(status="Cancelled")
+        data = {
+            "requested": MealRequestDailySerializer(requested, many=True).data,
+            "requested": MealRequestDailySerializer(completed, many=True).data,
+            "canceled": MealRequestDailySerializer(canceled, many=True).data
+        }
+        return Response(data)
