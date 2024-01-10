@@ -29,7 +29,7 @@ def send_otp(user):
 def verify_otp(user, otp):
     try:
         otp_int = int(otp)
-        if otp_int == 123456:
+        if otp_int == int(user.otp):
             return True
     except:
         pass
