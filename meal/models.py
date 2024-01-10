@@ -187,4 +187,3 @@ class MealRequestDaily(BaseModel):
 
     class Meta:
         ordering = ['-date']
-        unique_together = ('requester', 'date')

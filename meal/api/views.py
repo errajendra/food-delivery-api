@@ -5,6 +5,8 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from cc_avenue.utils import *
 from pay_ccavenue import CCAvenue
+from datetime import datetime, timedelta
+from pytz import timezone
 from razor_pay.utils import (
     client as razorpay_client,
     RAZOR_PAY_API_KEY
@@ -288,3 +290,37 @@ class RequestedPlanMealHistory(viewsets.ModelViewSet):
             "canceled": MealRequestDailySerializer(canceled, many=True).data
         }
         return Response(data)
+
+
+
+""" Cancel Meal Request. """
+class CancelMealRequest(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    http_method_names = ("put",)
+    
+    def get_queryset(self):
+        return MealRequestDaily.objects.filter(requester=self.request.user)
+    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        now = datetime.now(timezone("Asia/Kolkata"))
+        ipd = instance.date - timedelta(days=1)
+        c_time = datetime(
+            year=now.year, month=now.month, day=now.day,
+            hour=now.hour, minute=now.minute, second=now.second
+        )
+        ins_pre_date = datetime(
+            year=ipd.year, month=ipd.month, day=ipd.day,
+            hour=20, minute=0
+        )
+        if c_time < ins_pre_date:
+            instance.status = "Cancelled"
+            instance.save()
+        else:
+            return Response(
+                status=401,
+                data={
+                    "status":401,
+                    "message": "You can cancel before 8 PM",})
+        serializer = MealRequestDailySerializer(instance)
+        return Response({"status":200, "message": "OK", "data": serializer.data})
