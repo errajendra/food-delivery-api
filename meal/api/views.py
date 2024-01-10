@@ -184,7 +184,7 @@ class PlanMeal(viewsets.ModelViewSet):
                 plan_purchase = PlanPurchase.objects.get(pk=plan_purchese_id)
             except PlanPurchase.DoesNotExist:
                 raise PlanPurchaseDoesNotExist()
-            if len(meal_plan_data) < plan_purchase.remaining_meals:
+            if len(meal_plan_data) > plan_purchase.remaining_meals:
                 raise NoRemainMealsAvlSubscription()
             for meal_data in meal_plan_data:
                 datetime = meal_data['datetime']
