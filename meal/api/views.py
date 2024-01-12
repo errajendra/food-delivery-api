@@ -66,6 +66,7 @@ class MealView(viewsets.ModelViewSet):
 
 """ Plan View """
 class PlanListingView(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
     http_method_names = ('get',)
     queryset = Plan.objects.all().order_by('-created_at')
     serializer_class = PlanSerializer

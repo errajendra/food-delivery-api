@@ -47,6 +47,14 @@ class PlanSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['price_per_meal'] = instance.price_per_meal
+        user = self.context['request'].user
+        plan_purchese = PlanPurchase.objects.filter(
+            plan=instance, user=user, remaining_meals__gte=1, status=True
+        ).exists()
+        if plan_purchese:
+            data['is_purchased'] = True
+        else:
+            data['is_purchased'] = False
         return data
 
 
@@ -77,10 +85,11 @@ class PlanPurcheseListSerializer(serializers.ModelSerializer):
 
 
 
-
 class MealPlanDataSerializer(serializers.Serializer):
     datetime = serializers.DateTimeField()
     meal = serializers.IntegerField()
+
+
 
 class DailyMealRequestSerializer(serializers.Serializer):
     plan_purchese_id = serializers.IntegerField()

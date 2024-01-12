@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from .utils import client
 from user.models import Transaction
 from meal.models import PlanPurchase
+from meal.api.serializers import PlanPurcheseListSerializer
 
 
 
@@ -40,11 +41,13 @@ def verify_payment(request):
         plan = PlanPurchase.objects.get(transaction=tnx)
         plan.status = True
         plan.save()
+        plan_data = PlanPurcheseListSerializer(plan).data
         return Response(
             data={
                 'status': 200,
                 'message': 'Payment Success.',
-                'data': result
+                'payment_success': result,
+                "data": plan_data
             },
             status=200
         )
