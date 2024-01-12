@@ -41,7 +41,7 @@ def verify_payment(request):
         plan = PlanPurchase.objects.get(transaction=tnx)
         plan.status = True
         plan.save()
-        plan_data = PlanPurcheseListSerializer(plan).data
+        plan_data = PlanPurcheseListSerializer(instance=plan).data
         return Response(
             data={
                 'status': 200,
