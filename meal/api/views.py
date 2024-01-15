@@ -147,6 +147,7 @@ class MenuListOfPlan(viewsets.ModelViewSet):
         
     def list(self, request, *args, **kwargs):
         plan_id = self.request.GET.get('plan', None)
+        eating_type = self.request.GET.get('eating_type', None)
         if not plan_id:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
@@ -161,6 +162,8 @@ class MenuListOfPlan(viewsets.ModelViewSet):
         meals = Meal.objects.filter(
             eating_type__in = eating_type_list,
         )
+        if eating_type:
+            meals = meals.filter(eating_type=eating_type)
         self.queryset = meals
         return super().list(request, *args, **kwargs)
 
