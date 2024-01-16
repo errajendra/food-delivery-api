@@ -3,12 +3,16 @@ from .forms import (
     CategoryForm, Category,
     SubCategory, SubCategoryForm,
     Meal, MealForm,
-    Plan, PlanForm, MealRequestForm
+    Plan, PlanForm, MealRequestForm,
+    DailyMealMenuForm
 )
 from .models import *
 from user.models import *
 from django.template.loader import render_to_string
 from django.http import JsonResponse
+
+
+
 """
     Category View Functions
 """
@@ -199,7 +203,6 @@ def daily_meal_request_list(request):
         return render(request, 'meal/daily-meal-request-delivery-person.html', context)
     
             
-   
 
 
 def add_daily_meal(request):
@@ -222,6 +225,7 @@ def transaction_list(request):
     return render(request, 'user/transaction-list.html', context)
 
 
+
 def update_delivery_person(request):
     if request.method == 'POST':
         meal_id = request.POST.get('meall')
@@ -239,6 +243,7 @@ def update_delivery_person(request):
 
     return redirect("daily_meal_request_list")
 
+
 def get_delivery_person_list_popup(request):
      #"""pop model using Ajax"""
     print("meal")
@@ -248,3 +253,52 @@ def get_delivery_person_list_popup(request):
         html = render_to_string("meal/delivery_boy_popup.html", {'delivery_person': delivery_person, 'meal_id': meal_id}, request=request)
         print(html)
         return JsonResponse({'update': html})
+
+
+
+""" 
+    Daily Meal Menu View
+    Auther: Rajendra
+"""
+
+# Add Daily Meal Menu
+def add_daily_meal_menu(request):
+    form = DailyMealMenuForm(data=request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('daily_meal_menu_list')
+    context = {
+        "form": form,
+        "title": "Add Daily Meal Menu",
+    }
+    return render(request, 'meal/form.html', context)
+
+
+# List of daily meal menu
+def daily_meal_menu_list(request):
+    context = {
+        'title': "Daily Meal Menu List",
+        "data": DailyMealMenu.objects.all().order_by('-date')
+    }
+    return render(request, 'meal/daily-meal-menu-list.html', context)
+
+
+def daily_meal_menu_delete(request, id):
+    instance = get_object_or_404(DailyMealMenu, id=id)
+    instance.delete()
+    return redirect('daily_meal_menu_list')
+
+
+def daily_meal_menu_edit(request, id):
+    instance = get_object_or_404(DailyMealMenu, id=id)
+    form = DailyMealMenuForm(instance=instance, data=request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return redirect('daily_meal_menu_list')
+    context = {
+        "title": "Update Daily Meal Menu",
+        "form": form,
+    }
+    return render(request, 'meal/form.html', context)

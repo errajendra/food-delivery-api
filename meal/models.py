@@ -62,7 +62,7 @@ class Meal(BaseModel):
     image = models.ImageField(upload_to="meals", blank=True)
     
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.eating_type})"
     
 
 
@@ -187,3 +187,15 @@ class MealRequestDaily(BaseModel):
 
     class Meta:
         ordering = ['-date']
+
+
+
+""" Menu Meal list.
+ select date and meal menu for that perticular date.
+"""
+class DailyMealMenu(BaseModel):
+    date = models.DateField(unique=True)
+    meals = models.ManyToManyField(Meal, related_name="daily_meal_menu")
+    
+    def __str__(self) -> str:
+        return str(self.date)

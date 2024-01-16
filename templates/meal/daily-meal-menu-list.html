@@ -1,0 +1,92 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <!-- Card header -->
+            <div class="card-header border-0">
+                <h3 class="mb-0">{{title}} </h3>
+                <a href="{% url "add_daily_meal_menu" %}" class="bg-success btn float-end">+Add</a>
+            </div>
+            {% csrf_token %}
+            <!-- Light table -->
+            <div class="table-responsive">
+                <table class="table table-hover" id="example1">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col" class="sort">SN</th>
+                        <th scope="col" class="sort">Date</th>
+                        <th scope="col" class="sort">Meals</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                    {% for menu in data %}
+                    <tr>
+                        <td class="budget">
+                            {{forloop.counter}}
+                        </td>
+                        <td>
+                            {{menu.date}}
+                        </td>
+                        <td>
+                            <table class="">
+                                <thead class="">
+                                    <tr>
+                                        <th scope="col" class="sort">SN</th>
+                                        <th scope="col" class="sort">Meal</th>
+                                        <th scope="col" class="sort">Eating Type</th>
+                                    </tr>
+                                </thead>
+                                {% for menu in menu.meals.all %}
+                                <tr>
+                                    <td>
+                                        {{forloop.counter}}
+                                    </td>
+                                    <td>
+                                        {{menu.name}}
+                                    </td>
+                                    <td>
+                                        {{menu.eating_type}}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </td>
+                        <td>
+                            <a href="{% url 'edit_daily_meal_menu' menu.id %}" ><i class="fa fa-edit " title="Update" ></i></a>
+                            <i class="fa fa-trash-alt" type="button" data-bs-toggle="modal" href="#deleteModal{{menu.id}}" style="background:transparent;"></i>
+                        </td>
+                    </tr>
+                    <!-- Modal -->
+                    
+                    <div class="modal fade" id="deleteModal{{menu.id}}" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel{{menu.id}}">Delete Plan</h5>
+
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure want to delete ?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <a class="btn btn-danger" href="{% url 'delete_daily_meal_menu' menu.id %}">Delete</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <!-- end Model -->
+                    {% endfor %}
+                </tbody>
+                </table>
+            </div>
+        </div>  
+    </div>
+</div>
+
+{% endblock content %}

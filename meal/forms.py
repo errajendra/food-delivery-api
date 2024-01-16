@@ -1,7 +1,7 @@
 from django import forms
 from .models import (
     Category, SubCategory, Meal, Meal,
-    Plan, MealRequestDaily
+    Plan, MealRequestDaily, DailyMealMenu
 )
 
 
@@ -90,3 +90,13 @@ class MealRequestForm(forms.ModelForm):
 
         }
 
+
+class DailyMealMenuForm(forms.ModelForm):
+    class Meta:
+        model = DailyMealMenu
+        fields = ['date', 'meals']
+        
+        widgets = {
+            'date': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
+            'meals': forms.SelectMultiple(attrs={'class':'form-control'}),
+        }

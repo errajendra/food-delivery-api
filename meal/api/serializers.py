@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from rest_framework.fields import empty
 from ..models import (
-    Category, SubCategory, Meal, Plan, PlanPurchase, MealRequestDaily
+    Category, SubCategory, Meal, Plan, PlanPurchase, MealRequestDaily,
+    DailyMealMenu,
 )
 from user.models import Address
 from user.api.serializers import TransactionSerializer
@@ -110,3 +111,15 @@ class MealRequestDailySerializer(serializers.ModelSerializer):
     class Meta:
         model = MealRequestDaily
         fields = "__all__"
+
+
+
+class DailyMealMenuSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DailyMealMenu
+        fields = ["date", "meals"]
+        
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['meals'] = MealSerializer(instance.meals.all(), many=True).data
+        return data

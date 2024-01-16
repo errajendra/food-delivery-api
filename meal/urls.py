@@ -38,7 +38,11 @@ urlpatterns = [
     
     path('get-delivery-person-list-popup/', get_delivery_person_list_popup, name='get_delivery_person_list_popup'),
     
-   
+    # Daily Meal Menu Urls
+    path('daily-meal-menu-list/', daily_meal_menu_list, name='daily_meal_menu_list'),
+    path('add-daily-meal-menu/', add_daily_meal_menu, name='add_daily_meal_menu'),
+    path('edit-daily-meal-menu/<int:id>/', daily_meal_menu_edit, name='edit_daily_meal_menu'),
+    path('delete-daily-meal-menu/<int:id>/', daily_meal_menu_delete, name='delete_daily_meal_menu'),
     
     
 ]

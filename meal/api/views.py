@@ -12,12 +12,14 @@ from razor_pay.utils import (
     RAZOR_PAY_API_KEY
 )
 from ..models import (
-    Category, SubCategory, Meal, Plan, PlanPurchase, Transaction, MealRequestDaily
+    Category, SubCategory, Meal, Plan, PlanPurchase, Transaction, MealRequestDaily,
+    DailyMealMenu,
 )
 from .serializers import (
     CategorySerilizer, SubCategorySerilizer, MealSerializer,
     PlanSerializer, PlanPurcheseSerializer, PlanPurcheseListSerializer,
-    DailyMealRequestSerializer, BannerSerializer, MealRequestDailySerializer
+    DailyMealRequestSerializer, BannerSerializer, MealRequestDailySerializer,
+    DailyMealMenuSerializer,
 )
 from django.db.utils import IntegrityError
 from rest_framework.views import APIView
@@ -331,3 +333,34 @@ class CancelMealRequest(viewsets.ModelViewSet):
                     "message": "You can cancel before 8 PM",})
         serializer = MealRequestDailySerializer(instance)
         return Response({"status":200, "message": "OK", "data": serializer.data})
+
+
+
+""" 
+Daily Meal Menu View
+"""
+class DailyMealMenuView(viewsets.ModelViewSet):
+    http_method_names = ('get',)
+    
+    def get_queryset(self):
+        start_date = datetime.strptime(
+            self.request.GET.get('start_date') or datetime.now().date().strftime(
+                "%Y-%m-%d"), "%Y-%m-%d")
+        end_date = datetime.strptime(
+            self.request.GET.get('end_date') or (
+                datetime.now() + timedelta(days=7)).strftime("%Y-%m-%d"), "%Y-%m-%d"
+            )
+        qs = DailyMealMenu.objects.select_related().filter(
+            date__gte = start_date, 
+            date__lte = end_date
+        )
+        return qs
+
+    def list(self, request, *args, **kwargs):
+        qs = self.get_queryset()
+        context = {
+            "status": status.HTTP_200_OK,
+            "message":"Successfully fetched daily meal menu.",
+            "data": DailyMealMenuSerializer(qs, many=True).data
+        }
+        return Response(context)

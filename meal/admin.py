@@ -35,3 +35,7 @@ class MealRequestDailyAdmin(admin.ModelAdmin):
     list_display = (
        'id', 'plan', 'meal', 'date', 'delivery_person', 'status'
     )
+    
+@admin.register(DailyMealMenu)
+class DailyMealMenuAdmin(admin.ModelAdmin):
+    list_display = ('date', 'id', 'created_at')
