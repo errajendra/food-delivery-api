@@ -84,7 +84,7 @@ class PlanPurcheseView(viewsets.ModelViewSet):
         serializer = PlanPurcheseSerializer(data=request.data, context={'request':request})
         if serializer.is_valid():
             plan = serializer.validated_data['plan']
-            address = serializer.validated_data['address']
+            # address = serializer.validated_data['address']
             
             tnx = Transaction.objects.create(
                 user = request.user,
@@ -95,7 +95,7 @@ class PlanPurcheseView(viewsets.ModelViewSet):
                 user = request.user,
                 transaction = tnx,
                 remaining_meals = plan.duration,
-                address = address.full_address
+                # address = address.full_address
             )
             # Create payment urls here
             merchant_data={
@@ -186,6 +186,7 @@ class PlanMeal(viewsets.ModelViewSet):
             
             plan_purchese_id = serializer.validated_data['plan_purchese_id']
             meal_plan_data = serializer.validated_data['meal_plan_data']
+            address = serializer.validated_data['address']
 
             # Fetch the PlanPurchase instance based on plan_purchese_id
             try:
@@ -208,7 +209,8 @@ class PlanMeal(viewsets.ModelViewSet):
                         requester=requester,
                         plan=plan_purchase,
                         meal=meal,
-                        date=datetime
+                        date=datetime,
+                        address = address.full_address
                     )
                     meal_request.save()
                     plan_purchase.remaining_meals = plan_purchase.remaining_meals - 1

@@ -24,7 +24,7 @@
                             <th scope="col" class="sort">Meal</th>
                             <th scope="col" class="sort">Date</th>
                             <th scope="col" class="sort">Status</th>
-                           
+                            <th scope="col" class="sort">Address</th>
                             <th scope="col" class="sort">Action</th>
                            
                         </tr>
@@ -34,7 +34,7 @@
                         <tr>
                             <td>{{ forloop.counter }}</td>
                             <td>{{ meal.requester }}</td>
-                            <td>{{ meal.plan.address }}</td>
+                            <td>{{ meal.plan }}</td>
                             <td>{{ meal.meal }}</td>
                             <td>{{ meal.date }}</td>
                             <td>
@@ -44,38 +44,38 @@
                                     <option value="Cancelled" {% if meal.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
                                 </select>
                             </td>
-                          
-                                <td>
-                                    {% if meal.delivery_person %}
-                                        <button class="btn btn-success assignDeliveryBoyBtn"
-                                            data-meal-id="{{ meal.id }}"
-                                            data-url="{% url 'get_delivery_person_list_popup' %}" data-bs-toggle="modal" href="#AssignDeliveryBoyModal">
-                                            {{ meal.delivery_person }}
-                                        </button>
-                                    {% else %}
-                                        <button class="btn btn-warning assignDeliveryBoyBtn"
-                                            data-meal-id="{{ meal.id }}"
-                                            data-url="{% url 'get_delivery_person_list_popup' %}"
-                                            data-bs-toggle="modal" href="#AssignDeliveryBoyModal">
-                                            Assign to Delivery Person
-                                        </button>
-                                    {% endif %}
-                                </td>
+                            <td> {{ meal.address }} </td>
+                            <td>
+                                {% if meal.delivery_person %}
+                                    <button class="btn btn-success assignDeliveryBoyBtn"
+                                        data-meal-id="{{ meal.id }}"
+                                        data-url="{% url 'get_delivery_person_list_popup' %}" data-bs-toggle="modal" href="#AssignDeliveryBoyModal">
+                                        {{ meal.delivery_person }}
+                                    </button>
+                                {% else %}
+                                    <button class="btn btn-warning assignDeliveryBoyBtn"
+                                        data-meal-id="{{ meal.id }}"
+                                        data-url="{% url 'get_delivery_person_list_popup' %}"
+                                        data-bs-toggle="modal" href="#AssignDeliveryBoyModal">
+                                        Assign to Delivery Person
+                                    </button>
+                                {% endif %}
+                            </td>
                            
                         </tr>
                         <!-- Modal -->
-<div class="modal fade" id="AssignDeliveryBoyModal" tabindex="-1" aria-labelledby="exampleModalToggleLabel2" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel2">Assign Delivery Person</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body"></div>
-        </div>
-    </div>
-</div>
-<!-- end Model -->
+                        <div class="modal fade" id="AssignDeliveryBoyModal" tabindex="-1" aria-labelledby="exampleModalToggleLabel2" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel2">Assign Delivery Person</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end Model -->
                         {% endfor %}
                     </tbody>
                 </table>

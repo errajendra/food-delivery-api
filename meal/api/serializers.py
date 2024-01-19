@@ -67,15 +67,7 @@ class PlanSerializer(serializers.ModelSerializer):
 class PlanPurcheseSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlanPurchase
-        fields = ('plan', 'address')
-    
-    def validate_address(self, data):
-        if not bool(data):
-            raise serializers.ValidationError("Address is required.")
-        elif Address.objects.filter(id=data).exists():
-            return Address.objects.filter(id=int(data)).first()
-        else:
-            raise serializers.ValidationError('Invalid address id.')
+        fields = ('plan',)
 
 
 
@@ -95,9 +87,19 @@ class MealPlanDataSerializer(serializers.Serializer):
 
 
 
+#  the input data using the serializer
 class DailyMealRequestSerializer(serializers.Serializer):
     plan_purchese_id = serializers.IntegerField()
-    meal_plan_data = MealPlanDataSerializer(many=True)        
+    meal_plan_data = MealPlanDataSerializer(many=True)
+    address = serializers.IntegerField()
+    
+    def validate_address(self, data):
+        if not bool(data):
+            raise serializers.ValidationError("Address is required.")
+        elif Address.objects.filter(id=data).exists():
+            return Address.objects.get(id=int(data))
+        else:
+            raise serializers.ValidationError('Invalid address id.')       
     
 
 

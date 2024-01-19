@@ -131,6 +131,7 @@ class PlanPurchase(BaseModel):
     )
     address = models.CharField(
         max_length=255, verbose_name="User Address to Deliver Meal",
+        null = True, blank = True
     )
 
     def __str__(self):
@@ -162,6 +163,10 @@ class MealRequestDaily(BaseModel):
         on_delete=models.CASCADE,
     )
     date = models.DateTimeField(default=timezone.now)
+    address = models.CharField(
+        max_length=255, verbose_name="User Address to Deliver Meal",
+        null = True, blank = True
+    )
     delivery_person = models.ForeignKey(
         User,
         related_name='delivery',
