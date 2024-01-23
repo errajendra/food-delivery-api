@@ -72,6 +72,17 @@ class PlanListingView(viewsets.ModelViewSet):
     http_method_names = ('get',)
     queryset = Plan.objects.all().order_by('-created_at')
     serializer_class = PlanSerializer
+    
+    def list(self, request, *args, **kwargs):
+        data = super().list(request, *args, **kwargs)
+        plan_purchese = PlanPurchase.objects.filter(
+            user=request.user, remaining_meals__gte=1, status=True
+        ).exists()
+        if plan_purchese:
+            data.data['have_any_purchese_plan'] = True
+        else:
+            data.data['have_any_purchese_plan'] = False
+        return data
 
 
 
@@ -195,6 +206,7 @@ class PlanMeal(viewsets.ModelViewSet):
                 raise PlanPurchaseDoesNotExist()
             if len(meal_plan_data) > plan_purchase.remaining_meals:
                 raise NoRemainMealsAvlSubscription()
+            total_meal_comsumed = 0
             for meal_data in meal_plan_data:
                 datetime = meal_data['datetime']
                 meal_id = meal_data['meal']
@@ -215,10 +227,11 @@ class PlanMeal(viewsets.ModelViewSet):
                     meal_request.save()
                     plan_purchase.remaining_meals = plan_purchase.remaining_meals - 1
                     plan_purchase.save()
+                    total_meal_comsumed += 1
                     created_meal_requests.append({
                         "requester": meal_request.requester.id,
                         "plan": meal_request.plan.id,
-                        "meal": meal_request.meal.id,
+                        "meal": MealSerializer(Meal.objects.get(id=meal_request.meal.id)).data,
                         "date": meal_request.date,
                         "status": meal_request.status,
                     })
@@ -248,6 +261,8 @@ class PlanMeal(viewsets.ModelViewSet):
                 "message": "Meal Requests submitted successfully.",
                 "data": {
                     "meal_requests": created_meal_requests,
+                    "remaining_meals": plan_purchase.remaining_meals,
+                    "total_meal_comsumed": total_meal_comsumed
                 }
             },
             status=status.HTTP_200_OK
