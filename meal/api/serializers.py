@@ -52,8 +52,8 @@ class PlanSerializer(serializers.ModelSerializer):
             user = self.context['request'].user
             plan_purchese = PlanPurchase.objects.filter(
                 plan=instance, user=user, remaining_meals__gte=1, status=True
-            ).exists()
-            if plan_purchese:
+            )
+            if plan_purchese.exists():
                 data['is_purchased'] = True
                 data['remaining_meals'] = plan_purchese.first().remaining_meals
             else:
