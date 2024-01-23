@@ -55,6 +55,7 @@ class PlanSerializer(serializers.ModelSerializer):
             ).exists()
             if plan_purchese:
                 data['is_purchased'] = True
+                data['remaining_meals'] = plan_purchese.first().remaining_meals
             else:
                 data['is_purchased'] = False
         except:
