@@ -340,7 +340,7 @@ class CancelMealRequest(viewsets.ModelViewSet):
             instance.status = "Cancelled"
             instance.save()
             plan = instance.plan
-            plan = plan.remaining_meals = plan.remaining_meals + 1
+            plan.remaining_meals = plan.remaining_meals + 1
             plan.save()
         else:
             return Response(
