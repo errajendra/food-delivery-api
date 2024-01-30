@@ -41,7 +41,7 @@ Meal/Food/Lunch/Denner Model
 class Meal(BaseModel):
     name = models.CharField(max_length=100, verbose_name="Meal Name")
     description = models.CharField(max_length=250)
-    price = models.FloatField(verbose_name="Starting Price/Day")
+    price = models.FloatField(verbose_name="Starting Price/Day", default=0.0)
     eating_type = models.CharField(
         verbose_name="Eating Type",
         choices=[

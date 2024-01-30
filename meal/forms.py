@@ -36,7 +36,7 @@ class SubCategoryForm(forms.ModelForm):
 class MealForm(forms.ModelForm):
     class Meta:
         model = Meal
-        fields = "__all__"
+        fields = ("name", 'description', 'eating_type', 'image')
         
         widgets = {
             'name': forms.TextInput(attrs={'class':'form-control'}),

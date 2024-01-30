@@ -22,14 +22,14 @@
                         <th scope="col" class="sort">Transaction</th>
                         <th scope="col" class="sort">Reamining Meal</th>
                         <th scope="col" class="sort">Status</th>
-                        <th scope="col" class="sort">Address</th>
+                        {% comment %} <th scope="col" class="sort">Address</th> {% endcomment %}
                         <th scope="col">Date</th>
                     </tr>
                 </thead>
                 <tbody class="list">
                     {% for plan in plan_purchase %}
                     <tr>
-                        <td class="budget">
+                        <td>
                             {{forloop.counter}}
                         </td>
                         <td>
@@ -42,17 +42,14 @@
                             {{plan.transaction}}
                         </td>
                         <td>
-                            {{plan.remaining_meals}}
+                            {{plan.remaining_meals}}/{{plan.plan.duration}}
                         </td>
                         <td>
                             {% if plan.status %}
-                                Active
-                             {% else %}
+                            Active
+                            {% else %}
                             InActive
                             {% endif %}
-                            </td>
-                        <td>
-                            {{plan.address}}
                         </td>
                         <td>
                           {{plan.created_at}}

@@ -19,7 +19,7 @@
                         <th scope="col" class="sort" data-sort="name">SN</th>
                         <th scope="col" class="sort" data-sort="name">User</th>
                         <th scope="col" class="sort" data-sort="budget">Amount</th>
-                        <th scope="col">CC Avenue Tracking Id</th>
+                        <th scope="col">Tracking Id</th>
                         <th scope="col">Status</th>
                     </tr>
                 </thead>
@@ -30,6 +30,7 @@
                             {{forloop.counter}}
                         </td>
                         <td>
+                            {{tran.user.name}}
                             {{tran.user}}
                         </td>
                         <td>
