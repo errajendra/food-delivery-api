@@ -320,6 +320,7 @@ class RequestedPlanMealHistory(viewsets.ModelViewSet):
 class CancelMealRequest(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     http_method_names = ("put",)
+    serializer_class = MealRequestDailySerializer
     
     def get_queryset(self):
         return MealRequestDaily.objects.filter(requester=self.request.user)

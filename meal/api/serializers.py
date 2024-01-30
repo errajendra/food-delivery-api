@@ -114,6 +114,11 @@ class MealRequestDailySerializer(serializers.ModelSerializer):
     class Meta:
         model = MealRequestDaily
         fields = "__all__"
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['meal'] = MealSerializer(instance.meal).data
+        return data
 
 
 
