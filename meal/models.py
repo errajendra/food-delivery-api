@@ -89,6 +89,8 @@ class Plan(BaseModel):
         max_length=50)
     items = RichTextField(null=True, blank=True)
     benifits = RichTextField(null=True, blank=True)
+    validity = models.PositiveIntegerField(
+        verbose_name="Validity in Days", default=180)
     
     def __str__(self):
         return self.name
@@ -113,7 +115,7 @@ class PlanPurchase(BaseModel):
         related_name='userplans',
         on_delete=models.CASCADE
     )
-    transaction = models.OneToOneField(
+    transaction = models.ForeignKey(
         Transaction,
         on_delete=models.CASCADE
     )

@@ -65,10 +65,10 @@ class PlanSerializer(serializers.ModelSerializer):
 
 
 """ Plan Purchese Serilizer. """
-class PlanPurcheseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PlanPurchase
-        fields = ('plan',)
+# class PlanPurcheseSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = PlanPurchase
+#         fields = ('plan',)
 
 
 

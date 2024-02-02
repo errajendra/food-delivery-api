@@ -38,10 +38,9 @@ def verify_payment(request):
         tnx.razorpay_payment_id = razorpay_payment_id
         tnx.razorpay_signature = razorpay_signature
         tnx.save()
-        plan = PlanPurchase.objects.get(transaction=tnx)
-        plan.status = True
-        plan.save()
-        plan_data = PlanPurcheseListSerializer(instance=plan).data
+        plan = PlanPurchase.objects.filter(transaction=tnx)
+        plan.update(status=True)
+        plan_data = PlanPurcheseListSerializer(plan, many=True).data
         return Response(
             data={
                 'status': 200,

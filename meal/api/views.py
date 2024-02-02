@@ -1,10 +1,9 @@
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.shortcuts import get_object_or_404
-from cc_avenue.utils import *
-from pay_ccavenue import CCAvenue
+import json
 from datetime import datetime, timedelta
 from pytz import timezone
 from razor_pay.utils import (
@@ -17,7 +16,7 @@ from ..models import (
 )
 from .serializers import (
     CategorySerilizer, SubCategorySerilizer, MealSerializer,
-    PlanSerializer, PlanPurcheseSerializer, PlanPurcheseListSerializer,
+    PlanSerializer, PlanPurcheseListSerializer,
     DailyMealRequestSerializer, BannerSerializer, MealRequestDailySerializer,
     DailyMealMenuSerializer,
 )
@@ -92,27 +91,32 @@ class PlanPurcheseView(viewsets.ModelViewSet):
     http_method_names = ('post', 'get')
     
     def create(self, request, *args, **kwargs):
-        serializer = PlanPurcheseSerializer(data=request.data, context={'request':request})
-        if serializer.is_valid():
-            plan = serializer.validated_data['plan']
-            # address = serializer.validated_data['address']
-            
+        data = request.data
+        ids = json.loads(data['plans'])
+        plans = Plan.objects.filter(id__in=ids)
+        if plans:
+            price = plans.aggregate(Sum('price'))['price__sum']
+            if not price or price < 1:
+                raise APIException({'error': ("No plans selected")})
             tnx = Transaction.objects.create(
                 user = request.user,
-                amount = plan.price
+                amount = price
             )
-            plan_purchage = PlanPurchase.objects.create(
-                plan = plan,
-                user = request.user,
-                transaction = tnx,
-                remaining_meals = plan.duration,
-                # address = address.full_address
-            )
+            plan_purchage = []
+            for plan in plans:
+                plan_purchage.append(PlanPurchase(
+                    plan = plan,
+                    user = request.user,
+                    transaction = tnx,
+                    remaining_meals = plan.duration,
+                    # address = address.full_address
+                ))
+            PlanPurchase.objects.bulk_create(plan_purchage, batch_size=3)
             # Create payment urls here
             merchant_data={
                 "currency" : "INR" ,
                 'amount': tnx.amount,
-                'receipt': str(plan_purchage.pk),
+                'receipt': str(data['plans']),
             }
             payment = razorpay_client.order.create(merchant_data)
             tnx.tracking_id = payment['id']
@@ -134,7 +138,7 @@ class PlanPurcheseView(viewsets.ModelViewSet):
             data={
                 "status": status.HTTP_400_BAD_REQUEST,
                 "message": "BAD REQUEST",
-                "errors": serializer.errors
+                "errors": """Pass valid plans ids in "{'plans':[1,2]}" formate."""
             }
         )       
 

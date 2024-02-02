@@ -127,6 +127,13 @@ class Address(BaseModel):
         on_delete=models.CASCADE,
         related_name="address"
     )
+    type = models.CharField(
+        max_length=12, choices=[
+            ("Home", "Home"),
+            ("Office", "Office"),
+        ],
+        default = "Home"
+    )
     house_number = models.CharField(
         verbose_name="House/Street Number",
         default="",

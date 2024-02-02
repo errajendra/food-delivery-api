@@ -20,15 +20,19 @@ class MealAdmin(admin.ModelAdmin):
 class SubCategoryAdmin(admin.ModelAdmin):
     list_display = (
         'name', 'price', 'duration',
-        'eating_type', 'tag'
+        'eating_type', 'tag', 'validity'
     )
     list_editable = ('tag',)
 
 @admin.register(PlanPurchase)
 class MealAdmin(admin.ModelAdmin):
+    def max_meals(self, instance):
+        return instance.plan.duration
+    
     list_display = (
-        'user', 'plan', 'remaining_meals', 'transaction', 'status', 'address'
+        'user', 'plan', 'remaining_meals', 'max_meals', 'transaction', 'status', 'address'
     )
+    list_editable = ('remaining_meals', 'status', 'address')
 
 @admin.register(MealRequestDaily)
 class MealRequestDailyAdmin(admin.ModelAdmin):
