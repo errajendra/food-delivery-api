@@ -1,7 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from .forms import (
-    CategoryForm, Category,
-    SubCategory, SubCategoryForm,
     Meal, MealForm,
     Plan, PlanForm, MealRequestForm,
     DailyMealMenuForm
@@ -10,87 +8,6 @@ from .models import *
 from user.models import *
 from django.template.loader import render_to_string
 from django.http import JsonResponse
-
-
-
-"""
-    Category View Functions
-"""
-def category_add(request):
-    # Add Category Method
-    form = CategoryForm(data=request.POST or None)
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            return redirect('category_list')
-    context = {
-        "form": form,
-        "title": "Add Category Form",
-    }
-    return render(request, 'meal/form.html', context)
-
-
-def category_list(request):
-    # List Categories Method
-    categories = Category.objects.all().order_by("name")
-    context = {"categories": categories, 'title': "Categories"}
-    return render(request, 'meal/categories.html', context)
-
-
-def category_edit(request, id):
-    # Edit Category Method
-    instance = get_object_or_404(Category, id=id)
-    form = CategoryForm(instance=instance, data=request.POST or None)
-    if request.method == "POST":
-        if form.is_valid():
-            form.save()
-            return redirect('category_list')
-    context = {
-        "title": "Update Category",
-        "form": form,
-    }
-    return render(request, 'meal/form.html', context)
-
-
-
-"""
-    Sub Category View Functions
-"""
-def subcategory_add(request):
-    # Add Category Method
-    form = SubCategoryForm(data=request.POST or None)
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            return redirect('subcategory_list')
-    context = {
-        "form": form,
-        "title": "Add Sub Category Form",
-    }
-    return render(request, 'meal/form.html', context)
-
-
-def subcategory_list(request):
-    # List Categories Method
-    categories = SubCategory.objects.select_related().all().order_by("name")
-    context = {"categories": categories, 'title': "Sub Categories"}
-    return render(request, 'meal/sub-categories.html', context)
-
-
-def subcategory_edit(request, id):
-    # Edit Category Method
-    instance = get_object_or_404(SubCategory, id=id)
-    form = SubCategoryForm(instance=instance, data=request.POST or None)
-    if request.method == "POST":
-        if form.is_valid():
-            form.save()
-            return redirect('subcategory_list')
-    context = {
-        "title": "Update Sub Category",
-        "form": form,
-    }
-    return render(request, 'meal/form.html', context)
-
 
 
 """

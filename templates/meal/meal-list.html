@@ -17,6 +17,7 @@
                 <thead class="thead-light">
                     <tr>
                         <th scope="col" class="sort" data-sort="name">SN</th>
+                        <th scope="col" class="sort" data-sort="name">Plan</th>
                         <th scope="col" class="sort" data-sort="name">Name</th>
                         <th scope="col" class="sort" data-sort="name">Eating Type</th>
                         <th scope="col" class="sort" data-sort="budget">Description</th>
@@ -28,6 +29,9 @@
                     <tr>
                         <td class="budget">
                             {{forloop.counter}}
+                        </td>
+                        <td>
+                            {{meal.plan}}
                         </td>
                         <td>
                             {{meal.name}}

@@ -11,11 +11,11 @@ from razor_pay.utils import (
     RAZOR_PAY_API_KEY
 )
 from ..models import (
-    Category, SubCategory, Meal, Plan, PlanPurchase, Transaction, MealRequestDaily,
+    Meal, Plan, PlanPurchase, Transaction, MealRequestDaily,
     DailyMealMenu,
 )
 from .serializers import (
-    CategorySerilizer, SubCategorySerilizer, MealSerializer,
+    MealSerializer,
     PlanSerializer, PlanPurcheseListSerializer,
     DailyMealRequestSerializer, BannerSerializer, MealRequestDailySerializer,
     DailyMealMenuSerializer,
@@ -23,27 +23,6 @@ from .serializers import (
 from django.db.utils import IntegrityError
 from rest_framework.views import APIView
 from .exceptions import *
-
-
-""" Category Listing View."""
-class CategoryView(viewsets.ModelViewSet):
-    http_method_names = ('get',)
-    queryset = Category.objects.all().order_by('name')
-    serializer_class = CategorySerilizer
-
-
-
-""" Sub Category Listing View."""
-class SubCategoryView(viewsets.ModelViewSet):
-    http_method_names = ('get',)
-    serializer_class = CategorySerilizer
-    
-    def get_queryset(self):
-        data = self.request.data
-        categoryId = data['category'] if 'category' in data else None
-        if categoryId:
-            return SubCategory.objects.filter(category__id=categoryId).order_by('name')
-        return SubCategory.objects.all()
 
 
 
@@ -92,55 +71,67 @@ class PlanPurcheseView(viewsets.ModelViewSet):
     
     def create(self, request, *args, **kwargs):
         data = request.data
-        ids = json.loads(data['plans'])
-        plans = Plan.objects.filter(id__in=ids)
-        if plans:
-            price = plans.aggregate(Sum('price'))['price__sum']
-            if not price or price < 1:
-                raise APIException({'error': ("No plans selected")})
+        try:
+            details = data['details']
+            price = 0
             tnx = Transaction.objects.create(
-                user = request.user,
-                amount = price
+                user = request.user
             )
             plan_purchage = []
-            for plan in plans:
+            plan_ids = []
+            for i in details:
+                plan = get_object_or_404(Plan, id=i['plan'])
+                plan_ids.append(i['plan'])
+                meals = i['meals']
+                price += plan.price * meals
                 plan_purchage.append(PlanPurchase(
                     plan = plan,
                     user = request.user,
                     transaction = tnx,
-                    remaining_meals = plan.duration,
-                    # address = address.full_address
+                    remaining_meals = meals,
+                    total_meals = meals
                 ))
-            PlanPurchase.objects.bulk_create(plan_purchage, batch_size=3)
-            # Create payment urls here
-            merchant_data={
-                "currency" : "INR" ,
-                'amount': tnx.amount,
-                'receipt': str(data['plans']),
-            }
-            payment = razorpay_client.order.create(merchant_data)
-            tnx.tracking_id = payment['id']
-            tnx.save()
-            return Response(
-                data={
-                    "status": status.HTTP_200_OK,
-                    "message": "Complete your payment.",
-                    "data": {
-                        "order_detail": payment,
-                        "murchent_detail": {
-                            "key_id": RAZOR_PAY_API_KEY
+            if price > 1 and plan_purchage:
+                tnx.amount = price
+                PlanPurchase.objects.bulk_create(plan_purchage, batch_size=3)
+                # Create payment urls here
+                merchant_data = {
+                    "currency" : "INR" ,
+                    'amount': tnx.amount * 100,
+                    'receipt': str(plan_ids),
+                }
+                payment = razorpay_client.order.create(merchant_data)
+                tnx.tracking_id = payment['id']
+                tnx.save()
+                return Response(
+                    data={
+                        "status": status.HTTP_200_OK,
+                        "message": "Complete your payment.",
+                        "data": {
+                            "order_detail": payment,
+                            "murchent_detail": {
+                                "key_id": RAZOR_PAY_API_KEY
+                            }
                         }
                     }
+                )
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={
+                    "status": status.HTTP_400_BAD_REQUEST,
+                    "message": "BAD REQUEST",
+                    "errors": "Please Select valid Meal Plans."
                 }
             )
-        return Response(
-            status=status.HTTP_400_BAD_REQUEST,
-            data={
-                "status": status.HTTP_400_BAD_REQUEST,
-                "message": "BAD REQUEST",
-                "errors": """Pass valid plans ids in "{'plans':[1,2]}" formate."""
-            }
-        )       
+        except Exception as e:
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={
+                    "status": status.HTTP_400_BAD_REQUEST,
+                    "message": "BAD REQUEST",
+                    "errors": f"Error - {e}"
+                }
+            )       
 
     def list(self, request, *args, **kwargs):
         self.serializer_class = PlanPurcheseListSerializer

@@ -3,67 +3,9 @@ from django.utils import timezone
 from ckeditor.fields import RichTextField
 from user.models import (
     BaseModel, CustomUser as User,
-    Transaction,
+    Transaction, _
 )
 
-
-
-""" Meal Categories Model."""
-class Category(models.Model):
-    name = models.CharField(
-        max_length=100,
-        help_text="""
-            Meal Category Like- Cuisine, Portion Size etc
-        """
-    )
-    description = models.TextField()
-    
-    def __str__(self) -> str:
-        return self.name
-
-
-class SubCategory(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    name = models.CharField(
-        max_length=100,
-        help_text="Sub Category of Cateory"
-    )
-    description = models.TextField()
-
-    
-    def __str__(self) -> str:
-        return self.category.name+" > "+self.name
-
-
-"""
-Meal/Food/Lunch/Denner Model
-"""
-class Meal(BaseModel):
-    name = models.CharField(max_length=100, verbose_name="Meal Name")
-    description = models.CharField(max_length=250)
-    price = models.FloatField(verbose_name="Starting Price/Day", default=0.0)
-    eating_type = models.CharField(
-        verbose_name="Eating Type",
-        choices=[
-            ('Breakfast', 'Breakfast'), 
-            ('Lunch', 'Lunch'),
-            ('Dinner', 'Dinner')
-        ],
-        default='Lunch',
-        max_length=10)
-    # category = models.ForeignKey(
-    #     Category, on_delete=models.SET_NULL,
-    #     null=True, blank=True
-    # )
-    # sub_category = models.ForeignKey(
-    #     SubCategory, on_delete=models.SET_NULL,
-    #     null=True, blank=True
-    # )
-    image = models.ImageField(upload_to="meals", blank=True)
-    
-    def __str__(self):
-        return f"{self.name} ({self.eating_type})"
-    
 
 
 """
@@ -73,8 +15,8 @@ class Plan(BaseModel):
     name = models.CharField(
         verbose_name="Plan Name", max_length=100
     )
-    price = models.FloatField(verbose_name="Plan Price")
-    duration = models.PositiveIntegerField(verbose_name="Number of Meals")
+    price = models.FloatField(verbose_name="Price/Per Meal")
+    # duration = models.PositiveIntegerField(verbose_name="Number of Meals")
     # saving_per_day = models.FloatField("Per Day Saving Price", default=0)
     tag = models.CharField(
         verbose_name="Select- Recommended/Most Popular",
@@ -83,21 +25,16 @@ class Plan(BaseModel):
         default="Most Popular"
     )
     eating_type = models.CharField(
-        verbose_name="Eating Type",
-       
-        default='Lunch',
-        max_length=50)
+        verbose_name = "Eating Type",
+        default = 'Lunch',
+        max_length = 50)
     items = RichTextField(null=True, blank=True)
     benifits = RichTextField(null=True, blank=True)
     validity = models.PositiveIntegerField(
-        verbose_name="Validity in Days", default=180)
+        verbose_name = "Validity in Days", default=180)
     
     def __str__(self):
         return self.name
-    
-    @property
-    def price_per_meal(self):
-        return round(self.price / self.duration, 2)
 
 
 
@@ -107,29 +44,33 @@ Plan Purchage Detail Model
 class PlanPurchase(BaseModel):
     plan = models.ForeignKey(
         Plan,
-        related_name='planpurchases',
-        on_delete=models.CASCADE
+        related_name = 'planpurchases',
+        on_delete = models.CASCADE
     )
     user = models.ForeignKey(
         User,
-        related_name='userplans',
-        on_delete=models.CASCADE
+        related_name = 'userplans',
+        on_delete = models.CASCADE
     )
     transaction = models.ForeignKey(
         Transaction,
         on_delete=models.CASCADE
     )
+    total_meals = models.PositiveIntegerField(
+        verbose_name = "Total Number of Meals Piurchese",
+        help_text = "It will set automaticaly to purchase plan meal number."
+    )
     remaining_meals = models.PositiveIntegerField(
-        verbose_name="Number of Meals Remaining",
-        help_text="It will set automaticaly to purchase plan meal number."
+        verbose_name = "Number of Meals Remaining",
+        help_text = "It will update automaticaly when order is created or canceled."
     )
     status = models.BooleanField(
-        default=False,
-        help_text="""
-            Plan Purchese Status,
-            Make it True for Successfuly Purchese and
-            False if not purchesd yet.
-        """
+        default = False,
+        help_text =_(
+            "Plan Purchese Status"
+            "Make it True for Successfuly Purchese and"
+            "False if not purchesd yet."
+        )
     )
     address = models.CharField(
         max_length=255, verbose_name="User Address to Deliver Meal",
@@ -139,6 +80,29 @@ class PlanPurchase(BaseModel):
     def __str__(self):
         return f"{self.plan.name}"
 
+
+
+"""
+Meal/Food/Lunch/Denner Model
+"""
+class Meal(BaseModel):
+    name = models.CharField(max_length=100, verbose_name="Meal Name or Eating Type")
+    plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
+    description = models.CharField(max_length=250)
+    eating_type = models.CharField(
+        verbose_name="Eating Type",
+        choices=[
+            ('Breakfast', 'Breakfast'), 
+            ('Lunch', 'Lunch'),
+            ('Dinner', 'Dinner')
+        ],
+        default='Lunch',
+        max_length=10)
+    image = models.ImageField(upload_to="meals", blank=True)
+    
+    def __str__(self):
+        return f"{self.name} ({self.eating_type})"
+    
 
 
 """"

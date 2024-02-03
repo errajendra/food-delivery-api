@@ -1,27 +1,11 @@
 from rest_framework import serializers
 from rest_framework.fields import empty
 from ..models import (
-    Category, SubCategory, Meal, Plan, PlanPurchase, MealRequestDaily,
+    Meal, Plan, PlanPurchase, MealRequestDaily,
     DailyMealMenu,
 )
 from user.models import Address
 from user.api.serializers import TransactionSerializer
-
-
-
-""" Category Listing Serializer. """
-class CategorySerilizer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = ('id', 'name', 'description')
-
-
-
-""" Sub Category Listing Serializer. """
-class SubCategorySerilizer(serializers.ModelSerializer):
-    class Meta:
-        model = SubCategory
-        fields = ('id', 'category', 'name', 'description')
 
 
 
@@ -32,7 +16,7 @@ class MealSerializer(serializers.ModelSerializer):
     class Meta:
         model = Meal
         fields = (
-            'id', 'name', 'description', 'price', 'eating_type', 'image'
+            'id', 'name', 'description', 'eating_type', 'image'
         )
 
 
@@ -42,12 +26,11 @@ class PlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
         fields = (
-            'id', 'name', 'price', 'duration', 'tag', 'eating_type'
+            'id', 'name', 'price', 'tag', 'eating_type', 'validity'
         )
     
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['price_per_meal'] = instance.price_per_meal
         try:
             user = self.context['request'].user
             plan_purchese = PlanPurchase.objects.filter(
@@ -61,14 +44,6 @@ class PlanSerializer(serializers.ModelSerializer):
         except:
             pass
         return data
-
-
-
-""" Plan Purchese Serilizer. """
-# class PlanPurcheseSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = PlanPurchase
-#         fields = ('plan',)
 
 
 

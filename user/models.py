@@ -198,7 +198,7 @@ class Transaction(BaseModel):
     ]
     
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    amount = models.FloatField()
+    amount = models.FloatField(default=0.0)
     tracking_id = models.CharField(
         verbose_name="RazorPay Order ID",
         max_length=100, null=True, blank=True
