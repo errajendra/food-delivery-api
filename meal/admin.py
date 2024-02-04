@@ -2,6 +2,13 @@ from django.contrib import admin
 from .models import *
 
 
+@admin.register(MealType)
+class MealTypeAdmin(admin.ModelAdmin):
+    list_display = (
+        'name', 'description'
+    )
+
+
 @admin.register(Meal)
 class MealAdmin(admin.ModelAdmin):
     list_display = (

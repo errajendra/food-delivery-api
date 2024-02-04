@@ -2,10 +2,32 @@ from rest_framework import serializers
 from rest_framework.fields import empty
 from ..models import (
     Meal, Plan, PlanPurchase, MealRequestDaily,
-    DailyMealMenu,
+    DailyMealMenu, MealType,
 )
 from user.models import Address
 from user.api.serializers import TransactionSerializer
+
+
+
+""" Meal Listing and Detail Serializer"""
+class MealTypeSerilizer(serializers.ModelSerializer):
+    class Meta:
+        model = MealType
+        fields = (
+            'id', 'name', 'description'
+        )
+
+
+
+""" Meal Listing and Detail Serializer"""
+class MealSerializer(serializers.ModelSerializer):
+    # category = CategorySerilizer()
+    # sub_category = SubCategorySerilizer()
+    class Meta:
+        model = Meal
+        fields = (
+            'id', 'name', 'description', 'eating_type', 'image'
+        )
 
 
 

@@ -8,15 +8,30 @@ from user.models import (
 
 
 
+""" Meal Type Model."""
+class MealType(models.Model):
+    name = models.CharField(
+        max_length=100,
+        help_text="""
+            Meal Type like: Regular, Jumbo
+        """
+    )
+    description = models.TextField()
+    
+    def __str__(self) -> str:
+        return self.name
+
+
+
 """
 Plan Detail Model
 """
 class Plan(BaseModel):
-    name = models.CharField(
-        verbose_name="Plan Name", max_length=100
+    name = models.ForeignKey(MealType, on_delete=models.CASCADE,
+        verbose_name="Plan Name", help_text = "Select Plan Type"
     )
-    price = models.FloatField(verbose_name="Price/Per Meal")
-    # duration = models.PositiveIntegerField(verbose_name="Number of Meals")
+    price = models.FloatField(verbose_name="Price of Plan")
+    number_of_meals = models.PositiveIntegerField(verbose_name="Number of Meals")
     # saving_per_day = models.FloatField("Per Day Saving Price", default=0)
     tag = models.CharField(
         verbose_name="Select- Recommended/Most Popular",
@@ -34,7 +49,11 @@ class Plan(BaseModel):
         verbose_name = "Validity in Days", default=180)
     
     def __str__(self):
-        return self.name
+        return str(self.id)
+    
+    @property
+    def price_per_meal(self):
+        return round(float(self.price)/self.number_of_meals, 2)
 
 
 
