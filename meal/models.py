@@ -91,10 +91,10 @@ class PlanPurchase(BaseModel):
             "False if not purchesd yet."
         )
     )
-    address = models.CharField(
-        max_length=255, verbose_name="User Address to Deliver Meal",
-        null = True, blank = True
-    )
+    # address = models.CharField(
+    #     max_length=255, verbose_name="User Address to Deliver Meal",
+    #     null = True, blank = True
+    # )
 
     def __str__(self):
         return f"{self.plan.name}"

@@ -16,6 +16,30 @@ class MealTypeSerilizer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'description'
         )
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        plans = Plan.objects.filter(name=instance).order_by('-number_of_meals')
+        if plans:
+            plan = plans[0]
+            data['price_per_meal'] = plan.price_per_meal
+            data['number_of_meals'] = plan.number_of_meals
+            data['total_price'] = plan.number_of_meals * plan.price_per_meal
+        else:
+            data['price_per_meal'] = ""
+            data['number_of_meals'] = ""
+            data['total_price'] = " "
+        return data
+
+
+
+""" Meal Listing and Detail Serializer"""
+class MealTypePurcheseSerilizer(MealTypeSerilizer):
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        plans_purches = PlanPurchase.objects.filter(plan__name=instance, status=True)
+        data['plans_purches'] = PlanPurcheseListSerializer(plans_purches, many=True).data
+        return data
 
 
 
@@ -45,15 +69,17 @@ class MealSerializer(serializers.ModelSerializer):
 
 """ Plan Listing Serializer."""
 class PlanSerializer(serializers.ModelSerializer):
+    name = MealTypeSerilizer()
     class Meta:
         model = Plan
         fields = (
-            'id', 'name', 'price', 'tag', 'eating_type', 'validity'
+            'id', 'name', 'number_of_meals', 'price', 'tag', 'eating_type', 'validity'
         )
     
     def to_representation(self, instance):
         data = super().to_representation(instance)
         try:
+            data['price_per_meal'] = instance.price_per_meal
             user = self.context['request'].user
             plan_purchese = PlanPurchase.objects.filter(
                 plan=instance, user=user, remaining_meals__gte=1, status=True

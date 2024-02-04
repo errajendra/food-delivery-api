@@ -18,7 +18,7 @@ from .serializers import (
     MealTypeSerilizer, MealSerializer,
     PlanSerializer, PlanPurcheseListSerializer,
     DailyMealRequestSerializer, BannerSerializer, MealRequestDailySerializer,
-    DailyMealMenuSerializer,
+    DailyMealMenuSerializer, MealTypePurcheseSerilizer,
 )
 from django.db.utils import IntegrityError
 from rest_framework.views import APIView
@@ -45,17 +45,17 @@ class MealTypeView(viewsets.ModelViewSet):
             "status": status.HTTP_200_OK,
             "message": "OK",
             "results": {
-                "purchese_types": MealTypeSerilizer(plan_type_purchese, many= True).data,
+                "purchese_types": MealTypePurcheseSerilizer(plan_type_purchese, many= True).data,
                 "other_meal_types": MealTypeSerilizer(other_plan_types, many= True).data
             }
         }
-        data = super().list(request, *args, **kwargs)
+        # data = super().list(request, *args, **kwargs)
         plan_purchesed = plan_type_purchese.exists()
         if plan_purchesed:
-            data.data['have_any_purchese_plan'] = True
+            data['have_any_purchese_plan'] = True
         else:
-            data.data['have_any_purchese_plan'] = False
-        return data
+            data['have_any_purchese_plan'] = False
+        return Response(data)
 
 
 

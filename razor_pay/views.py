@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from .utils import client
 from user.models import Transaction
 from meal.models import PlanPurchase
-from meal.api.serializers import PlanPurcheseListSerializer
+from meal.api.serializers import PlanPurcheseListSerializer, TransactionSerializer
 
 
 
@@ -46,7 +46,8 @@ def verify_payment(request):
                 'status': 200,
                 'message': 'Payment Success.',
                 'payment_success': result,
-                "data": plan_data
+                "data": plan_data,
+                "transaction": TransactionSerializer(tnx).data,
             },
             status=200
         )

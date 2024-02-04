@@ -19,7 +19,7 @@ class MealAdmin(admin.ModelAdmin):
 @admin.register(Plan)
 class PlanAdmin(admin.ModelAdmin):
     list_display = (
-        'name', 'price',
+        'name', 'price', 'number_of_meals',
         'eating_type', 'tag', 'validity'
     )
     list_editable = ('tag',)
@@ -28,9 +28,9 @@ class PlanAdmin(admin.ModelAdmin):
 @admin.register(PlanPurchase)
 class MealAdmin(admin.ModelAdmin):
     list_display = (
-        'user', 'plan', 'remaining_meals', 'total_meals', 'transaction', 'status', 'address'
+        'user', 'plan', 'remaining_meals', 'total_meals', 'transaction', 'status'
     )
-    list_editable = ('remaining_meals', 'status', 'address')
+    list_editable = ('remaining_meals', 'status')
 
 
 @admin.register(MealRequestDaily)
