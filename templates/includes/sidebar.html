@@ -95,6 +95,15 @@
           <span class="sidebar-text">Daily Meal Menu</span>
         </a>
       </li>
+      
+      <li class="nav-item {% if request.resolver_match.view_name == 'meal_type_list' %} active {% endif %}">
+        <a href="{% url 'meal_type_list' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <i class="fas fa-calendar"></i>
+          </span>
+          <span class="sidebar-text">Meal Type(Name)</span>
+        </a>
+      </li>
 
       <li class="nav-item {% if request.resolver_match.view_name == 'plan_list' %} active {% endif %}">
         <a href="{% url 'plan_list' %}" class="nav-link">

@@ -12,7 +12,7 @@ class MealTypeAdmin(admin.ModelAdmin):
 @admin.register(Meal)
 class MealAdmin(admin.ModelAdmin):
     list_display = (
-        'name', 'description', 'plan', 'eating_type'
+        'meal_type', 'description', 'eating_type'
     )
 
  

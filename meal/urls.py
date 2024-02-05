@@ -6,6 +6,12 @@ urlpatterns = [
     path('api/', include('meal.api.urls')),
     # path('ajax/', include('user.ajax.urls')),
     
+    # MealType Urls
+    path('meal-type-list/', meal_type_list, name='meal_type_list'),
+    path('add-meal-type/', meal_type_add, name='add_meal_type'),
+    path('edit-meal-type/<int:id>/', meal_type_edit, name='edit_meal_type'),
+    path('delete-meal-type/<int:id>/', meal_type_delete, name='delete_meal_type'),
+    
     # Meal Urls
     path('meal-list/', meal_list, name='meal_list'),
     path('add-meal/', meal_add, name='add_meal'),

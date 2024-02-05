@@ -8,66 +8,53 @@
             <!-- Card header -->
             <div class="card-header border-0">
                 <h3 class="mb-0">{{title}} </h3>
-                <a href="{% url "add_plan" %}" class="bg-success btn float-end">+Add</a>
+                <a href="{% url "add_meal_type" %}" class="bg-success btn float-end">+Add</a>
             </div>
             {% csrf_token %}
             <!-- Light table -->
             <div class="table-responsive">
-                <table class="table table-hover" id="example1">
+                <table class="table table-hover">
                 <thead class="thead-light">
                     <tr>
-                        <th scope="col" class="sort">SN</th>
-                        <th scope="col" class="sort">Name</th>
-                        <th scope="col" class="sort">Eating Type</th>
-                        <th scope="col" class="sort">Tag</th>
-                        <th scope="col" class="sort">Price</th>
-                        <th scope="col" class="sort">Number of Meals</th>
+                        <th scope="col" class="sort" data-sort="name">SN</th>
+                        <th scope="col" class="sort" data-sort="name">Name</th>
+                        <th scope="col" class="sort" data-sort="budget">Description</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody class="list">
-                    {% for plan in plans %}
+                    {% for meal in data %}
                     <tr>
                         <td class="budget">
                             {{forloop.counter}}
                         </td>
                         <td>
-                            {{plan.name}}
+                            {{meal.name}}
                         </td>
                         <td>
-                            {{plan.eating_type}}
+                            {{meal.description}}
                         </td>
                         <td>
-                            {{plan.tag}}
-                        </td>
-                        <td>
-                            {{plan.price}}, <small class="text-black-50">{{plan.price_per_meal}}/Meal</small>
-                        </td>
-                        <td>
-                            {{plan.number_of_meals}}
-                        </td>
-                        <td>
-                            <a href="{% url 'edit_plan' plan.id %}" ><i class="fa fa-edit " title="Update" ></i></a>
-                            <i class="fa fa-trash-alt" type="button" data-bs-toggle="modal" href="#deleteModal{{plan.id}}" style="background:transparent;"></i>
+                            <a class="" href="{% url "edit_meal_type" meal.id %}"><i class="fa fa-edit " title="Update" ></i></a>
+                            <i class="fa fa-trash-alt" type="button" data-bs-toggle="modal" href="#deletemealModal{{meal.id}}" style="background:transparent;"></i>
                         </td>
                     </tr>
-                    <!-- Modal -->
+                     <!-- Modal -->
                     
-                    <div class="modal fade" id="deleteModal{{plan.id}}" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+                     <div class="modal fade" id="deletemealModal{{meal.id}}" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
                         <div class="modal-dialog">
                           <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="deleteModalLabel{{plan.id}}">Delete Plan</h5>
+                                <h5 class="modal-title" id="deleteModalLabel{{meal.id}}">Delete Meal</h5>
 
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 Are you sure want to delete ?
-                                Purchese Plans of users will be also deleted.
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <a class="btn btn-danger" href="{% url 'delete_plan' plan.id %}">Delete</a>
+                                <a class="btn btn-danger" href="{% url 'delete_meal_type' meal.id %}">Delete</a>
                             </div>
                           </div>
                         </div>
@@ -80,5 +67,15 @@
         </div>  
     </div>
 </div>
-
 {% endblock content %}
+{% block javascripts %}
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
+<script>
+    new DataTable('#example1', {
+        responsive: true,
+    });
+</script>
+{% endblock javascripts %}

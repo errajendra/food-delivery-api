@@ -21,6 +21,8 @@ class MealType(models.Model):
     def __str__(self) -> str:
         return self.name
 
+    class Meta:
+        ordering = ['name']
 
 
 """
@@ -49,11 +51,15 @@ class Plan(BaseModel):
         verbose_name = "Validity in Days", default=180)
     
     def __str__(self):
-        return str(self.id)
+        return str(self.name)
     
     @property
     def price_per_meal(self):
         return round(float(self.price)/self.number_of_meals, 2)
+    
+    class Meta:
+        unique_together = ('name', 'number_of_meals')
+        ordering = ['name']
 
 
 
@@ -105,9 +111,11 @@ class PlanPurchase(BaseModel):
 Meal/Food/Lunch/Denner Model
 """
 class Meal(BaseModel):
-    name = models.CharField(max_length=100, verbose_name="Meal Name or Eating Type")
-    plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
-    description = models.CharField(max_length=250)
+    name = models.CharField(
+        max_length=100, verbose_name="Meal Name",
+        help_text="With Rice/Without Rice")
+    meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE)
+    description = models.CharField(max_length=250, help_text="Meal Items")
     eating_type = models.CharField(
         verbose_name="Eating Type",
         choices=[
@@ -120,7 +128,7 @@ class Meal(BaseModel):
     image = models.ImageField(upload_to="meals", blank=True)
     
     def __str__(self):
-        return f"{self.name} ({self.eating_type})"
+        return f"{self.meal_type} ({self.eating_type})"
     
 
 

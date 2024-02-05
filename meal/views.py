@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from .forms import (
-    Meal, MealForm,
+    Meal, MealForm, MealTypeForm,
     Plan, PlanForm, MealRequestForm,
     DailyMealMenuForm
 )
@@ -8,6 +8,50 @@ from .models import *
 from user.models import *
 from django.template.loader import render_to_string
 from django.http import JsonResponse
+
+
+"""
+    Meal Type View Functions
+"""
+def meal_type_add(request):
+    form = MealTypeForm(data=request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('meal_type_list')
+    context = {
+        "form": form,
+        "title": "Add Meal Type Form",
+    }
+    return render(request, 'meal/form.html', context)
+
+
+def meal_type_list(request):
+    meals = MealType.objects.select_related().all()
+    context = {"data": meals, 'title': "Meal Types"}
+    return render(request, 'meal/meal-type-list.html', context)
+
+
+def meal_type_edit(request, id):
+    # Edit Category Method
+    instance = get_object_or_404(MealType, id=id)
+    form = MealTypeForm(instance=instance, data=request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return redirect('meal_list')
+    context = {
+        "title": "Update Meal Type",
+        "form": form,
+    }
+    return render(request, 'meal/form.html', context)
+
+
+def meal_type_delete(request, id):
+    instance = get_object_or_404(MealType, id=id)
+    instance.delete()
+    return redirect('meal_type_list')
+
 
 
 """
@@ -52,6 +96,8 @@ def meal_delete(request, id):
     instance = get_object_or_404(Meal, id=id)
     instance.delete()
     return redirect('meal_list')
+
+
 
 """
     Plan View Functions
