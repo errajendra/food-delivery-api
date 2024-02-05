@@ -45,8 +45,11 @@ class MealTypeView(viewsets.ModelViewSet):
             "status": status.HTTP_200_OK,
             "message": "OK",
             "results": {
-                "purchese_types": MealTypePurcheseSerilizer(plan_type_purchese, many= True).data,
-                "other_meal_types": MealTypeSerilizer(other_plan_types, many= True).data
+                "purchese_types": MealTypePurcheseSerilizer(
+                    plan_type_purchese, many= True,
+                    context={'user':request.user}).data,
+                "other_meal_types": MealTypeSerilizer(
+                    other_plan_types, many= True).data
             }
         }
         # data = super().list(request, *args, **kwargs)

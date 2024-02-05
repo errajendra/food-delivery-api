@@ -36,8 +36,10 @@ class MealTypeSerilizer(serializers.ModelSerializer):
 """ Meal Listing and Detail Serializer"""
 class MealTypePurcheseSerilizer(MealTypeSerilizer):
     def to_representation(self, instance):
+        customer = self.context.get('user')
         data = super().to_representation(instance)
-        plans_purches = PlanPurchase.objects.filter(plan__name=instance, status=True)
+        plans_purches = PlanPurchase.objects.filter(
+            plan__name=instance, user=customer, status=True)
         data['plans_purches'] = PlanPurcheseListSerializer(plans_purches, many=True).data
         return data
 

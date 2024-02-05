@@ -131,6 +131,7 @@ class Address(BaseModel):
         max_length=12, choices=[
             ("Home", "Home"),
             ("Office", "Office"),
+            ("Other", "Other"),
         ],
         default = "Home"
     )
