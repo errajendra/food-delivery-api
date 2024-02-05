@@ -118,6 +118,7 @@ class DailyMealRequestSerializer(serializers.Serializer):
     plan_purchese_id = serializers.IntegerField()
     meal_plan_data = MealPlanDataSerializer(many=True)
     address = serializers.IntegerField()
+    instruction = serializers.CharField(required=False)
     
     def validate_address(self, data):
         if not bool(data):

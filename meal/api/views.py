@@ -210,6 +210,7 @@ class PlanMeal(viewsets.ModelViewSet):
             plan_purchese_id = serializer.validated_data['plan_purchese_id']
             meal_plan_data = serializer.validated_data['meal_plan_data']
             address = serializer.validated_data['address']
+            instruction = serializer.validated_data['instruction']
 
             # Fetch the PlanPurchase instance based on plan_purchese_id
             try:
@@ -234,7 +235,8 @@ class PlanMeal(viewsets.ModelViewSet):
                         plan=plan_purchase,
                         meal=meal,
                         date=datetime,
-                        address = address.full_address
+                        address = address.full_address,
+                        instruction = instruction
                     )
                     meal_request.save()
                     plan_purchase.remaining_meals = plan_purchase.remaining_meals - 1

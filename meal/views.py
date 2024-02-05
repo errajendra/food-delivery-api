@@ -39,7 +39,7 @@ def meal_type_edit(request, id):
     if request.method == "POST":
         if form.is_valid():
             form.save()
-            return redirect('meal_list')
+            return redirect('meal_type_list')
     context = {
         "title": "Update Meal Type",
         "form": form,

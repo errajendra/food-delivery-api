@@ -160,6 +160,9 @@ class MealRequestDaily(BaseModel):
         max_length=255, verbose_name="User Address to Deliver Meal",
         null = True, blank = True
     )
+    instruction = models.CharField(
+        verbose_name = "Customer Instruction", max_length = 100, 
+        null = True, blank = True)
     delivery_person = models.ForeignKey(
         User,
         related_name='delivery',
