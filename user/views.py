@@ -13,24 +13,29 @@ from .forms import ProfileForm
 def index(request):
     """ Dashbord Page."""
     total_user = CustomUser.objects.filter(is_active=True).count()
-    total_meal = Meal.objects.all().count()
+    total_meal = MealType.objects.all().count()
     total_plan = Plan.objects.all().count()
-    total_plan_purchase = PlanPurchase.objects.all().count()
+    total_plan_purchase = PlanPurchase.objects.filter(
+        remaining_meals__gt=0, status=True).count()
     today = date.today()
 
     # Count the MealRequestDaily objects with the date field matching today's date
-    today_meal_request = MealRequestDaily.objects.filter(date__date=today).count()
     meal_requests = MealRequestDaily.objects.filter(date__date=today).order_by('date')
-    meal_requests_delivery_person = MealRequestDaily.objects.filter(date__date=today, delivery_person = request.user).order_by('date')
-    
-    total_meal_request_delivery_person = MealRequestDaily.objects.filter(date__date=today, delivery_person = request.user).count()
+    today_meal_request_count = meal_requests.count()
+    if request.user.is_delivery_person:
+        meal_requests_delivery_person = MealRequestDaily.objects.filter(
+            date__date=today, delivery_person = request.user).order_by('date')
+    else:
+        meal_requests_delivery_person = []
+    total_meal_request_delivery_person = MealRequestDaily.objects.filter(
+        date__date=today, delivery_person = request.user).count()
 
     context = {
         "total_user":total_user,
         "total_meal":total_meal,
         "total_plan":total_plan,
         "total_plan_purchase":total_plan_purchase,
-        "today_meal_request":today_meal_request,
+        "today_meal_request": today_meal_request_count,
         "meal_requests":meal_requests,
         "meal_requests_delivery_person":meal_requests_delivery_person,
         "total_meal_request_delivery_person":total_meal_request_delivery_person
