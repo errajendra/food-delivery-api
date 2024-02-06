@@ -8,6 +8,7 @@ from .models import *
 from user.models import *
 from django.template.loader import render_to_string
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 
 """
@@ -154,16 +155,28 @@ def plan_purchase_list(request):
     context = {"plan_purchase": plan_purchase, 'title': "Plan Purchase List"}
     return render(request, 'meal/plan-purchase-list.html', context)
 
+
 def daily_meal_request_list(request):
     user = request.user
     if request.user.is_staff:
         daily_meal_request = MealRequestDaily.objects.select_related().all()
         context = {"daily_meal_request": daily_meal_request, 'title': "Daily Meal Request"}
-        return render(request, 'meal/daily-meal-request.html', context)
-    else:
+        return render(request, 'meal/meal-request/list.html', context)
+    elif user.is_cook:
+        today = (datetime.now(timezone.utc) + timedelta(hours=5, minutes=30)).date()
+        daily_meal_request = MealRequestDaily.objects.select_related().filter(
+            status="Requested", 
+            date__date__gte = today
+        ).order_by("date")
+        context = {
+            "daily_meal_request": daily_meal_request, 
+            'title': "Meal to Cook",
+            'today': today}
+        return render(request, 'meal/meal-request/list-cook.html', context)
+    elif user.is_delivery_person:
         daily_meal_request = MealRequestDaily.objects.select_related().filter(delivery_person=user)
         context = {"daily_meal_request": daily_meal_request, 'title': "Daily Meal Request"}
-        return render(request, 'meal/daily-meal-request-delivery-person.html', context)
+        return render(request, 'meal/meal-request/list-delivery-person.html', context)
     
             
 

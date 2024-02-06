@@ -132,6 +132,33 @@ class Meal(BaseModel):
     
 
 
+
+""" Menu Meal list.
+ select date and meal menu for that perticular date.
+"""
+class DailyMealMenu(BaseModel):
+    date = models.DateField()
+    meal_type = models.ForeignKey(
+        MealType, on_delete=models.CASCADE,
+        related_name="menu_for_dates")
+    eating_type = models.CharField(
+        verbose_name="Eating Type",
+        choices=[
+            ('Breakfast', 'Breakfast'), 
+            ('Lunch', 'Lunch'),
+            ('Dinner', 'Dinner')
+        ],
+        max_length=10)
+    items = RichTextField(help_text="Meal Menu Items")
+    
+    class Meta:
+        unique_together = ('date', 'meal_type', 'eating_type')
+    
+    def __str__(self) -> str:
+        return str(self.date)
+
+
+
 """"
     Meal (Menu) Daily Request base on purhese plan. 
     Select Menu Option Daily.
@@ -176,6 +203,7 @@ class MealRequestDaily(BaseModel):
         choices=(
             ('Success', 'Success'),
             ('Requested', 'Requested'), 
+            ('Cooked/Packed', 'Cooked/Packed'), 
             ('Cancelled', 'Cancelled')
         ),
         max_length=20,
@@ -188,32 +216,16 @@ class MealRequestDaily(BaseModel):
 
     class Meta:
         ordering = ['-date']
-
-
-
-""" Menu Meal list.
- select date and meal menu for that perticular date.
-"""
-class DailyMealMenu(BaseModel):
-    date = models.DateField()
-    meal_type = models.ForeignKey(
-        MealType, on_delete=models.CASCADE,
-        related_name="menu_for_dates")
-    eating_type = models.CharField(
-        verbose_name="Eating Type",
-        choices=[
-            ('Breakfast', 'Breakfast'), 
-            ('Lunch', 'Lunch'),
-            ('Dinner', 'Dinner')
-        ],
-        max_length=10)
-    items = RichTextField(help_text="Meal Menu Items")
-    
-    class Meta:
-        unique_together = ('date', 'meal_type', 'eating_type')
-    
-    def __str__(self) -> str:
-        return str(self.date)
+        
+    def meal_items(self):
+        menus = DailyMealMenu.objects.filter(
+            date = self.date.date(),
+            eating_type = self.meal.eating_type,
+            meal_type = self.meal.meal_type
+        )
+        if menus:
+            return menus.first().items
+        return " "
 
 
 

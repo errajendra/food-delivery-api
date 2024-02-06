@@ -37,36 +37,24 @@ def index(request):
     }
     return render(request, 'user/index.html', context)
 
+
 def admin_login(request):
     """ Admin Login Method. """
     message = None
 
     if request.method == "POST":
         mobile_number = request.POST['mobile_number']
-        print(mobile_number)
         password = request.POST['password']
 
         try:
-            user = User.objects.get(mobile_number=mobile_number, is_staff=True)
+            user = User.objects.get(mobile_number=mobile_number, is_active=True)
         except User.DoesNotExist:
             user = None
-
-        if user:
+        if user and (user.is_staff or user.is_delivery_person or user.is_cook):
             if user.check_password(password):
                 login(request, user)
-                next = request.GET.get('next', None)
-                if next:
-                    return redirect(next)
-                return redirect('index')
-        else:
-            # User is not an admin, check if they are a delivery person
-            try:
-                user1 = CustomUser.objects.get(mobile_number=mobile_number, is_delivery_person=True, is_active=True)
-            except CustomUser.DoesNotExist:
-                user1 = None
-
-            if user1 and user1.check_password(password):
-                login(request, user1)
+                if user.is_cook:
+                    return redirect('daily_meal_request_list')
                 next = request.GET.get('next', None)
                 if next:
                     return redirect(next)

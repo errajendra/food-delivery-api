@@ -49,16 +49,15 @@
 <!--                </a>-->
 <!--              </li>-->
 
+      {% if request.user.is_staff %}
       <li class="nav-item {% if request.resolver_match.view_name == 'index' %} active {% endif %}">
         <a href="{% url 'index' %}" class="nav-link">
           <span class="sidebar-icon">
             <i class="fas fa-tachometer-alt"></i>
-
           </span>
           <span class="sidebar-text">Dashboard</span>
         </a>
       </li>
-      {% if request.user.is_staff %}
       <li class="nav-item {% if request.resolver_match.view_name == 'users' %} active {% endif %}">
         <a href="{% url 'users' %}" class="nav-link">
           <span class="sidebar-icon">
@@ -68,25 +67,7 @@
           <span class="sidebar-text">Customers</span>
         </a>
       </li>
-
-      {% comment %} <li class="nav-item {% if 'category_list' in segment %} active {% endif %}">
-        <a href="{% url 'category_list' %}" class="nav-link">
-          <span class="sidebar-icon">
-            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"></path></svg>
-          </span>
-          <span class="sidebar-text">Category</span>
-        </a>
-      </li>
-      
-      <li class="nav-item {% if 'subcategory_list' in segment %} active {% endif %}">
-        <a href="{% url 'subcategory_list' %}" class="nav-link">
-          <span class="sidebar-icon">
-            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"></path></svg>
-          </span>
-          <span class="sidebar-text">Sub Category</span>
-        </a>
-      </li> {% endcomment %}
-      
+            
       <li class="nav-item {% if 'daily_meal_menu_list' in segment %} active {% endif %}">
         <a href="{% url 'daily_meal_menu_list' %}" class="nav-link">
           <span class="sidebar-icon">
@@ -165,16 +146,25 @@
           <span class="sidebar-text">Delivery Person</span>
         </a>
       </li>
- {% elif request.user.is_delivery_person %}
- <li class="nav-item {% if request.resolver_match.view_name == 'daily_meal_request_list' %} active {% endif %}">
-  <a href="{% url 'daily_meal_request_list' %}" class="nav-link">
-      <span class="sidebar-icon">
-          <i class="fas fa-utensils"></i>
-      </span>
-      <span class="sidebar-text">Daily Meal Request</span>
-  </a>
-</li>
-{% endif %}
+      {% elif request.user.is_delivery_person %}
+      <li class="nav-item {% if request.resolver_match.view_name == 'daily_meal_request_list' %} active {% endif %}">
+        <a href="{% url 'daily_meal_request_list' %}" class="nav-link">
+            <span class="sidebar-icon">
+                <i class="fas fa-utensils"></i>
+            </span>
+            <span class="sidebar-text">Meal Delivery</span>
+        </a>
+      </li>
+      {% elif request.user.is_cook %}
+      <li class="nav-item {% if request.resolver_match.view_name == 'daily_meal_request_list' %} active {% endif %}">
+        <a href="{% url 'daily_meal_request_list' %}" class="nav-link">
+            <span class="sidebar-icon">
+                <i class="fas fa-utensils"></i>
+            </span>
+            <span class="sidebar-text">Meal Orders</span>
+        </a>
+      </li>
+      {% endif %}
     </ul>
   </div>
 </nav>

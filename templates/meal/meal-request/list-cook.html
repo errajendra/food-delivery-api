@@ -21,11 +21,10 @@
                             <th scope="col" class="sort">SN</th>
                             <th scope="col" class="sort">User</th>
                             <th scope="col" class="sort">Plan</th>
-                            <th scope="col" class="sort">Meal</th>
                             <th scope="col" class="sort">Date</th>
                             <th scope="col" class="sort">Status</th>
-                           
-                           
+                            <th scope="col" class="sort">Meal</th>
+                            <th scope="col" class="sort">Instruction</th>                           
                         </tr>
                     </thead>
                     <tbody class="list">
@@ -33,21 +32,20 @@
                         <tr>
                             <td>{{ forloop.counter }}</td>
                             <td>{{ meal.requester }}</td>
-                            <td>{{ meal.plan.address }}</td>
                             <td>{{ meal.meal }}</td>
                             <td>{{ meal.date }}</td>
                             <td>
+                                {% if meal.date|date == today|date %}
                                 <select class="border-0 mealRequestStatus" data-meal-id="{{ meal.id }}">
                                     <option value="Requested" {% if meal.status == 'Requested' %}selected{% endif %}>Requested</option>
-                                    <option value="Success" {% if meal.status == 'Success' %}selected{% endif %}>Success</option>
-                                    <option value="Cancelled" {% if meal.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                                    <option value="Cooked/Packed" {% if meal.status == 'Cooked/Packed' %}selected{% endif %}>Cooked/Packed</option>
                                 </select>
-                            </td>
-                          
-                               
-                           
+                                {% else %}
+                                {% endif %}
+                            </td>   
+                            <td> {{ meal.meal_items|safe }}</td>
+                            <td> {% if meal.instruction %}{{ meal.instruction }}{% endif %}</td>
                         </tr>
-                      
                         {% endfor %}
                     </tbody>
                 </table>
@@ -73,10 +71,10 @@
               { "data": "SN" },
               { "data": "User" },
               { "data": "Plan" },
-              { "data": "Meal" },
               { "data": "Date" },
               { "data": "Status" },
-            
+              { "data": "Meal" },
+              { "data": "Instruction" },
             ]
           });
        

@@ -69,6 +69,14 @@ class CustomUser(AbstractUser):
             "Unselect this instead of Delivery Person accounts has removed."
         ),
     )
+    is_cook = models.BooleanField(
+        _("Is Cook Person"),
+        default=False,
+        help_text=_(
+            "Designates whether this user should be treated as Cook/Rasoiya Person. "
+            "Unselect this instead of Cook/Rasoiya Person accounts has removed."
+        ),
+    )
     fcm_token = models.TextField(null=True, blank=True)
     username = None
     first_name = None

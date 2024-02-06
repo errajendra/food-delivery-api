@@ -4,7 +4,7 @@ from .models import *
 
 @admin.register(CustomUser)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'email', 'date_joined', 'is_active', 'is_delivery_person')
+    list_display = ('mobile_number', 'name', 'email', 'date_joined', 'is_active', 'is_delivery_person', 'is_cook')
     list_editable = ('is_active', 'is_delivery_person')
 
 
