@@ -1,0 +1,116 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block bc %}
+<li class="breadcrumb-item">Users</li>
+{% endblock bc %}
+{% block content %}
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <!-- Card header -->
+            <div class="card-header border-0">
+                <h3 class="mb-0">{{title}} </h3>
+            </div>
+            {% csrf_token %}
+            <!-- Light table -->
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush" id="example1">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col" class="sort" data-sort="name">SN</th>
+                        <th scope="col" class="sort" data-sort="name">User</th>
+                        <th scope="col" class="sort" data-sort="budget">Description</th>
+                        <th scope="col" class="sort" data-sort="name">Attechment</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Last Update</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                    {% for help in helps %}
+                    <tr>
+                        <td class="budget">
+                            {{forloop.counter}}
+                        </td>
+
+                        <th scope="row">
+                            <div class="media align-items-center">
+                                <div class="media-body">
+                                    <span class="name mb-0 text-sm">{{help.user.mobile_number}} </span>
+                                    <p class="name mb-0 text-xs">{{help.user.email}} </p>
+                                </div>
+                            </div>
+                        </th>
+
+                        <td>
+                            {{help.message}}
+                        </td>
+
+                        <td>
+                            {% if help.attachment %}
+                            <a href="{{help.attachment.url}}" target="_blank"><i class="fa fa-download"></i></a>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <select class="border-0 suportStatus" data-help-id="{{ help.id }}">
+                                <option value="Requested" {% if help.status == "Requested" %}selected{% endif %}>Requested</option>
+                                <option value="Under Review" {% if help.status == "Under Review" %}selected{% endif %}>Under Review</option>
+                                <option value="Close" {% if help.status == "Close" %}selected{% endif %}>Close</option>
+                                <option value="Rejected" {% if help.status == "Rejected" %}selected{% endif %}>Rejected</option>
+                            </select>
+                        </td>
+
+                        <td>
+                            {{help.updated_at}}
+                        </td>
+                        <td>
+                            {{help.updated_at}}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+            </div>
+        </div>  
+    </div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
+    <script>
+    new DataTable('#example1', {
+        responsive: true,
+    });
+    </script>
+    <script>
+        $(document).on('change', '.suportStatus', function(e) {
+            var help_id = $(this).data('help-id');
+            var new_status = $(this).val();
+            var url = "{% url 'update-help-active-ajax' %}";
+            
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: {
+                    'help_id': help_id,
+                    'new_status': new_status,
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if (data.success) {
+                        console.log('help status updated successfully');
+                    
+                    } else {
+                        console.error('Error updating help status:', data.error);
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock javascripts %}

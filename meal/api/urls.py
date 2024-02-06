@@ -8,6 +8,7 @@ from .views import(
     RequestedPlanMealHistory,
     CancelMealRequest,
     DailyMealMenuView,
+    CustomerSupportView,
 )
 
 router = DefaultRouter()
@@ -24,6 +25,8 @@ router.register('cancel-meal-request', CancelMealRequest,
                 basename='cancel-meal-request-api')
 router.register('daily-meal-menu', DailyMealMenuView,
                 basename='daily-meal-menu-api')
+router.register('customer-support', CustomerSupportView,
+                basename='customer-support-api')
 
 
 urlpatterns = [

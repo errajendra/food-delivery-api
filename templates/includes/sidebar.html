@@ -149,6 +149,14 @@
           <span class="sidebar-text">Transaction</span>
         </a>
       </li>
+      <li class="nav-item {% if request.resolver_match.view_name == 'supports'  %} active {% endif %}">
+        <a href="{% url 'supports' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <i class="fas fa-truck"></i>
+          </span>
+          <span class="sidebar-text">Customer Support</span>
+        </a>
+      </li>
       <li class="nav-item {% if request.resolver_match.view_name == 'delivery_person_list'  %} active {% endif %}">
         <a href="{% url 'delivery_person_list' %}" class="nav-link">
           <span class="sidebar-icon">

@@ -4,7 +4,7 @@ from .views import *
 
 urlpatterns = [
     path('api/', include('meal.api.urls')),
-    # path('ajax/', include('user.ajax.urls')),
+    path('ajax/', include('meal.ajax.urls')),
     
     # MealType Urls
     path('meal-type-list/', meal_type_list, name='meal_type_list'),
@@ -40,6 +40,9 @@ urlpatterns = [
     path('add-daily-meal-menu/', add_daily_meal_menu, name='add_daily_meal_menu'),
     path('edit-daily-meal-menu/<int:id>/', daily_meal_menu_edit, name='edit_daily_meal_menu'),
     path('delete-daily-meal-menu/<int:id>/', daily_meal_menu_delete, name='delete_daily_meal_menu'),
+    
+    # Support Urls
+    path('supports/', supprt_list, name="supports"),
     
     
 ]

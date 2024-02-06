@@ -12,13 +12,14 @@ from razor_pay.utils import (
 )
 from ..models import (
     MealType, Meal, Plan, PlanPurchase, Transaction, MealRequestDaily,
-    DailyMealMenu,
+    DailyMealMenu, CustomerSupport,
 )
 from .serializers import (
     MealTypeSerilizer, MealSerializer,
     PlanSerializer, PlanPurcheseListSerializer,
     DailyMealRequestSerializer, BannerSerializer, MealRequestDailySerializer,
     DailyMealMenuSerializer, MealTypePurcheseSerilizer,
+    CustomerSupportSerializer,
 )
 from django.db.utils import IntegrityError
 from rest_framework.views import APIView
@@ -397,3 +398,64 @@ class DailyMealMenuView(viewsets.ModelViewSet):
             "data": DailyMealMenuSerializer(qs, many=True).data
         }
         return Response(context)
+
+
+
+
+""" Customer Support View. """
+class CustomerSupportView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CustomerSupportSerializer
+    
+    def get_queryset(self):
+        return CustomerSupport.objects.filter(user=self.request.user)
+    
+    
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        try:
+            request.data['user'] = user.id
+        except:
+            request.data._mutable = True
+            request.data['user'] = user.id
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    "status": 200,
+                    "message": "OK",
+                    "data": serializer.data
+                }
+            )
+        return Response(
+            {
+                "status": 400,
+                "message": "BAD REQUEST",
+                "errors": serializer.errors
+            }
+        )
+    
+    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = CustomerSupportSerializer(
+            instance=instance, data=request.data
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    "status": 200,
+                    "message": "OK",
+                    "data": serializer.data
+                }
+            )
+        return Response(
+            {
+                "status": 400,
+                "message": "BAD REQUEST",
+                "errors": serializer.errors
+            }
+        )
+

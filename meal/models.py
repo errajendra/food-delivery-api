@@ -214,3 +214,38 @@ class DailyMealMenu(BaseModel):
     
     def __str__(self) -> str:
         return str(self.date)
+
+
+
+""" 
+    Customer Support Model Table
+"""
+class CustomerSupport(BaseModel):
+    user = models.ForeignKey(
+        User,
+        related_name='help_raised',
+        on_delete=models.CASCADE,
+    )
+    status = models.CharField(
+        choices=(
+            ('Requested', 'Requested'), 
+            ('Under Review', 'Under Review'),
+            ('Close', 'Close'),
+            ('Rejected', 'Rejected'),
+        ),
+        max_length=20,
+        default="Requested"
+    )
+    attachment = models.FileField(upload_to='support/attachments/', blank=True)
+    message = models.TextField()
+
+    @property
+    def can_be_closed(self):
+        """ Returns True if this support ticket can be closed (i.e., has been resolved), False otherwise."""
+        return self.status in ['Under Review', 'Rejected']
+
+    def close(self):
+        """ Close this support ticket by setting its status to Under Review and saving it."""
+        assert self.can_be_closed, f'Cannot close ticket with status "{self .status}"!'
+        self.status = "Close"
+        self.save()

@@ -265,3 +265,13 @@ def daily_meal_menu_edit(request, id):
         "form": form,
     }
     return render(request, 'meal/form.html', context)
+
+
+""" Support Views. """
+
+def supprt_list(request, id=None):
+    context = {
+        'title': "Customer Suport List",
+        "helps": CustomerSupport.objects.all()
+    }
+    return render(request, 'support/list.html', context)
