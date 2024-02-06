@@ -386,7 +386,7 @@ class DailyMealMenuView(viewsets.ModelViewSet):
         qs = DailyMealMenu.objects.select_related().filter(
             date__gte = start_date, 
             date__lte = end_date
-        )
+        ).order_by('date')
         return qs
 
     def list(self, request, *args, **kwargs):

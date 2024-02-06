@@ -151,9 +151,4 @@ class MealRequestDailySerializer(serializers.ModelSerializer):
 class DailyMealMenuSerializer(serializers.ModelSerializer):
     class Meta:
         model = DailyMealMenu
-        fields = ["date", "meals"]
-        
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['meals'] = MealSerializer(instance.meals.all(), many=True).data
-        return data
+        fields = ['date', 'meal_type', 'eating_type', 'items']

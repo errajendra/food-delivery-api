@@ -78,9 +78,10 @@ class MealRequestForm(forms.ModelForm):
 class DailyMealMenuForm(forms.ModelForm):
     class Meta:
         model = DailyMealMenu
-        fields = ['date', 'meals']
+        fields = ['date', 'meal_type', 'eating_type', 'items']
         
         widgets = {
             'date': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
-            'meals': forms.SelectMultiple(attrs={'class':'form-control'}),
+            'meal_type': forms.Select(attrs={'class':'form-control'}),
+            'eating_type': forms.Select(attrs={'class':'form-control'}),
         }

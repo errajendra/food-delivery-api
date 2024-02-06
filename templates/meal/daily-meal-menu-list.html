@@ -18,8 +18,10 @@
                     <tr>
                         <th scope="col" class="sort">SN</th>
                         <th scope="col" class="sort">Date</th>
-                        <th scope="col" class="sort">Meals</th>
-                        <th scope="col">Action</th>
+                        <th scope="col" class="sort">Meal Type</th>
+                        <th scope="col" class="sort">Eating Type</th>
+                        <th scope="col" class="sort">Items</th>
+                        <th scope="col" class="sort">Action</th>
                     </tr>
                 </thead>
                 <tbody class="list">
@@ -32,28 +34,13 @@
                             {{menu.date}}
                         </td>
                         <td>
-                            <table class="">
-                                <thead class="">
-                                    <tr>
-                                        <th scope="col" class="sort">SN</th>
-                                        <th scope="col" class="sort">Meal</th>
-                                        <th scope="col" class="sort">Eating Type</th>
-                                    </tr>
-                                </thead>
-                                {% for menu in menu.meals.all %}
-                                <tr>
-                                    <td>
-                                        {{forloop.counter}}
-                                    </td>
-                                    <td>
-                                        {{menu.name}}
-                                    </td>
-                                    <td>
-                                        {{menu.eating_type}}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </table>
+                            {{menu.meal_type}}
+                        </td>
+                        <td>
+                            {{menu.eating_type}}
+                        </td>
+                        <td>
+                            {{menu.items|safe}}
                         </td>
                         <td>
                             <a href="{% url 'edit_daily_meal_menu' menu.id %}" ><i class="fa fa-edit " title="Update" ></i></a>

@@ -195,8 +195,22 @@ class MealRequestDaily(BaseModel):
  select date and meal menu for that perticular date.
 """
 class DailyMealMenu(BaseModel):
-    date = models.DateField(unique=True)
-    meals = models.ManyToManyField(Meal, related_name="daily_meal_menu")
+    date = models.DateField()
+    meal_type = models.ForeignKey(
+        MealType, on_delete=models.CASCADE,
+        related_name="menu_for_dates")
+    eating_type = models.CharField(
+        verbose_name="Eating Type",
+        choices=[
+            ('Breakfast', 'Breakfast'), 
+            ('Lunch', 'Lunch'),
+            ('Dinner', 'Dinner')
+        ],
+        max_length=10)
+    items = RichTextField(help_text="Meal Menu Items")
+    
+    class Meta:
+        unique_together = ('date', 'meal_type', 'eating_type')
     
     def __str__(self) -> str:
         return str(self.date)
