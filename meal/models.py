@@ -45,8 +45,8 @@ class Plan(BaseModel):
         verbose_name = "Eating Type",
         default = 'Lunch',
         max_length = 50)
-    items = RichTextField(null=True, blank=True)
-    benifits = RichTextField(null=True, blank=True)
+    # items = RichTextField(null=True, blank=True)
+    # benifits = RichTextField(null=True, blank=True)
     validity = models.PositiveIntegerField(
         verbose_name = "Validity in Days", default=180)
     

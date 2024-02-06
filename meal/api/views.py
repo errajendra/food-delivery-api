@@ -210,7 +210,7 @@ class PlanMeal(viewsets.ModelViewSet):
             plan_purchese_id = serializer.validated_data['plan_purchese_id']
             meal_plan_data = serializer.validated_data['meal_plan_data']
             address = serializer.validated_data['address']
-            instruction = serializer.validated_data['instruction']
+            instruction = serializer.validated_data.get('instruction', None)
 
             # Fetch the PlanPurchase instance based on plan_purchese_id
             try:
@@ -248,6 +248,7 @@ class PlanMeal(viewsets.ModelViewSet):
                         "meal": MealSerializer(Meal.objects.get(id=meal_request.meal.id)).data,
                         "date": meal_request.date,
                         "status": meal_request.status,
+                        "instruction": instruction,
                     })
                 except IntegrityError:
                     # Handle the integrity error and provide a custom message
