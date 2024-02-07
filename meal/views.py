@@ -158,21 +158,44 @@ def plan_purchase_list(request):
 
 def daily_meal_request_list(request):
     user = request.user
+    
     if request.user.is_staff:
         daily_meal_request = MealRequestDaily.objects.select_related().all()
         context = {"daily_meal_request": daily_meal_request, 'title': "Daily Meal Request"}
         return render(request, 'meal/meal-request/list.html', context)
+    
     elif user.is_cook:
         today = (datetime.now(timezone.utc) + timedelta(hours=5, minutes=30)).date()
         daily_meal_request = MealRequestDaily.objects.select_related().filter(
             status="Requested", 
-            date__date__gte = today
+            date__date = today
         ).order_by("date")
         context = {
             "daily_meal_request": daily_meal_request, 
             'title': "Meal to Cook",
             'today': today}
+        
+        # Counts
+        plans = Plan.objects.filter(
+            id__in= PlanPurchase.objects.filter(
+                id__in = daily_meal_request.values_list('plan', flat=True)
+            ).values_list('plan', flat=True))
+        meals_count = []
+        for plan in plans:
+            meal_types = [i.strip() for i in plan.eating_type.split(",")]
+            meal_type_counts = []
+            for et in meal_types:
+                qty = daily_meal_request.filter(meal__eating_type=et, plan__plan=plan).count()
+                if qty > 0:
+                    d = {
+                        "name": f"{plan.name} ({et})",
+                        "quantity": qty
+                    }
+                    meal_type_counts.append(d)
+            meals_count.append(meal_type_counts)
+        context['meals_count'] = meals_count
         return render(request, 'meal/meal-request/list-cook.html', context)
+    
     elif user.is_delivery_person:
         daily_meal_request = MealRequestDaily.objects.select_related().filter(delivery_person=user)
         context = {"daily_meal_request": daily_meal_request, 'title': "Daily Meal Request"}

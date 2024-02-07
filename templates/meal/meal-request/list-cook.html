@@ -6,6 +6,27 @@
     <div class="col">
         <div class="card">
             <!-- Card header -->
+            {% comment %} <div class="card-header border-0">
+                <h3 class="mb-0"></h3>
+            </div> {% endcomment %}
+            <div class="card-body table-responsive row">
+                {% for plan in meals_count %}
+                <div class="col row m-1 bg-gray-100 rounded p-1 pb-2">
+                    <div class="col p-1">
+                        <div class="card-counter info">
+                            {% comment %} <i class="fa fa-users"></i> {% endcomment %}
+                            {% for d in plan %}
+                            <span class="count-numbers">{{d.name}}</span>: <span class="count-name">{{d.quantity}} </span></br/>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>  
+                {% endfor %}  
+            </div>
+        </div>
+
+        <div class="card">
+            <!-- Card header -->
             <div class="card-header border-0">
                 <h3 class="mb-0">{{ title }}</h3>
                 {% if request.user.is_staff %}
@@ -24,6 +45,7 @@
                             <th scope="col" class="sort">Date</th>
                             <th scope="col" class="sort">Status</th>
                             <th scope="col" class="sort">Meal</th>
+                            <th scope="col" class="sort">Rice+Roti</th>
                             <th scope="col" class="sort">Instruction</th>                           
                         </tr>
                     </thead>
@@ -44,6 +66,7 @@
                                 {% endif %}
                             </td>   
                             <td> {{ meal.meal_items|safe }}</td>
+                            <td> {{ meal.meal.name }}</td>
                             <td> {% if meal.instruction %}{{ meal.instruction }}{% endif %}</td>
                         </tr>
                         {% endfor %}
@@ -74,6 +97,7 @@
               { "data": "Date" },
               { "data": "Status" },
               { "data": "Meal" },
+              { "data": "Rice+Roti" },
               { "data": "Instruction" },
             ]
           });

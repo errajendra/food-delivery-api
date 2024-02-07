@@ -29,7 +29,8 @@ class MealType(models.Model):
 Plan Detail Model
 """
 class Plan(BaseModel):
-    name = models.ForeignKey(MealType, on_delete=models.CASCADE,
+    name = models.ForeignKey(
+        MealType, on_delete=models.CASCADE, related_name="plans",
         verbose_name="Plan Name", help_text = "Select Plan Type"
     )
     price = models.FloatField(verbose_name="Price of Plan")
@@ -51,7 +52,7 @@ class Plan(BaseModel):
         verbose_name = "Validity in Days", default=180)
     
     def __str__(self):
-        return str(self.name)
+        return str(self.name) + " -> " + str(self.number_of_meals)
     
     @property
     def price_per_meal(self):
@@ -103,7 +104,7 @@ class PlanPurchase(BaseModel):
     # )
 
     def __str__(self):
-        return f"{self.plan.name}"
+        return f"{self.plan.name} - {self.user.mobile_number}"
 
 
 
@@ -126,6 +127,9 @@ class Meal(BaseModel):
         default='Lunch',
         max_length=10)
     image = models.ImageField(upload_to="meals", blank=True)
+    
+    class Meta:
+        unique_together = ('name', 'meal_type', 'eating_type')
     
     def __str__(self):
         return f"{self.meal_type} ({self.eating_type})"

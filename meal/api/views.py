@@ -15,7 +15,7 @@ from ..models import (
     DailyMealMenu, CustomerSupport,
 )
 from .serializers import (
-    MealTypeSerilizer, MealSerializer,
+    MealTypeSerilizer, MealSerializer,MealTypeMenuSerilizer,
     PlanSerializer, PlanPurcheseListSerializer,
     DailyMealRequestSerializer, BannerSerializer, MealRequestDailySerializer,
     DailyMealMenuSerializer, MealTypePurcheseSerilizer,
@@ -392,10 +392,14 @@ class DailyMealMenuView(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         qs = self.get_queryset()
+        dates = qs.values_list('date', flat=True)
+        data = {}
+        for d in dates:
+            data[f"{d}"] = DailyMealMenuSerializer(qs.filter(date=d),many=True).data
         context = {
             "status": status.HTTP_200_OK,
             "message":"Successfully fetched daily meal menu.",
-            "data": DailyMealMenuSerializer(qs, many=True).data
+            "data": data
         }
         return Response(context)
 

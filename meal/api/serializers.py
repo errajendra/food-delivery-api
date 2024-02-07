@@ -45,11 +45,28 @@ class MealTypePurcheseSerilizer(MealTypeSerilizer):
         return data
 
 
+""" Used on Meal Meanu Detail Serializer"""
+class MealTypeMenuSerilizer(serializers.ModelSerializer):
+    class Meta:
+        model = MealType
+        fields = (
+            'id', 'name'
+        )
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        eating_types = instance.plans.all().values_list('eating_type', flat=True)
+        eatings = []
+        for et in eating_types:
+            et = et.split(",")
+            [eatings.append(i.strip()) for i in et]
+        data['eating_types'] = set(eatings)
+        return data
+    
+    
 
 """ Meal Listing and Detail Serializer"""
 class MealSerializer(serializers.ModelSerializer):
-    # category = CategorySerilizer()
-    # sub_category = SubCategorySerilizer()
     class Meta:
         model = Meal
         fields = (
@@ -150,6 +167,7 @@ class MealRequestDailySerializer(serializers.ModelSerializer):
 
 
 class DailyMealMenuSerializer(serializers.ModelSerializer):
+    meal_type = MealTypeMenuSerilizer()
     class Meta:
         model = DailyMealMenu
         fields = ['date', 'meal_type', 'eating_type', 'items']
