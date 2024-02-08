@@ -155,7 +155,8 @@ class PlanPurcheseView(viewsets.ModelViewSet):
         self.serializer_class = PlanPurcheseListSerializer
         self.queryset = PlanPurchase.objects.filter(
             user = request.user,
-            status = True
+            status = True,
+            remaining_meals__gt = 0
         ).order_by('-remaining_meals')
         return super().list(request, *args, **kwargs)
 
