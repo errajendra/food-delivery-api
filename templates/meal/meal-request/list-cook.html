@@ -44,6 +44,7 @@
                             <th scope="col" class="sort">Plan</th>
                             <th scope="col" class="sort">Date</th>
                             <th scope="col" class="sort">Status</th>
+                            <th scope="col" class="sort">Address</th>
                             <th scope="col" class="sort">Meal</th>
                             <th scope="col" class="sort">Rice+Roti</th>
                             <th scope="col" class="sort">Instruction</th>                           
@@ -64,7 +65,8 @@
                                 </select>
                                 {% else %}
                                 {% endif %}
-                            </td>   
+                            </td>
+                            <td> {{ meal.address }} </td>
                             <td> {{ meal.meal_items|safe }}</td>
                             <td> {{ meal.meal.name }}</td>
                             <td> {% if meal.instruction %}{{ meal.instruction }}{% endif %}</td>
@@ -80,11 +82,26 @@
 
 
 {% endblock content %}
+
+
+<!-- Specific Page JS goes HERE  -->    
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+{% endblock stylesheets %}
+
+
 {% block javascripts %}
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
+
+{% comment %} Print  Button {% endcomment %}
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+
 <script>
     $(document).ready(function () {
         // DataTables initialization
@@ -96,10 +113,15 @@
               { "data": "Plan" },
               { "data": "Date" },
               { "data": "Status" },
+              { "data": "Address" },
               { "data": "Meal" },
               { "data": "Rice+Roti" },
               { "data": "Instruction" },
-            ]
+            ],
+            dom: 'Bfrtip',
+            buttons: [
+                'excel', 'pdf', 'print'
+            ],
           });
        
 
@@ -146,5 +168,7 @@
         });
     });
 </script>
+
+
 {% endblock javascripts %}
 

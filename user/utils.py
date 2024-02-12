@@ -17,7 +17,7 @@ phone_validator = RegexValidator(
 
 
 """pin or zip code validation"""
-zip_regex_formate = r"^[1-9]\d{5}$"
+zip_regex_formate = r"^[1-9]\d{3,5}$"
 zip_invalid_message = "Enter a 6 digit valid ZIP code."
 
 # zip number validator

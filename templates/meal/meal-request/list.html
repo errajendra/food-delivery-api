@@ -21,10 +21,12 @@
                             <th scope="col" class="sort">SN</th>
                             <th scope="col" class="sort">User</th>
                             <th scope="col" class="sort">Plan</th>
-                            <th scope="col" class="sort">Meal</th>
+                            <th scope="col" class="sort">Type</th>
                             <th scope="col" class="sort">Date</th>
                             <th scope="col" class="sort">Status</th>
                             <th scope="col" class="sort">Address</th>
+                            <th scope="col" class="sort">Meal</th>
+                            <th scope="col" class="sort">Rice+Roti</th>
                             <th scope="col" class="sort">Instruction</th> 
                             <th scope="col" class="sort">Action</th>
                            
@@ -35,7 +37,7 @@
                         <tr>
                             <td>{{ forloop.counter }}</td>
                             <td>{{ meal.requester }}</td>
-                            <td>{{ meal.plan }}</td>
+                            <td>{{ meal.plan.name }}</td>
                             <td>{{ meal.meal }}</td>
                             <td>{{ meal.date }}</td>
                             <td>
@@ -47,6 +49,8 @@
                                 </select>
                             </td>
                             <td> {{ meal.address }} </td>
+                            <td> {{ meal.meal_items|safe }}</td>
+                            <td> {{ meal.meal.name }}</td>
                             <td> {% if meal.instruction %}{{ meal.instruction }}{% endif %}</td>
                             <td>
                                 {% if meal.delivery_person %}
@@ -90,24 +94,29 @@
 
 
 {% endblock content %}
+
 {% block javascripts %}
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
+
 <script>
     $(document).ready(function () {
         // DataTables initialization
        
         $('#example1').dataTable( {
+            
             "columns": [
               { "data": "SN" },
               { "data": "User" },
               { "data": "Plan" },
-              { "data": "Meal" },
+              { "data": "Type" },
               { "data": "Date" },
               { "data": "Status" },
               { "data": "Address" },
+              { "data": "Meal" },
+              { "data": "Rice+Roti" },
               { "data": "Instruction" },
               { "data": "Action" }
             ]
@@ -155,6 +164,7 @@
                 }
             });
         });
+
     });
 </script>
 {% endblock javascripts %}
