@@ -487,8 +487,6 @@ class UserAddByFile(ModelViewSet):
                     create_objs.append(obj)
                 except:
                     pass
-            updatable_fields = ['Contact Number', 'Customer Name',]
-            unique_field = ['mobile_number']
             User.objects.bulk_create(
                 objs = create_objs,
                 batch_size = 100,
