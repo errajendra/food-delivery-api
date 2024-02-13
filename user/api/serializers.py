@@ -34,32 +34,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 
 
-"""" User Verify Account with otp Serializer."""
-# class UserVerifyAccountSerializer(serializers.Serializer):
-#     mobile_number = serializers.CharField()
-#     otp = serializers.IntegerField()
-    
-#     def validate_mobile_number(self, data):
-#         try:
-#             user = User.objects.get(mobile_number=data)
-#             self.user = user
-#             return data
-#         except:
-#             self.user = None
-#         raise serializers.ValidationError('User not fount.')
-    
-#     def validate_otp(self, data):
-#         try:
-#             if self.user:
-#                 user = self.user
-#             else:
-#                 user = None
-#         except Exception as e:
-#             user = None
-#         if user:
-#             if verify_otp(user, data):
-#                 return data
-#         raise serializers.ValidationError("Invalid Otp.")
+""" Use in Medicine upload or add by csv data. """
+class FileUploadSerializer(serializers.Serializer):
+    file = serializers.FileField()
+  
+
 
 class UserVerifyAccountSerializer(serializers.Serializer):
     mobile_number = serializers.CharField()

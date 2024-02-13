@@ -39,7 +39,9 @@
                             </a> {% endcomment %}
                             <div class="media-body">
                                 <span class="name mb-0 text-sm">{{user.name}} </span>
+                                {% if user.email %}
                                 <p class="name mb-0 text-xs">{{user.email}} </p>
+                                {% endif %}
                             </div>
                             </div>
                         </th>

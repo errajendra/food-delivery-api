@@ -9,6 +9,8 @@ from .views import (
     DeleteUserAccountView,
     UserAddressView,
     TransactionListView,
+    UserAddByFile,
+    UserMealPlanPurcheseAddByFile,
 )
 
 router = DefaultRouter()
@@ -41,6 +43,12 @@ router.register('notification', NotificationView,
 """ Transactions Url"""
 router.register('transactions', TransactionListView, 
                 basename="user-transaction-list-api")
+
+# Upload User by CSV
+router.register('user-upload', UserAddByFile, basename="user-upload")
+router.register('user-meal-plan-upload',
+                UserMealPlanPurcheseAddByFile, basename="user-meal-plan-upload")
+
 
 urlpatterns = [
     path('', include(router.urls)),

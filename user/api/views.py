@@ -2,12 +2,15 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from django.db.models import Q
 from .serializers import *
 from .exceptions import *
+import pandas as pd
+from meal.models import PlanPurchase, Plan
 
 
 
@@ -461,3 +464,178 @@ class TransactionListView(ModelViewSet):
     
     def get_queryset(self):
         return Transaction.objects.filter(user=self.request.user)
+
+
+
+""" User add by CSV upload. """
+class UserAddByFile(ModelViewSet):
+    http_method_names = ['post']
+    
+    def create(self, request, *args, **kwargs):
+        serializer = FileUploadSerializer(data=request.data)
+        if serializer.is_valid():
+            file = serializer.validated_data['file']
+            reader = pd.read_csv(file)
+            create_objs = []
+            for _, row in reader.iterrows():
+                try:
+                    obj = User(
+                        mobile_number = row["Contact Number"],
+                        name = row['Customer Name'],
+                        is_active = True,
+                    )
+                    create_objs.append(obj)
+                except:
+                    pass
+            updatable_fields = ['Contact Number', 'Customer Name',]
+            unique_field = ['mobile_number']
+            User.objects.bulk_create(
+                objs = create_objs,
+                batch_size = 100,
+                ignore_conflicts = True,
+            )
+            return Response({"status": "success"}, status=201)
+
+
+
+""" User Meal Purchese data add by CSV upload. """
+class UserMealPlanPurcheseAddByFile(ModelViewSet):
+    http_method_names = ['post']
+    
+    def create(self, request, *args, **kwargs):
+        serializer = FileUploadSerializer(data=request.data)
+        if serializer.is_valid():
+            file = serializer.validated_data['file']
+            reader = pd.read_csv(file)
+            create_plan_purchese_objs = []
+            for _, row in reader.iterrows():
+                try:
+                    user = User.objects.get(mobile_number = row["Contact Number"])
+                except User.DoesNotExist:
+                    user = None
+                if user:
+                    # For Breakfast
+                    try:
+                        breakfast = row["Purchased Breakfast"]
+                        if breakfast > 0:
+                            plan = Plan.objects.filter(
+                                name__name__icontains = "Breakfast",
+                                number_of_meals__gte = breakfast
+                            ).order_by('number_of_meals').first()
+                            tnx = Transaction.objects.create(
+                                user = user,
+                                amount = plan.price,
+                                status = "Success"
+                            )
+                            obj = PlanPurchase.objects.create(
+                                plan = plan,
+                                user = user,
+                                transaction = tnx,
+                                total_meals = breakfast,
+                                remaining_meals = row["Pending Breakfast"],
+                                status = True
+                            )
+                            # create_plan_purchese_objs.append(obj)
+                    except:
+                        pass
+                    
+                    # For Quick
+                    try:
+                        quick = row["Purchased Quick"]
+                        if quick > 0:
+                            plan = Plan.objects.filter(
+                                name__name__icontains = "Quick",
+                                number_of_meals__gte = quick
+                            ).order_by('number_of_meals').first()
+                            tnx = Transaction.objects.create(
+                                user = user,
+                                amount = plan.price,
+                                status = "Success"
+                            )
+                            obj = PlanPurchase.objects.create(
+                                plan = plan,
+                                user = user,
+                                transaction = tnx,
+                                total_meals = quick,
+                                remaining_meals = row["Pending Quick"],
+                                status = True
+                            )
+                            # create_plan_purchese_objs.append(obj)
+                    except:
+                        pass
+                    
+                    # For Regular
+                    try:
+                        regular = row["Purchased Regular"]
+                        if regular > 0:
+                            plan = Plan.objects.filter(
+                                name__name__icontains = "Regular",
+                                number_of_meals__gte = regular
+                            ).order_by('number_of_meals').first()
+                            tnx = Transaction.objects.create(
+                                user = user,
+                                amount = plan.price,
+                                status = "Success"
+                            )
+                            obj = PlanPurchase.objects.create(
+                                plan = plan,
+                                user = user,
+                                transaction = tnx,
+                                total_meals = regular,
+                                remaining_meals = row["Pending Regular"],
+                                status = True
+                            )
+                            # create_plan_purchese_objs.append(obj)
+                    except:
+                        pass
+                    
+                    # For Jumbo
+                    try:
+                        jumbo = row["Purchased Jumbo"]
+                        if jumbo > 0:
+                            plan = Plan.objects.filter(
+                                name__name__icontains = "Jumbo",
+                                number_of_meals__gte = jumbo
+                            ).order_by('number_of_meals').first()
+                            tnx = Transaction.objects.create(
+                                user = user,
+                                amount = plan.price,
+                                status = "Success"
+                            )
+                            obj = PlanPurchase.objects.create(
+                                plan = plan,
+                                user = user,
+                                transaction = tnx,
+                                total_meals = jumbo,
+                                remaining_meals = row["Pending Jumbo"],
+                                status = True
+                            )
+                            # create_plan_purchese_objs.append(obj)
+                    except:
+                        pass
+                    
+                    # For Premium
+                    try:
+                        premium = row["Purchased Premium"]
+                        if premium > 0:
+                            plan = Plan.objects.filter(
+                                name__name__icontains = "Premium",
+                                number_of_meals__gte = premium
+                            ).order_by('number_of_meals').first()
+                            tnx = Transaction.objects.create(
+                                user = user,
+                                amount = plan.price,
+                                status = "Success"
+                            )
+                            obj = PlanPurchase.objects.create(
+                                plan = plan,
+                                user = user,
+                                transaction = tnx,
+                                total_meals = premium,
+                                remaining_meals = row["Pending Premium"],
+                                status = True
+                            )
+                            # create_plan_purchese_objs.append(obj)
+                    except:
+                        pass
+            return Response({"status": "success"}, status=201)
