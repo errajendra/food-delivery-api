@@ -637,3 +637,4 @@ class UserMealPlanPurcheseAddByFile(ModelViewSet):
                     except:
                         pass
             return Response({"status": "success"}, status=201)
+        return Response(serializer.errors, status=400)
