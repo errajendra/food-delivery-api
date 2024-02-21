@@ -13,7 +13,7 @@
             </div>
             <!-- Light table -->
             <div class="mx-md-7 mx-lg-8 mx-3">
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{form.media}}
                     {{form.as_p}}
@@ -35,8 +35,6 @@
 <script>
     $(document).ready(function(){
 
-    
-       
         var multipleCancelButton1 = new Choices('#id_eating_type', {
             removeItemButton: true,
             renderChoiceLimit:500

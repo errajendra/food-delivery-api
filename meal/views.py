@@ -9,6 +9,7 @@ from user.models import *
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from .forms import BannerForm
 
 
 """
@@ -311,3 +312,52 @@ def supprt_list(request, id=None):
         "helps": CustomerSupport.objects.all()
     }
     return render(request, 'support/list.html', context)
+
+
+
+""" 
+Home Page Banner view on App    
+"""
+# Add Banner
+def add_banner(request):
+    form = BannerForm(data=request.POST or None, files=request.FILES or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('banner_list')
+    context = {
+        "form": form,
+        "title": "Add Banner",
+    }
+    return render(request, 'meal/form.html', context)
+
+
+# List of Banners
+def banner_list(request):
+    context = {
+        'title': "Banners List",
+        "banners": Banner.objects.all()
+    }
+    return render(request, 'meal/banners.html', context)
+
+
+def banner_delete(request, id):
+    instance = get_object_or_404(Banner, id=id)
+    instance.delete()
+    return redirect('banner_list')
+
+
+def banner_edit(request, id):
+    instance = get_object_or_404(Banner, id=id)
+    form = BannerForm(
+        instance=instance, data=request.POST or None, files=request.FILES or None)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return redirect('banner_list')
+    context = {
+        "title": "Update Banner",
+        "form": form,
+    }
+    return render(request, 'meal/form.html', context)
+

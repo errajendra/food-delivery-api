@@ -1,7 +1,8 @@
 from django import forms
 from .models import (
     MealType, Meal,
-    Plan, MealRequestDaily, DailyMealMenu
+    Plan, MealRequestDaily, DailyMealMenu,
+    Banner,
 )
 
 
@@ -84,4 +85,17 @@ class DailyMealMenuForm(forms.ModelForm):
             'date': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
             'meal_type': forms.Select(attrs={'class':'form-control'}),
             'eating_type': forms.Select(attrs={'class':'form-control'}),
+        }
+
+
+"""
+Banner form used on Home Page of App
+"""
+class BannerForm(forms.ModelForm):
+    class Meta:
+        model = Banner
+        fields = "__all__"
+        
+        widgets = {
+            'alt': forms.TextInput(attrs={'class':'form-control'})
         }

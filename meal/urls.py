@@ -41,6 +41,12 @@ urlpatterns = [
     path('edit-daily-meal-menu/<int:id>/', daily_meal_menu_edit, name='edit_daily_meal_menu'),
     path('delete-daily-meal-menu/<int:id>/', daily_meal_menu_delete, name='delete_daily_meal_menu'),
     
+    # Banner Urls
+    path('banner-list/', banner_list, name='banner_list'),
+    path('add-banner/', add_banner, name='add_banner'),
+    path('edit-banner/<int:id>/', banner_edit, name='edit_banner'),
+    path('delete-banner/<int:id>/', banner_delete, name='delete_banner'),
+    
     # Support Urls
     path('supports/', supprt_list, name="supports"),
     

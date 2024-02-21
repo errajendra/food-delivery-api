@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 from ckeditor.fields import RichTextField
+from PIL import Image
 from user.models import (
     BaseModel, CustomUser as User,
     Transaction, _
@@ -265,3 +267,34 @@ class CustomerSupport(BaseModel):
         assert self.can_be_closed, f'Cannot close ticket with status "{self .status}"!'
         self.status = "Close"
         self.save()
+
+
+
+""" 
+Home Page banner image.
+"""
+def banner_image_size(image):
+    # def validator(image):
+    width = 720
+    height = 300
+    img = Image.open(image)
+    fw, fh = img.size
+    if not fw == width or not fh == height:
+        raise ValidationError(
+            f"Height {height} or Width {width} is not found.")
+    
+
+class Banner(BaseModel):
+    
+    image = models.ImageField(
+        upload_to='banners/',
+        validators=[banner_image_size],
+        help_text="Height 300 and Width 720 is only allowed."
+    )
+    alt = models.CharField(max_length=255)
+    status = models.BooleanField(
+        default=True,
+        help_text=(
+            "Status is True it means it will show in listing.",
+            "Uncheck this for removing this entry from listing."
+        ))

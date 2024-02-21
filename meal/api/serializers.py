@@ -4,6 +4,7 @@ from ..models import (
     Meal, Plan, PlanPurchase, MealRequestDaily,
     DailyMealMenu, MealType,
     CustomerSupport,
+    Banner,
 )
 from user.models import Address
 from user.api.serializers import TransactionSerializer
@@ -148,10 +149,16 @@ class DailyMealRequestSerializer(serializers.Serializer):
     
 
 
-class BannerSerializer(serializers.Serializer):
-    image_url = serializers.CharField()
-    alt_text = serializers.CharField()    
-    
+class BannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Banner
+        fields = ('image', 'alt')
+        
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['image'] = self.context['request'].build_absolute_uri(instance.image.url)
+        return data
+
 
 
 class MealRequestDailySerializer(serializers.ModelSerializer):

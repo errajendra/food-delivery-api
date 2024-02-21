@@ -4,9 +4,9 @@ from user.utils import render_index_page
 from django.conf import settings
 from django.conf.urls.static import static
 
-admin.site.site_header = 'Food Delivery Adminsitration'
+admin.site.site_header = 'Food Delivery (ATM) Adminsitration'
 admin.site.index_title = ''
-admin.site.site_title = 'Food Delivery Admin'
+admin.site.site_title = 'ATM - Food Delivery Admin'
 
 urlpatterns = [
     path('admin/', admin.site.urls),

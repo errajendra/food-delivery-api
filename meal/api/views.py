@@ -12,7 +12,7 @@ from razor_pay.utils import (
 )
 from ..models import (
     MealType, Meal, Plan, PlanPurchase, Transaction, MealRequestDaily,
-    DailyMealMenu, CustomerSupport,
+    DailyMealMenu, CustomerSupport, Banner,
 )
 from .serializers import (
     MealTypeSerilizer, MealSerializer,MealTypeMenuSerilizer,
@@ -196,6 +196,10 @@ class MenuListOfPlan(viewsets.ModelViewSet):
 
 
 
+""" 
+Daily meal order or Plan  meal order ViewSets
+Get  User Daily/Plan meal orders.
+"""
 class PlanMeal(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     http_method_names = ('post', 'get')
@@ -290,12 +294,8 @@ class PlanMeal(viewsets.ModelViewSet):
 """ Home Page View. """
 class BannerView(APIView):
     def get(self, request, format=None):
-        banners = [
-            {'image_url': self.request.build_absolute_uri('/static/banners/banner2.png'), 'alt_text': 'Banner 1'},
-            # Add more banners as needed
-        ]
-
-        serializer = BannerSerializer(banners, many=True)
+        banners = Banner.objects.filter(status=True)
+        serializer = BannerSerializer(banners, many=True, context={'request':request})
         return Response(
             data={
                 "status": status.HTTP_200_OK,

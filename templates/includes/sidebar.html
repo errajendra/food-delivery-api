@@ -146,6 +146,16 @@
           <span class="sidebar-text">Delivery Person</span>
         </a>
       </li>
+      
+      <li class="nav-item {% if request.resolver_match.view_name == 'banner_list'  %} active {% endif %}">
+        <a href="{% url 'banner_list' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <i class="fas fa-images"></i>
+          </span>
+          <span class="sidebar-text">Banners</span>
+        </a>
+      </li>
+
       {% elif request.user.is_delivery_person %}
       <li class="nav-item {% if request.resolver_match.view_name == 'daily_meal_request_list' %} active {% endif %}">
         <a href="{% url 'daily_meal_request_list' %}" class="nav-link">
