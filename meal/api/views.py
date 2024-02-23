@@ -320,8 +320,12 @@ class RequestedPlanMealHistory(viewsets.ModelViewSet):
     
     
     def list(self, request, *args, **kwargs):
+        now = datetime.now(timezone("Asia/Kolkata"))
         queryset = self.get_queryset()
-        requested = queryset.filter(status="Requested")
+        requested = queryset.filter(
+            status="Requested",
+            date__gte = now.date()
+        )
         completed = queryset.filter(status="Success")
         canceled = queryset.filter(status="Cancelled")
         data = {
