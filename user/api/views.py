@@ -93,8 +93,9 @@ class SendLoginOtpView(ModelViewSet):
             user = serializer.validated_data['mobile_number']
             email = serializer.validated_data['email']
             try:
-                user.email = email
-                user.save()
+                if not user.email:
+                    user.email = email
+                    user.save()
             except:
                 pass
             if send_otp(user):

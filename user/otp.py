@@ -9,16 +9,15 @@ def send_otp(user):
     user.otp = otp
     user.save()
     email_context = {
-        "message": f"Hii, {user.name} please verify your account with entering otp: {otp}",
-        "name": "Food Delivery (ATM)",
-        "email": f"{settings.DEFAULT_FROM_EMAIL}"
+        "otp": otp,
+        "email": f"contact@atmkaro.in"
     }
     email_message = render_to_string(
-        'user/email/created.html', email_context
+        'user/email/otp.html', email_context
     )
     if user.email:
         email = EmailMessage(
-            subject = "Food Delivery (ATM): OTP",
+            subject = "Your login OTP is ready to unlock a world of flavor at Amritsari Tadke Mein! 🍲",
             body = email_message,
             to = [user.email]
         )

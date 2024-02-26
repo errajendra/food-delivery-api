@@ -18,20 +18,21 @@ def create_notification_setting(sender, instance, created, **kwargs):
             user = instance
         )
         # Sending otp on his mail
-        otp = randint(100000, 999999)
-        instance.otp = otp
-        instance.save()
-        email_context = {
-            "message": f"Hii, {instance.name} please verify your account with entering otp: {otp}",
-            "name": "Food Delivery Team",
-            "email": f"{settings.DEFAULT_FROM_EMAIL}"
-        }
-        email_message = render_to_string(
-            'user/email/created.html', email_context
-        )
-        email = EmailMessage(
-            subject = "Veification Code- Food Delivery Subscription",
-            body = email_message,
-            to = [instance.email]
-        )
-        email.send(fail_silently=False)
+        if instance.email:
+            otp = randint(100000, 999999)
+            instance.otp = otp
+            instance.save()
+            email_context = {
+                "otp": otp,
+                "name": "The Amritsari Tadke Mein Team",
+                "email": f"contact@atmkaro.in"
+            }
+            email_message = render_to_string(
+                'user/email/created.html', email_context
+            )
+            email = EmailMessage(
+                subject = "Welcome to Amritsari Tadke Mein! Your Flavorful Journey Starts Here! 🌟",
+                body = email_message,
+                to = [instance.email]
+            )
+            email.send(fail_silently=False)

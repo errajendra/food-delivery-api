@@ -16,9 +16,9 @@ from .views import (
 router = DefaultRouter()
 
 """ User Register, Login and Profile Urls. """
-router.register('register', UserRegisterView, basename="user-register-api")
+router.register('register', UserRegisterView, basename="user-register-api") # Not Using
 router.register('verify-account-with-otp', UserVerifyAccountView,
-                basename="verify-account-with-otp")
+                basename="verify-account-with-otp") # Not Using
 router.register('send-login-otp', SendLoginOtpView, basename="send-login-otp-api")
 router.register('login', LoginView, basename="user-login-api")
 router.register('delete-account-permanentaly',
