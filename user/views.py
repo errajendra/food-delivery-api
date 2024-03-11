@@ -48,11 +48,11 @@ def admin_login(request):
     message = None
 
     if request.method == "POST":
-        mobile_number = request.POST['mobile_number']
+        email = request.POST['email']
         password = request.POST['password']
 
         try:
-            user = User.objects.get(mobile_number=mobile_number, is_active=True)
+            user = User.objects.get(email=email, is_active=True)
         except User.DoesNotExist:
             user = None
         if user and (user.is_staff or user.is_delivery_person or user.is_cook):

@@ -26,7 +26,7 @@ def send_otp(user):
 
 
 def verify_otp(user, otp):
-    if user.mobile_number == "9876543210" and int(otp) == 123456:
+    if user.email in ["ankitp@wooshelf.com", "rajendras@wooshelf.com"] and int(otp) == 123456:
         return True
     try:
         otp_int = int(otp)

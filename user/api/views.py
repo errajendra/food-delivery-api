@@ -90,14 +90,8 @@ class SendLoginOtpView(ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.validated_data['mobile_number']
-            email = serializer.validated_data['email']
-            try:
-                if not user.email:
-                    user.email = email
-                    user.save()
-            except:
-                pass
+            user = serializer.validated_data['email']
+            
             if send_otp(user):
                 return Response(
                     {   'status': status.HTTP_200_OK,

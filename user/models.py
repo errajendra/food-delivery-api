@@ -37,9 +37,10 @@ class LowercaseEmailField(models.EmailField):
 
 
 class CustomUser(AbstractUser):
-    email = LowercaseEmailField(null=True, blank=True)
+    email = LowercaseEmailField(unique=True)
     mobile_number = models.CharField(
-        _("Mobile Number"), max_length=100, validators=[phone_validator],unique=True,
+        _("Mobile Number"), max_length=100, validators=[phone_validator],
+        null=True, blank=True
     )
     password = models.CharField(
         _("Password"), max_length=128, validators=[password_validator]
@@ -82,8 +83,9 @@ class CustomUser(AbstractUser):
     first_name = None
     last_name = None
 
-    USERNAME_FIELD = "mobile_number"
-
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
+    
     objects = CustomUserManager()
 
     def __str__(self):

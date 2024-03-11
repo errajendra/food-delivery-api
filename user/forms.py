@@ -9,7 +9,7 @@ from .models import CustomUser as User
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ("name", "email","image", "mobile_number")
+        fields = ("name", "email", "image", "mobile_number")
         
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),

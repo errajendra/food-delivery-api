@@ -69,11 +69,11 @@ class UserVerifyAccountSerializer(serializers.Serializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'name', 'email', 'image', 'fcm_token')
+        fields = ('id', 'name', 'mobile_number', 'image', 'fcm_token')
         
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['mobile_number'] = instance.mobile_number
+        data['email'] = instance.email
         return data
 
 
@@ -87,18 +87,19 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
 
 
-# User Login Serializer
+# User Login and Register Serializer
 class SendOtpSerializer(serializers.Serializer):
-    mobile_number = serializers.CharField()
+    mobile_number = serializers.CharField(required=False)
     email = serializers.EmailField()
 
-    def validate_mobile_number(self, data):
+    def validate_email(self, data):
         try:
-            qs = User.objects.filter(mobile_number=data)
+            qs = User.objects.filter(email=data)
             if qs.exists():
                 return qs.first()
             else:
-                user = User.objects.create(mobile_number=data)
+                user = User.objects.create(email=data)
+            print(user)
             return user
         except Exception as ex:
             raise serializers.ValidationError(f"Error - {ex}")
@@ -108,25 +109,25 @@ class SendOtpSerializer(serializers.Serializer):
 
 # User Login Serializer
 class LoginSerializer(serializers.Serializer):
-    mobile_number = serializers.CharField()
+    email = serializers.EmailField()
     otp = serializers.CharField()
     fcm_token = serializers.CharField(required=False)
 
-    def validate_mobile_number(self, data):
+    def validate_email(self, data):
         try:
-            qs = User.objects.get(mobile_number=data)
+            qs = User.objects.get(email=data)
             return qs
         except:
-            raise serializers.ValidationError("No active user found with this mobile number.")
+            raise serializers.ValidationError("No active user found with this email.")
 
     def validate_otp(self, data):
         try:
-            mob = self.context['request'].data['mobile_number']
+            email_id = self.context['request'].data['email']
         except:
-            mob = None
-        if mob:
+            email_id = None
+        if email_id:
             try:
-                user = User.objects.get(mobile_number=mob)
+                user = User.objects.get(email=email_id)
                 if verify_otp(user, data):
                     return data
             except:
