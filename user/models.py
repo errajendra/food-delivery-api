@@ -135,6 +135,8 @@ class Address(BaseModel):
         on_delete=models.CASCADE,
         related_name="address"
     )
+    name = models.CharField("Name", max_length=50, null=True, blank=True)
+    mobile_number = models.CharField("Mobile Number", max_length=15, null=True, blank=True)
     type = models.CharField(
         max_length=12, choices=[
             ("Home", "Home"),
@@ -183,7 +185,8 @@ class Address(BaseModel):
 
     @property
     def full_address(self):
-        return "%s %s %s, %s %s -%s" % (
+        return "%s, %s %s %s, %s %s -%s" % (
+            self.mobile_number,
             self.house_number, self.address1, self.address2,
             self.city, self.state, self.zip)
 
