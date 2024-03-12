@@ -137,8 +137,8 @@ class Address(BaseModel):
         on_delete=models.CASCADE,
         related_name="address"
     )
-    name = models.CharField("Name", max_length=50, null=True, blank=True)
-    MobileNo = models.CharField("Mobile Number", max_length=15, null=True, blank=True)
+    fullName = models.CharField("Name", max_length=50, null=True, blank=True)
+    mobileNo = models.CharField("Mobile Number", max_length=15, null=True, blank=True)
     type = models.CharField(
         max_length=12, choices=[
             ("Home", "Home"),
