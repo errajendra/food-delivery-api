@@ -6,7 +6,11 @@ from datetime import datetime
 from .models import *
 from meal.models import *
 from datetime import date
-from .forms import ProfileForm
+from .forms import (
+    ProfileForm, 
+    UserAdminForm,
+    AddCustummerForm,
+)
 
 
 @login_required
@@ -82,9 +86,36 @@ def user_list(request):
     """ All Customers Listing. """
     context = {
         'title': "Users",
-        'users': User.objects.filter(is_staff=False)
+        'users': User.objects.select_related().filter(is_superuser=False)
     }
     return render(request, 'user/list.html', context)
+
+
+def user_edit(request, id):
+    instance = get_object_or_404(User, id=id)
+    if request.method == 'POST':
+        form = UserAdminForm(request.POST, request.FILES, instance=instance)
+        if form.is_valid():
+            form.save()
+            # Redirect to the profile page or any other appropriate page after a successful update.
+            return redirect('users')
+    else:
+        form = UserAdminForm(instance=instance)
+    
+    return render(request, 'meal/form.html', {'form': form})
+
+
+def user_add(request):
+    if request.method == 'POST':
+        form = AddCustummerForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            # Redirect to the profile page or any other appropriate page after a successful update.
+            return redirect('users')
+    else:
+        form = AddCustummerForm()
+    
+    return render(request, 'meal/form.html', {'form': form})
 
 
 def user_profile(request):

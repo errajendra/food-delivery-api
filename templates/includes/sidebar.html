@@ -12,7 +12,8 @@
 <nav id="sidebarMenu" class="sidebar d-lg-block bg-gray-800 text-white collapse" data-simplebar>
   <div class="sidebar-inner px-4 pt-3">
     <div>
-      <img src="/static/assets/img/logo.png" class="image-md">Hi, {{request.user.mobile_number}}
+      <img src="/static/assets/img/logo.png" class="image-md">
+      {{request.user.name}}
     </div>
     {% comment %} <div class="user-card d-flex d-md-none align-items-center justify-content-between justify-content-md-center pb-4">
       <div class="d-flex align-items-center">
@@ -49,132 +50,201 @@
 <!--                </a>-->
 <!--              </li>-->
 
-      {% if request.user.is_staff %}
-      <li class="nav-item {% if request.resolver_match.view_name == 'index' %} active {% endif %}">
-        <a href="{% url 'index' %}" class="nav-link">
-          <span class="sidebar-icon">
-            <i class="fas fa-tachometer-alt"></i>
-          </span>
-          <span class="sidebar-text">Dashboard</span>
-        </a>
-      </li>
-      <li class="nav-item {% if request.resolver_match.view_name == 'users' %} active {% endif %}">
-        <a href="{% url 'users' %}" class="nav-link">
-          <span class="sidebar-icon">
-            <i class="fas fa-user"></i>
-
-          </span>
-          <span class="sidebar-text">Customers</span>
-        </a>
-      </li>
-            
-      <li class="nav-item {% if 'daily_meal_menu_list' in segment %} active {% endif %}">
-        <a href="{% url 'daily_meal_menu_list' %}" class="nav-link">
-          <span class="sidebar-icon">
-            <i class="fas fa-calendar"></i>
-          </span>
-          <span class="sidebar-text">Daily Meal Menu</span>
-        </a>
-      </li>
-      
-      <li class="nav-item {% if request.resolver_match.view_name == 'meal_type_list' %} active {% endif %}">
-        <a href="{% url 'meal_type_list' %}" class="nav-link">
-          <span class="sidebar-icon">
-            <i class="fas fa-calendar"></i>
-          </span>
-          <span class="sidebar-text">Meal Type(Name)</span>
-        </a>
-      </li>
-
-      <li class="nav-item {% if request.resolver_match.view_name == 'plan_list' %} active {% endif %}">
-        <a href="{% url 'plan_list' %}" class="nav-link">
-          <span class="sidebar-icon">
-            <i class="fas fa-calendar"></i>
-          </span>
-          <span class="sidebar-text">Plan</span>
-        </a>
-      </li>
-      <li class="nav-item {% if request.resolver_match.view_name == 'meal_list' %} active {% endif %}">
-        <a href="{% url 'meal_list' %}" class="nav-link">
-          <span class="sidebar-icon">
-            <i class="fas fa-utensils"></i>
-          </span>
-          <span class="sidebar-text">Meal</span>
-        </a>
-      </li>
-
-      <li class="nav-item {% if request.resolver_match.view_name == 'plan_purchase_list' %} active {% endif %}">
-        <a href="{% url 'plan_purchase_list' %}" class="nav-link">
-          <span class="sidebar-icon">
-            <i class="fas fa-calendar"></i>
-          </span>
-          <span class="sidebar-text">Plan Purchase</span>
-        </a>
-      </li>
-      <li class="nav-item {% if request.resolver_match.view_name == 'daily_meal_request_list' %} active {% endif %}">
-        <a href="{% url 'daily_meal_request_list' %}" class="nav-link">
+      {% if request.user.is_superuser %}
+        <li class="nav-item {% if request.resolver_match.view_name == 'index' %} active {% endif %}">
+          <a href="{% url 'index' %}" class="nav-link">
             <span class="sidebar-icon">
-                <i class="fas fa-utensils"></i>
+              <i class="fas fa-tachometer-alt"></i>
             </span>
-            <span class="sidebar-text">Daily Meal Request</span>
-        </a>
-    </li>
-    
-      
-      <li class="nav-item {% if request.resolver_match.view_name == 'transaction_list'  %} active {% endif %}">
-        <a href="{% url 'transaction_list' %}" class="nav-link">
-          <span class="sidebar-icon">
-            <i class="fas fa-exchange-alt"></i>
+            <span class="sidebar-text">Dashboard</span>
+          </a>
+        </li>
 
-          </span>
-          <span class="sidebar-text">Transaction</span>
-        </a>
-      </li>
-      <li class="nav-item {% if request.resolver_match.view_name == 'supports'  %} active {% endif %}">
-        <a href="{% url 'supports' %}" class="nav-link">
-          <span class="sidebar-icon">
-            <i class="fas fa-headphones-alt"></i>
-          </span>
-          <span class="sidebar-text">Customer Support</span>
-        </a>
-      </li>
-      <li class="nav-item {% if request.resolver_match.view_name == 'delivery_person_list'  %} active {% endif %}">
-        <a href="{% url 'delivery_person_list' %}" class="nav-link">
-          <span class="sidebar-icon">
-            <i class="fas fa-truck"></i>
-          </span>
-          <span class="sidebar-text">Delivery Person</span>
-        </a>
-      </li>
-      
-      <li class="nav-item {% if request.resolver_match.view_name == 'banner_list'  %} active {% endif %}">
-        <a href="{% url 'banner_list' %}" class="nav-link">
-          <span class="sidebar-icon">
-            <i class="fas fa-images"></i>
-          </span>
-          <span class="sidebar-text">Banners</span>
-        </a>
-      </li>
+        <li class="nav-item {% if request.resolver_match.view_name == 'users' %} active {% endif %}">
+          <a href="{% url 'users' %}" class="nav-link">
+            <span class="sidebar-icon">
+              <i class="fas fa-user"></i>
+            </span>
+            <span class="sidebar-text">Customers</span>
+          </a>
+        </li>
+        
+        <li class="nav-item {% if 'daily_meal_menu_list' in segment %} active {% endif %}">
+          <a href="{% url 'daily_meal_menu_list' %}" class="nav-link">
+            <span class="sidebar-icon">
+              <i class="fas fa-calendar"></i>
+            </span>
+            <span class="sidebar-text">Daily Meal Menu</span>
+          </a>
+        </li>
+        
+        <li class="nav-item {% if request.resolver_match.view_name == 'meal_type_list' %} active {% endif %}">
+          <a href="{% url 'meal_type_list' %}" class="nav-link">
+            <span class="sidebar-icon">
+              <i class="fas fa-calendar"></i>
+            </span>
+            <span class="sidebar-text">Meal Type(Name)</span>
+          </a>
+        </li>
+
+        <li class="nav-item {% if request.resolver_match.view_name == 'plan_list' %} active {% endif %}">
+          <a href="{% url 'plan_list' %}" class="nav-link">
+            <span class="sidebar-icon">
+              <i class="fas fa-calendar"></i>
+            </span>
+            <span class="sidebar-text">Plan</span>
+          </a>
+        </li>
+
+        <li class="nav-item {% if request.resolver_match.view_name == 'meal_list' %} active {% endif %}">
+          <a href="{% url 'meal_list' %}" class="nav-link">
+            <span class="sidebar-icon">
+              <i class="fas fa-utensils"></i>
+            </span>
+            <span class="sidebar-text">Meal</span>
+          </a>
+        </li>
+
+        <li class="nav-item {% if request.resolver_match.view_name == 'plan_purchase_list' %} active {% endif %}">
+          <a href="{% url 'plan_purchase_list' %}" class="nav-link">
+            <span class="sidebar-icon">
+              <i class="fas fa-calendar"></i>
+            </span>
+            <span class="sidebar-text">Plan Purchase</span>
+          </a>
+        </li>
+
+        <li class="nav-item {% if request.resolver_match.view_name == 'daily_meal_request_list' %} active {% endif %}">
+          <a href="{% url 'daily_meal_request_list' %}" class="nav-link">
+              <span class="sidebar-icon">
+                  <i class="fas fa-utensils"></i>
+              </span>
+              <span class="sidebar-text">Daily Meal Request</span>
+          </a>
+        </li>
+        
+        <li class="nav-item {% if request.resolver_match.view_name == 'transaction_list'  %} active {% endif %}">
+          <a href="{% url 'transaction_list' %}" class="nav-link">
+            <span class="sidebar-icon">
+              <i class="fas fa-exchange-alt"></i>
+
+            </span>
+            <span class="sidebar-text">Transaction</span>
+          </a>
+        </li>
+
+        <li class="nav-item {% if request.resolver_match.view_name == 'supports'  %} active {% endif %}">
+          <a href="{% url 'supports' %}" class="nav-link">
+            <span class="sidebar-icon">
+              <i class="fas fa-headphones-alt"></i>
+            </span>
+            <span class="sidebar-text">Customer Support</span>
+          </a>
+        </li>
+
+        <li class="nav-item {% if request.resolver_match.view_name == 'delivery_person_list'  %} active {% endif %}">
+          <a href="{% url 'delivery_person_list' %}" class="nav-link">
+            <span class="sidebar-icon">
+              <i class="fas fa-truck"></i>
+            </span>
+            <span class="sidebar-text">Delivery Person</span>
+          </a>
+        </li>
+        
+        <li class="nav-item {% if request.resolver_match.view_name == 'banner_list'  %} active {% endif %}">
+          <a href="{% url 'banner_list' %}" class="nav-link">
+            <span class="sidebar-icon">
+              <i class="fas fa-images"></i>
+            </span>
+            <span class="sidebar-text">Banners</span>
+          </a>
+        </li>
+
+      {% elif request.user.is_staff %}
+        <li class="nav-item {% if request.resolver_match.view_name == 'index' %} active {% endif %}">
+          <a href="{% url 'index' %}" class="nav-link">
+            <span class="sidebar-icon">
+              <i class="fas fa-tachometer-alt"></i>
+            </span>
+            <span class="sidebar-text">Dashboard</span>
+          </a>
+        </li>
+
+        <li class="nav-item {% if request.resolver_match.view_name == 'users' %} active {% endif %}">
+          <a href="{% url 'users' %}" class="nav-link">
+            <span class="sidebar-icon">
+              <i class="fas fa-user"></i>
+            </span>
+            <span class="sidebar-text">Customers</span>
+          </a>
+        </li>
+        
+        <li class="nav-item {% if request.resolver_match.view_name == 'transaction_list'  %} active {% endif %}">
+          <a href="{% url 'transaction_list' %}" class="nav-link">
+            <span class="sidebar-icon">
+              <i class="fas fa-exchange-alt"></i>
+            </span>
+            <span class="sidebar-text">Transaction</span>
+          </a>
+        </li>
+
+        <li class="nav-item {% if request.resolver_match.view_name == 'plan_purchase_list' %} active {% endif %}">
+          <a href="{% url 'plan_purchase_list' %}" class="nav-link">
+            <span class="sidebar-icon">
+              <i class="fas fa-calendar"></i>
+            </span>
+            <span class="sidebar-text">Plan Purchase</span>
+          </a>
+        </li>
+
+        <li class="nav-item {% if request.resolver_match.view_name == 'daily_meal_request_list' %} active {% endif %}">
+          <a href="{% url 'daily_meal_request_list' %}" class="nav-link">
+              <span class="sidebar-icon">
+                  <i class="fas fa-utensils"></i>
+              </span>
+              <span class="sidebar-text">Daily Meal Request</span>
+          </a>
+        </li>
 
       {% elif request.user.is_delivery_person %}
-      <li class="nav-item {% if request.resolver_match.view_name == 'daily_meal_request_list' %} active {% endif %}">
-        <a href="{% url 'daily_meal_request_list' %}" class="nav-link">
+        <li class="nav-item {% if request.resolver_match.view_name == 'index' %} active {% endif %}">
+          <a href="{% url 'index' %}" class="nav-link">
             <span class="sidebar-icon">
-                <i class="fas fa-utensils"></i>
+              <i class="fas fa-tachometer-alt"></i>
             </span>
-            <span class="sidebar-text">Meal Delivery</span>
-        </a>
-      </li>
+            <span class="sidebar-text">Dashboard</span>
+          </a>
+        </li>
+
+        <li class="nav-item {% if request.resolver_match.view_name == 'daily_meal_request_list' %} active {% endif %}">
+          <a href="{% url 'daily_meal_request_list' %}" class="nav-link">
+              <span class="sidebar-icon">
+                  <i class="fas fa-utensils"></i>
+              </span>
+              <span class="sidebar-text">Meal Delivery</span>
+          </a>
+        </li>
+
       {% elif request.user.is_cook %}
-      <li class="nav-item {% if request.resolver_match.view_name == 'daily_meal_request_list' %} active {% endif %}">
-        <a href="{% url 'daily_meal_request_list' %}" class="nav-link">
+        <li class="nav-item {% if request.resolver_match.view_name == 'index' %} active {% endif %}">
+          <a href="{% url 'index' %}" class="nav-link">
             <span class="sidebar-icon">
-                <i class="fas fa-utensils"></i>
+              <i class="fas fa-tachometer-alt"></i>
             </span>
-            <span class="sidebar-text">Meal Orders</span>
-        </a>
-      </li>
+            <span class="sidebar-text">Dashboard</span>
+          </a>
+        </li>
+        
+        <li class="nav-item {% if request.resolver_match.view_name == 'daily_meal_request_list' %} active {% endif %}">
+          <a href="{% url 'daily_meal_request_list' %}" class="nav-link">
+              <span class="sidebar-icon">
+                  <i class="fas fa-utensils"></i>
+              </span>
+              <span class="sidebar-text">Meal Orders</span>
+          </a>
+        </li>
       {% endif %}
+
     </ul>
   </div>
 </nav>

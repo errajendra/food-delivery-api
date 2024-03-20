@@ -27,4 +27,20 @@
     </div>
 </div>
 
+ <!-- Include jQuery using a CDN -->
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+ <script src="{% static 'choices.min.js' %}"></script>
+ 
+ <script>
+    $(document).ready(function(){
+
+        var multipleCancelButton1 = new Choices('#id_plan', {
+            removeItemButton: true,
+            renderChoiceLimit:500
+        });      
+        
+    });
+ </script>
+
 {% endblock content %}

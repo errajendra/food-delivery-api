@@ -400,7 +400,17 @@ class DailyMealMenuView(viewsets.ModelViewSet):
         dates = qs.values_list('date', flat=True)
         data = {}
         for d in dates:
-            data[f"{d}"] = DailyMealMenuSerializer(qs.filter(date=d),many=True).data
+            date_qs = qs.filter(date=d)
+            # date_meal_type = MealType.objects.filter(
+            #     id__in = date_qs.values_list('meal_type', flat=True)
+            #     ).values_list('name', flat=True)
+            
+            # data[f"{d}"] = {
+            #     "meal_types": date_meal_type,
+            #     "list": DailyMealMenuSerializer(date_qs, many=True).data
+            # }
+            
+            data[f"{d}"] = DailyMealMenuSerializer(date_qs, many=True).data
         context = {
             "status": status.HTTP_200_OK,
             "message":"Successfully fetched daily meal menu.",

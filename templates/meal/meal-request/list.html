@@ -36,7 +36,10 @@
                         {% for meal in daily_meal_request %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
-                            <td>{{ meal.requester }}</td>
+                            <td>
+                                <p class="mb-0"> {{meal.requester.name}} </p>
+                                <p class="mb-0"> {{meal.requester.email}} </p>
+                            </td>
                             <td>{{ meal.plan.plan.name }}</td>
                             <td>{{ meal.meal }}</td>
                             <td>{{ meal.date }}</td>

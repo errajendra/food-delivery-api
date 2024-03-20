@@ -106,7 +106,7 @@ class PlanPurchase(BaseModel):
     # )
 
     def __str__(self):
-        return f"{self.plan.name} - {self.user.mobile_number}"
+        return f"{self.user} - {self.plan.name}"
 
 
 

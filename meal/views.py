@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from .forms import (
     Meal, MealForm, MealTypeForm,
     Plan, PlanForm, MealRequestForm,
-    DailyMealMenuForm
+    DailyMealMenuForm, PlanPurchaseForm,
 )
 from .models import *
 from user.models import *
@@ -151,56 +151,91 @@ def plan_edit(request, id):
     return render(request, 'meal/form.html', context)
 
 
+
+"""
+Plan Purchese
+"""
+
 def plan_purchase_list(request):
     plan_purchase = PlanPurchase.objects.select_related().all()
     context = {"plan_purchase": plan_purchase, 'title': "Plan Purchase List"}
     return render(request, 'meal/plan-purchase-list.html', context)
 
 
+def plan_purchese_add(request):
+    if request.method == 'POST':
+        form = PlanPurchaseForm(request.POST)
+        if form.is_valid():
+            plan = get_object_or_404(Plan, id=request.POST.get('plan'))
+            user = get_object_or_404(CustomUser, id=request.POST.get('user'))
+            transaction = Transaction.objects.create(
+                user = user,
+                amount = plan.price,
+                status = "Success"
+            )
+            plan_purchese = PlanPurchase.objects.create(
+                user = user,
+                plan = plan,
+                transaction = transaction,
+                total_meals = plan.number_of_meals,
+                remaining_meals = plan.number_of_meals,
+                status = True
+            )
+            return redirect('plan_purchase_list')
+    else:
+        form = PlanPurchaseForm()
+
+    context = {
+        "form": form,
+        "title": "New Plan Purchese Form",
+    }
+    return render(request, 'meal/form.html', context)
+
+
 def daily_meal_request_list(request):
-    user = request.user
+    # user = request.user
     
-    if request.user.is_staff:
-        daily_meal_request = MealRequestDaily.objects.select_related().all()
-        context = {"daily_meal_request": daily_meal_request, 'title': "Daily Meal Request"}
-        return render(request, 'meal/meal-request/list.html', context)
+    # if request.user.is_staff:
+    #     daily_meal_request = MealRequestDaily.objects.select_related().all()
+    #     context = {"daily_meal_request": daily_meal_request, 'title': "Daily Meal Request"}
+    #     return render(request, 'meal/meal-request/list.html', context)
     
-    elif user.is_cook:
-        today = (datetime.now(timezone.utc) + timedelta(hours=5, minutes=30)).date()
-        daily_meal_request = MealRequestDaily.objects.select_related().filter(
-            status="Requested", 
-            date__date = today
-        ).order_by("date")
-        context = {
-            "daily_meal_request": daily_meal_request, 
-            'title': "Meal to Cook",
-            'today': today}
-        
-        # Counts
-        plans = Plan.objects.filter(
-            id__in= PlanPurchase.objects.filter(
-                id__in = daily_meal_request.values_list('plan', flat=True)
-            ).values_list('plan', flat=True))
-        meals_count = []
-        for plan in plans:
-            meal_types = [i.strip() for i in plan.eating_type.split(",")]
-            meal_type_counts = []
-            for et in meal_types:
-                qty = daily_meal_request.filter(meal__eating_type=et, plan__plan=plan).count()
-                if qty > 0:
-                    d = {
-                        "name": f"{plan.name} ({et})",
-                        "quantity": qty
-                    }
-                    meal_type_counts.append(d)
-            meals_count.append(meal_type_counts)
-        context['meals_count'] = meals_count
-        return render(request, 'meal/meal-request/list-cook.html', context)
+    # elif user.is_cook:
+    today = (datetime.now(timezone.utc) + timedelta(hours=5, minutes=30)).date()
+    daily_meal_request = MealRequestDaily.objects.select_related().filter(
+        status="Requested", 
+        date__date = today
+    ).order_by("date")
+    context = {
+        "daily_meal_request": daily_meal_request, 
+        'title': "Meal to Cook",
+        'today': today}
     
-    elif user.is_delivery_person:
-        daily_meal_request = MealRequestDaily.objects.select_related().filter(delivery_person=user)
-        context = {"daily_meal_request": daily_meal_request, 'title': "Daily Meal Request"}
-        return render(request, 'meal/meal-request/list-delivery-person.html', context)
+    # Counts
+    plans = Plan.objects.filter(
+        id__in= PlanPurchase.objects.filter(
+            id__in = daily_meal_request.values_list('plan', flat=True)
+        ).values_list('plan', flat=True))
+    meals_count = []
+    for plan in plans:
+        meal_types = [i.strip() for i in plan.eating_type.split(",")]
+        meal_type_counts = []
+        for et in meal_types:
+            qty = daily_meal_request.filter(meal__eating_type=et, plan__plan=plan).count()
+            if qty > 0:
+                d = {
+                    "name": f"{plan.name} ({et})",
+                    "quantity": qty
+                }
+                meal_type_counts.append(d)
+        meals_count.append(meal_type_counts)
+    context['meals_count'] = meals_count
+    return render(request, 'meal/meal-request/list-cook.html', context)
+    
+    # elif user.is_delivery_person:
+    #     daily_meal_request = MealRequestDaily.objects.select_related().filter(delivery_person=user)
+    #     context = {"daily_meal_request": daily_meal_request, 'title': "Daily Meal Request"}
+    #     return render(request, 'meal/meal-request/list-delivery-person.html', context)
     
             
 
@@ -209,6 +244,8 @@ def add_daily_meal(request):
     form = MealRequestForm(data=request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
+            plan = PlanPurchase.objects.get(id=form.data['plan'])
+            form.instance.requester = plan.user
             form.save()
             return redirect('daily_meal_request_list')
     context = {

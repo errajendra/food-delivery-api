@@ -24,6 +24,8 @@ urlpatterns = [
     path('edit-plan/<int:id>/', plan_edit, name='edit_plan'),
     path('delete-plan/<int:id>/', plan_delete, name='delete_plan'),
     
+    # Plan Puchese Urls
+    path('add-plan-purchese/', plan_purchese_add, name='add_plan_purchese'),
     path('plan-purchase-list/', plan_purchase_list, name='plan_purchase_list'),
     
     path('daily-meal-request-list/', daily_meal_request_list, name='daily_meal_request_list'),

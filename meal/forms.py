@@ -1,6 +1,6 @@
 from django import forms
 from .models import (
-    MealType, Meal,
+    MealType, Meal, PlanPurchase,
     Plan, MealRequestDaily, DailyMealMenu,
     Banner,
 )
@@ -60,11 +60,25 @@ class PlanForm(forms.ModelForm):
 
 
 
+""" Plan Purchese Form. """
+class PlanPurchaseForm(forms.ModelForm):
+    
+    class Meta:
+        model = PlanPurchase
+        fields = ('plan', 'user')
+        
+        widgets = {
+            'plan': forms.Select(attrs={'class':'form-control'}),
+            'user': forms.Select(attrs={'class':'form-control'}),
+        }
+
+
+
 """ Meal Request Form. """
 class MealRequestForm(forms.ModelForm):
     class Meta:
         model = MealRequestDaily
-        fields = ["requester", "plan", "meal", "status"]
+        fields = ["plan", "meal", "status"]
         
         widgets = {
             

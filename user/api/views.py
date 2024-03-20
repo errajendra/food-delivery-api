@@ -473,9 +473,11 @@ class UserAddByFile(ModelViewSet):
             reader = pd.read_csv(file)
             create_objs = []
             for _, row in reader.iterrows():
+                mobile_number = row["Contact Number"]
                 try:
                     obj = User(
-                        mobile_number = row["Contact Number"],
+                        mobile_number = mobile_number,
+                        email = f"{mobile_number}@atmkaro.in",
                         name = row['Customer Name'],
                         is_active = True,
                     )
@@ -488,6 +490,13 @@ class UserAddByFile(ModelViewSet):
                 ignore_conflicts = True,
             )
             return Response({"status": "success"}, status=201)
+        return Response(
+            status=status.HTTP_400_BAD_REQUEST,
+            data={
+                "status": status.HTTP_400_BAD_REQUEST,
+                "errors": serializer.errors
+            }
+        )
 
 
 
@@ -502,8 +511,9 @@ class UserMealPlanPurcheseAddByFile(ModelViewSet):
             reader = pd.read_csv(file)
             create_plan_purchese_objs = []
             for _, row in reader.iterrows():
+                mobile_number = row["Contact Number"]
                 try:
-                    user = User.objects.get(mobile_number = row["Contact Number"])
+                    user = User.objects.get(email = f"{mobile_number}@atmkaro.in")
                 except User.DoesNotExist:
                     user = None
                 if user:

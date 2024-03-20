@@ -8,6 +8,7 @@
             <!-- Card header -->
             <div class="card-header border-0">
                 <h3 class="mb-0">{{title}} </h3>
+                <a href="{% url "add_plan_purchese" %}" class="bg-success btn float-end">+New Plan Purchese</a>
                
             </div>
             {% csrf_token %}
@@ -19,7 +20,7 @@
                         <th scope="col" class="sort">SN</th>
                         <th scope="col" class="sort">Plan</th>
                         <th scope="col" class="sort">User</th>
-                        <th scope="col" class="sort">Transaction</th>
+                        <th scope="col" class="sort">Tnx ID</th>
                         <th scope="col" class="sort">Reamining Meal</th>
                         <th scope="col" class="sort">Status</th>
                         {% comment %} <th scope="col" class="sort">Address</th> {% endcomment %}
@@ -36,10 +37,11 @@
                             {{plan.plan}}
                         </td>
                         <td>
-                            {{plan.user}}
+                            <p class="mb-0"> {{plan.user.name}} </p>
+                            <p class="mb-0"> {{plan.user.email}} </p>
                         </td>
                         <td>
-                            {{plan.transaction}}
+                            {{plan.transaction.id}}
                         </td>
                         <td>
                             {{plan.remaining_meals}}/{{plan.total_meals}}
@@ -72,7 +74,7 @@
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
 <script>
 new DataTable('#example1', {
-    responsive: true,
+    responsive: false,
 });
 </script>
     <script>

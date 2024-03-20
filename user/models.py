@@ -43,7 +43,9 @@ class CustomUser(AbstractUser):
         null=True, blank=True
     )
     password = models.CharField(
-        _("Password"), max_length=128, validators=[password_validator]
+        _("Password"), max_length=128, 
+        help_text=_(
+            "Use the same password for security reasons."),
     )
     name = models.CharField(
         _("Full Name"), max_length=100, validators=[name_validator], null=True, blank=True
@@ -56,7 +58,7 @@ class CustomUser(AbstractUser):
     )
     is_active = models.BooleanField(
         _("active"),
-        default=False,
+        default=True,
         help_text=_(
             "Designates whether this user should be treated as active. "
             "Unselect this instead of deleting accounts."
@@ -89,7 +91,7 @@ class CustomUser(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        return str(self.mobile_number)
+        return str(self.email)
     
     def save(self, *args, **kwargs):
         """ This method is used to modify the password field

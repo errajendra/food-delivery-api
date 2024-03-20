@@ -9,6 +9,10 @@ urlpatterns = [
     path('login/', admin_login, name='login'),
     path('logout/', user_logout, name='logout'),
     path('profile/', user_profile, name='profile'),
+    
+    # User MS
+    path('add-user/', user_add, name='add_user'),
     path('users/', user_list, name='users'),
+    path('user/<int:id>/', user_edit, name='edit_user'),
 ]
 
