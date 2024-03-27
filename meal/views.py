@@ -201,9 +201,9 @@ def daily_meal_request_list(request):
         context = {
             "daily_meal_request": daily_meal_request,
             'title': "Daily Meal Request",
-            "plan_names": daily_meal_request.values_list('plan__plan__name__name', flat=True).distinct(),
+            "plan_names": set(daily_meal_request.values_list('plan__plan__name__name', flat=True).distinct()),
             "meal_types": set(daily_meal_request.values_list('meal__eating_type', flat=True).distinct()),
-            "statuss": daily_meal_request.values_list('status', flat=True).distinct(),
+            "statuss": set(daily_meal_request.values_list('status', flat=True).distinct()),
         }
         return render(request, 'meal/meal-request/list.html', context)
     
