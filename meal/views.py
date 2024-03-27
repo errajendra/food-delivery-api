@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from .forms import (
     Meal, MealForm, MealTypeForm,
-    Plan, PlanForm, MealRequestForm,
+    Plan, PlanForm, MealRequestForm, MealRequestUpdateForm,
     DailyMealMenuForm, PlanPurchaseForm,
+    SalesConnectForm,
 )
 from .models import *
 from user.models import *
@@ -193,22 +194,29 @@ def plan_purchese_add(request):
 
 
 def daily_meal_request_list(request):
-    # user = request.user
+    user = request.user
     
-    # if request.user.is_staff:
-    #     daily_meal_request = MealRequestDaily.objects.select_related().all()
-    #     context = {"daily_meal_request": daily_meal_request, 'title': "Daily Meal Request"}
-    #     return render(request, 'meal/meal-request/list.html', context)
+    if request.user.is_staff:
+        daily_meal_request = MealRequestDaily.objects.select_related().all()
+        context = {
+            "daily_meal_request": daily_meal_request,
+            'title': "Daily Meal Request",
+            "plan_names": daily_meal_request.values_list('plan__plan__name__name', flat=True).distinct(),
+            "meal_types": set(daily_meal_request.values_list('meal__eating_type', flat=True).distinct()),
+            "statuss": daily_meal_request.values_list('status', flat=True).distinct(),
+        }
+        return render(request, 'meal/meal-request/list.html', context)
     
-    # elif user.is_cook:
-    today = (datetime.now(timezone.utc) + timedelta(hours=5, minutes=30)).date()
-    daily_meal_request = MealRequestDaily.objects.select_related().filter(
-        status="Requested", 
-        date__date = today
-    ).order_by("date")
+    elif user.is_cook:
+        today = (datetime.now(timezone.utc) + timedelta(hours=5, minutes=30)).date()
+        daily_meal_request = MealRequestDaily.objects.select_related().filter(
+            status="Requested", 
+            date__date = today
+        ).order_by("date")
     context = {
         "daily_meal_request": daily_meal_request, 
         'title': "Meal to Cook",
+        # "plan_names": daily_meal_request.values('plan__plan__name__name').distinct(),
         'today': today}
     
     # Counts
@@ -253,6 +261,25 @@ def add_daily_meal(request):
         "title": "Add Daily Meal",
     }
     return render(request, 'meal/add_daily_meal.html', context)
+
+
+
+""" 
+Update Daily Meal Request
+"""
+def update_daily_meal(request, id):
+    instance = get_object_or_404(MealRequestDaily, id=id)
+    form = MealRequestUpdateForm(instance=instance)
+    if request.method == 'POST':
+        form = MealRequestUpdateForm(instance=instance, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('daily_meal_request_list')
+    context = {
+        "form": form,
+        "title": f"Update Daily Meal of {instance.requester}",
+    }
+    return render(request, 'meal/form.html', context)
 
 
 
@@ -394,6 +421,41 @@ def banner_edit(request, id):
             return redirect('banner_list')
     context = {
         "title": "Update Banner",
+        "form": form,
+    }
+    return render(request, 'meal/form.html', context)
+
+
+
+
+""" 
+    Sales Connect view on App    
+"""
+# List of Banners
+def sales_connect_list(request):
+    context = {
+        'title': "Sales Connects List",
+        "sales_connects": SalesConnect.objects.all()
+    }
+    return render(request, 'sales/sales_connects.html', context)
+
+
+def sales_connect_delete(request, id):
+    instance = get_object_or_404(SalesConnect, id=id)
+    instance.delete()
+    return redirect('sales_connect_list')
+
+
+def sales_connect_edit(request, id):
+    instance = get_object_or_404(SalesConnect, id=id)
+    form = SalesConnectForm(
+        instance=instance, data=request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return redirect('sales_connect_list')
+    context = {
+        "title": "Update Sales Connect",
         "form": form,
     }
     return render(request, 'meal/form.html', context)

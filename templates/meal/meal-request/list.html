@@ -7,11 +7,69 @@
         <div class="card">
             <!-- Card header -->
             <div class="card-header border-0">
-                <h3 class="mb-0">{{ title }}</h3>
-                {% if request.user.is_staff %}
-                    <a href="{% url "add_daily_meal" %}" class="bg-success btn float-end">+Add</a>
-                {% endif %}
+                <h3 class="mb-0">{{ title }}
+                    {% if request.user.is_staff %}
+                        <a href="{% url "add_daily_meal" %}" class="bg-success btn float-end">+Add</a>
+                    {% endif %}
+                </h3>
             </div>
+            <div id="filterDiv" class="m-3 row ">
+                <!-- Search -->
+                <div class="col">
+                  <label for="searchUser">Mobile</label>
+                  <input id="searchUser">
+                </div>
+
+                <div class="col">
+                  <label for="searchPlan">Meal Plan </label>
+                  <select id="searchPlan">
+                    <option selected value>All</option>
+                    {% for name in plan_names %}
+                    <option>{{name}} </option>
+                    {% endfor %}
+                  </select>
+                </div>
+
+                <div class="col">
+                  <label for="searchType">Eating Type</label>
+                  <select id="searchType">
+                    <option selected value>All</option>
+                    {% for t in meal_types %}
+                    <option>{{t}} </option>
+                    {% endfor %}
+                  </select>
+                </div>
+
+                <div class="col">
+                  <label for="searchStatus">Status</label>
+                  <select id="searchStatus">
+                    <option selected value>All</option>
+                    {% for s in statuss %}
+                    <option>{{s}} </option>
+                    {% endfor %}
+                  </select>
+                </div>
+
+                <!-- Search by date range -->
+                {% comment %} <div class="form-group">
+                    <label>Search By Date:</label>
+                    <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                        <i class="far fa-calendar-alt"></i>
+                        </span>
+                    </div>
+                    <input type="text" class="form-control float-right" id="reservation" name="daterange">
+                    </div>
+                </div> {% endcomment %}
+                
+                {% comment %} <div class="col">
+                    <label for="searchDate">Date</label>
+                    <input type="date" id="searchDate"/>
+                </div> {% endcomment %}
+
+            </div>
+
             {% csrf_token %}
             <!-- Light table -->
             <div class="table-responsive">
@@ -19,12 +77,15 @@
                     <thead class="thead-light">
                         <tr>
                             <th scope="col" class="sort">SN</th>
-                            <th scope="col" class="sort">User</th>
-                            <th scope="col" class="sort">Plan</th>
-                            <th scope="col" class="sort">Type</th>
+                            <th scope="col" class="sort">User Name</th>
+                            <th scope="col" class="sort">User Email</th>
+                            <th scope="col" class="sort">Mobile</th>
+                            <th scope="col" class="sort">Meal Plan</th>
+                            <th scope="col" class="sort">Eating Type</th>
                             <th scope="col" class="sort">Date</th>
                             <th scope="col" class="sort">Status</th>
                             <th scope="col" class="sort">Address</th>
+                            <th scope="col" class="sort">Lat, Long</th>
                             <th scope="col" class="sort">Meal</th>
                             <th scope="col" class="sort">Rice+Roti</th>
                             <th scope="col" class="sort">Instruction</th> 
@@ -37,21 +98,27 @@
                         <tr>
                             <td>{{ forloop.counter }}</td>
                             <td>
-                                <p class="mb-0"> {{meal.requester.name}} </p>
-                                <p class="mb-0"> {{meal.requester.email}} </p>
+                                {% if meal.requester.name %} {{meal.requester.name}} {% endif %}
                             </td>
+                            <td>
+                                {% if meal.requester.email %} {{meal.requester.email}} {% endif %}
+                            </td>
+                            <td> {% if meal.mobile_number %} {{ meal.mobile_number }} {% endif %} </td>
                             <td>{{ meal.plan.plan.name }}</td>
                             <td>{{ meal.meal }}</td>
                             <td>{{ meal.date }}</td>
                             <td>
-                                <select class="border-0 mealRequestStatus" data-meal-id="{{ meal.id }}">
+                                {{meal.status}}
+                                {% comment %} <select class="border-0 mealRequestStatus" data-meal-id="{{ meal.id }}">
                                     <option value="Requested" {% if meal.status == 'Requested' %}selected{% endif %}>Requested</option>
-                                    <option value="Success" {% if meal.status == 'Success' %}selected{% endif %}>Success</option>
-                                    <option value="Cooked/Packed" {% if meal.status == 'Cooked/Packed' %}selected{% endif %}>Cooked/Packed</option>
-                                    <option value="Cancelled" {% if meal.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
-                                </select>
+                                    <option value="Success" {% if meal.status == 'Success' %}selected{% endif %}>Success(Confirm)</option>
+                                    <option value="Prepared" {% if meal.status == 'Prepared' %}selected{% endif %}>Prepared</option>
+                                    <option value="Packed" {% if meal.status == 'Packed' %}selected{% endif %}>Packed</option>
+                                    <option value="Delivered" {% if meal.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                </select> {% endcomment %}
                             </td>
                             <td> {{ meal.address }} </td>
+                            <td> {{ meal.latitude }}, {{ meal.longitude }} </td>
                             <td> {{ meal.meal_items|safe }}</td>
                             <td> {{ meal.meal.name }}</td>
                             <td> {% if meal.instruction %}{{ meal.instruction }}{% endif %}</td>
@@ -63,18 +130,19 @@
                                         {{ meal.delivery_person }}
                                     </button>
                                 {% else %}
-                                    <button class="btn btn-warning assignDeliveryBoyBtn"
-                                        data-meal-id="{{ meal.id }}"
-                                        data-url="{% url 'get_delivery_person_list_popup' %}"
-                                        data-bs-toggle="modal" href="#AssignDeliveryBoyModal">
-                                        Assign Delivery Person
-                                    </button>
+                                <a href="{% url "update_daily_meal" meal.id %}" class="mx-2"><i class="fa fa-edit" title="Update" ></i></a>
+                                {% comment %} <button class="btn btn-warning assignDeliveryBoyBtn"
+                                    data-meal-id="{{ meal.id }}"
+                                    data-url="{% url 'get_delivery_person_list_popup' %}"
+                                    data-bs-toggle="modal" href="#AssignDeliveryBoyModal">
+                                    Assign Delivery Person
+                                </button> {% endcomment %}
                                 {% endif %}
                             </td>
                            
                         </tr>
                         <!-- Modal -->
-                        <div class="modal fade" id="AssignDeliveryBoyModal" tabindex="-1" aria-labelledby="exampleModalToggleLabel2" aria-hidden="true">
+                        {% comment %} <div class="modal fade" id="AssignDeliveryBoyModal" tabindex="-1" aria-labelledby="exampleModalToggleLabel2" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -84,7 +152,7 @@
                                     <div class="modal-body"></div>
                                 </div>
                             </div>
-                        </div>
+                        </div> {% endcomment %}
                         <!-- end Model -->
                         {% endfor %}
                     </tbody>
@@ -104,6 +172,12 @@
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
 
+{% comment %} Print  Button {% endcomment %}
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+
 <script>
     $(document).ready(function () {
         // DataTables initialization
@@ -112,17 +186,24 @@
             
             "columns": [
               { "data": "SN" },
-              { "data": "User" },
-              { "data": "Plan" },
-              { "data": "Type" },
+              { "data": "User Name" },
+              { "data": "User Email" },
+              { "data": "Mobile" },
+              { "data": "Meal Plan" },
+              { "data": "Eating Type" },
               { "data": "Date" },
               { "data": "Status" },
               { "data": "Address" },
+              { "data": "Lat, Long" },
               { "data": "Meal" },
               { "data": "Rice+Roti" },
               { "data": "Instruction" },
               { "data": "Action" }
-            ]
+            ],
+            dom: 'Bfrtip',
+            buttons: [
+                'excel', 'pdf', 'print'
+            ],
           });
        
 
@@ -170,5 +251,7 @@
 
     });
 </script>
-{% endblock javascripts %}
 
+{% comment %} Search JS {% endcomment %}
+<script src="{% static 'assets/js/custom-js/daily-meal-request.js' %}"></script>
+{% endblock javascripts %}

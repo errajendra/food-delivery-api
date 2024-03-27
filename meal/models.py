@@ -189,10 +189,21 @@ class MealRequestDaily(BaseModel):
         on_delete=models.CASCADE,
     )
     date = models.DateTimeField(default=timezone.now)
+    
+    mobile_number = models.CharField("Mobile Number", max_length=15, null=True, blank=True)
     address = models.CharField(
         max_length=255, verbose_name="User Address to Deliver Meal",
         null = True, blank = True
     )
+    latitude = models.DecimalField(
+        max_digits=16, decimal_places=10,
+        null=True, blank=True
+    )
+    longitude = models.DecimalField(
+        max_digits=16, decimal_places=10,
+        null=True, blank=True
+    )
+    
     instruction = models.CharField(
         verbose_name = "Customer Instruction", max_length = 100, 
         null = True, blank = True)
@@ -207,10 +218,11 @@ class MealRequestDaily(BaseModel):
     )
     status = models.CharField(
         choices=(
-            ('Success', 'Success'),
-            ('Requested', 'Requested'), 
-            ('Cooked/Packed', 'Cooked/Packed'), 
-            ('Cancelled', 'Cancelled')
+            ('Success', 'Success'), # Confirm
+            ('Requested', 'Requested'),
+            ('Prepared', 'Prepared'), 
+            ('Packed', 'Packed'),
+            ('Delivered', 'Delivered'),
         ),
         max_length=20,
         default="Requested"
@@ -298,3 +310,13 @@ class Banner(BaseModel):
             "Status is True it means it will show in listing.",
             "Uncheck this for removing this entry from listing."
         ))
+
+
+
+class SalesConnect(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sales_connects")
+    employee_id = models.CharField(_("Employee ID"), max_length = 50)
+    status = models.BooleanField(default=True)
+    
+    def __str__(self) -> str:
+        return str(self.employee_id)

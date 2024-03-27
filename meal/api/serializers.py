@@ -5,6 +5,7 @@ from ..models import (
     DailyMealMenu, MealType,
     CustomerSupport,
     Banner,
+    SalesConnect,
 )
 from user.models import Address
 from user.api.serializers import TransactionSerializer
@@ -190,3 +191,11 @@ class CustomerSupportSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         data['status'] = instance.status
         return data
+
+
+
+class SalesConnectSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    class Meta:
+        model = SalesConnect
+        fields = "__all__"

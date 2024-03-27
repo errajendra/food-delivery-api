@@ -45,6 +45,7 @@
                             <th scope="col" class="sort">Date</th>
                             <th scope="col" class="sort">Status</th>
                             <th scope="col" class="sort">Address</th>
+                            <th scope="col" class="sort">Lat, Long</th>
                             <th scope="col" class="sort">Meal</th>
                             <th scope="col" class="sort">Rice+Roti</th>
                             <th scope="col" class="sort">Instruction</th>                           
@@ -61,12 +62,16 @@
                                 {% if meal.date|date == today|date %}
                                 <select class="border-0 mealRequestStatus" data-meal-id="{{ meal.id }}">
                                     <option value="Requested" {% if meal.status == 'Requested' %}selected{% endif %}>Requested</option>
-                                    <option value="Cooked/Packed" {% if meal.status == 'Cooked/Packed' %}selected{% endif %}>Cooked/Packed</option>
+                                    <option value="Success" {% if meal.status == 'Success' %}selected{% endif %}>Success(Confirm)</option>
+                                    <option value="Prepared" {% if meal.status == 'Prepared' %}selected{% endif %}>Prepared</option>
+                                    <option value="Packed" {% if meal.status == 'Packed' %}selected{% endif %}>Packed</option>
+                                    <option value="Delivered" {% if meal.status == 'Delivered' %}selected{% endif %}>Delivered</option>
                                 </select>
                                 {% else %}
                                 {% endif %}
                             </td>
                             <td> {{ meal.address }} </td>
+                            <td> {{ meal.latitude }}, {{ meal.longitude }} </td>
                             <td> {{ meal.meal_items|safe }}</td>
                             <td> {{ meal.meal.name }}</td>
                             <td> {% if meal.instruction %}{{ meal.instruction }}{% endif %}</td>
@@ -114,6 +119,7 @@
               { "data": "Date" },
               { "data": "Status" },
               { "data": "Address" },
+              { "data": "Lat, Long" },
               { "data": "Meal" },
               { "data": "Rice+Roti" },
               { "data": "Instruction" },

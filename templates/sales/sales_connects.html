@@ -1,0 +1,92 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <!-- Card header -->
+            <div class="card-header border-0">
+                <h3 class="mb-0">{{title}} </h3>
+            </div>
+            {% csrf_token %}
+            <!-- Light table -->
+            <div class="table-responsive">
+                <table class="table table-hover" id="example1">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col" class="sort" data-sort="name">SN</th>
+                        <th scope="col" class="sort" data-sort="name">User Email</th>
+                        <th scope="col" class="sort" data-sort="name">User Mobile Number</th>
+                        <th scope="col" class="sort" data-sort="name">Employee ID</th>
+                        <th scope="col" class="sort" data-sort="name">Status</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                    {% for sales in sales_connects %}
+                    <tr>
+                        <td class="budget">
+                            {{forloop.counter}}
+                        </td>
+                        <td>
+                            {{sales.user.email}}
+                        </td>
+                        <td>
+                            {{sales.user.mobile_number}}
+                        </td>
+                        <td>
+                            {{sales.employee_id}}
+                        </td>
+                        <td>
+                            {% if sales.status %}
+                            Active
+                            {% else %}
+                            InActive
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a class="" href="{% url "edit_sales_connect" sales.id %}"><i class="fa fa-edit " title="Update" ></i></a>
+                            <i class="fa fa-trash-alt" type="button" data-bs-toggle="modal" href="#deletesalesModal{{sales.id}}" style="background:transparent;"></i>
+                        </td>
+                    </tr>
+                     <!-- Modal -->
+                    
+                     <div class="modal fade" id="deletesalesModal{{sales.id}}" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel{{sales.id}}">Delete sales</h5>
+
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure want to delete ?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <a class="btn btn-danger" href="{% url 'delete_sales_connect' sales.id %}">Delete</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <!-- end Model -->
+                    {% endfor %}
+                </tbody>
+                </table>
+            </div>
+        </div>  
+    </div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
+<script>
+    new DataTable('#example1', {
+        responsive: false,
+    });
+</script>
+{% endblock javascripts %}

@@ -63,3 +63,10 @@ class BannerAdmin(admin.ModelAdmin):
     list_display = ('id', 'alt', 'status', 'created_at')
     list_filter = ('status', 'created_at')
     search_fields = ('alt',)
+
+
+@admin.register(SalesConnect)
+class SalesConnectAdmin(admin.ModelAdmin):
+    list_display = ("user", "employee_id", "status", "created_at")
+    list_filter = ("status", "created_at")
+    search_fields = ("user__email", "user__mobile_number", "employee_id")

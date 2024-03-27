@@ -9,6 +9,7 @@ from .views import(
     CancelMealRequest,
     DailyMealMenuView,
     CustomerSupportView,
+    SalesConnectViews,
 )
 
 router = DefaultRouter()
@@ -27,6 +28,8 @@ router.register('daily-meal-menu', DailyMealMenuView,
                 basename='daily-meal-menu-api')
 router.register('customer-support', CustomerSupportView,
                 basename='customer-support-api')
+router.register('sales-connect', SalesConnectViews,
+                basename='sales-connect-api')
 
 
 urlpatterns = [

@@ -2,7 +2,7 @@ from django import forms
 from .models import (
     MealType, Meal, PlanPurchase,
     Plan, MealRequestDaily, DailyMealMenu,
-    Banner,
+    Banner, SalesConnect,
 )
 
 
@@ -78,15 +78,35 @@ class PlanPurchaseForm(forms.ModelForm):
 class MealRequestForm(forms.ModelForm):
     class Meta:
         model = MealRequestDaily
-        fields = ["plan", "meal", "status"]
+        fields = ["plan", "meal", "status", "mobile_number", "address", "latitude", "longitude"]
         
         widgets = {
-            
-            'requester': forms.Select(attrs={'class':'form-control'}),
             'plan': forms.Select(attrs={'class':'form-control'}),
             'meal': forms.Select(attrs={'class':'form-control'}),
             'status': forms.Select(attrs={'class': 'form-control'}),
+            'address': forms.TextInput(attrs={'class': 'form-control'}),
+            'mobile_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'latitude': forms.NumberInput(attrs={'class': 'form-control'}),
+            'longitude': forms.NumberInput(attrs={'class': 'form-control'}),
 
+        }
+        
+
+
+""" Meal Request Update Form. """
+class MealRequestUpdateForm(forms.ModelForm):
+    class Meta:
+        model = MealRequestDaily
+        fields = ["meal", "status", "date", "mobile_number", "address", "latitude", "longitude"]
+        
+        widgets = {
+            'meal': forms.Select(attrs={'class':'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'date': forms.DateTimeInput(attrs={'class': 'form-control'}),
+            'address': forms.TextInput(attrs={'class': 'form-control'}),
+            'mobile_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'latitude': forms.NumberInput(attrs={'class': 'form-control'}),
+            'longitude': forms.NumberInput(attrs={'class': 'form-control'}),
         }
 
 
@@ -112,4 +132,19 @@ class BannerForm(forms.ModelForm):
         
         widgets = {
             'alt': forms.TextInput(attrs={'class':'form-control'})
+        }
+
+
+
+"""
+    Sales Connect form
+"""
+class SalesConnectForm(forms.ModelForm):
+    class Meta:
+        model = SalesConnect
+        fields = "__all__"
+        
+        widgets = {
+            'user': forms.Select(attrs={'class':'form-control'}),
+            'employee_id': forms.TextInput(attrs={'class':'form-control'}),
         }

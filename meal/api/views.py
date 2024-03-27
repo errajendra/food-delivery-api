@@ -13,6 +13,7 @@ from razor_pay.utils import (
 from ..models import (
     MealType, Meal, Plan, PlanPurchase, Transaction, MealRequestDaily,
     DailyMealMenu, CustomerSupport, Banner,
+    SalesConnect,
 )
 from .serializers import (
     MealTypeSerilizer, MealSerializer,MealTypeMenuSerilizer,
@@ -20,6 +21,7 @@ from .serializers import (
     DailyMealRequestSerializer, BannerSerializer, MealRequestDailySerializer,
     DailyMealMenuSerializer, MealTypePurcheseSerilizer,
     CustomerSupportSerializer,
+    SalesConnectSerializer,
 )
 from django.db.utils import IntegrityError
 from rest_framework.views import APIView
@@ -196,6 +198,19 @@ class MenuListOfPlan(viewsets.ModelViewSet):
 
 
 
+"""
+Sales Connect Views
+"""
+class SalesConnectViews(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    http_method_names = ["post"]
+    serializer_class = SalesConnectSerializer
+    def get_queryset(self):
+        qs = SalesConnect.objects.filter(user=self.request.user)
+        return qs
+
+
+
 """ 
 Daily meal order or Plan  meal order ViewSets
 Get  User Daily/Plan meal orders.
@@ -241,7 +256,10 @@ class PlanMeal(viewsets.ModelViewSet):
                         plan=plan_purchase,
                         meal=meal,
                         date=datetime,
+                        mobile_number = address.mobileNo,
                         address = address.full_address,
+                        latitude = address.latitude,
+                        longitude = address.longitude,
                         instruction = instruction
                     )
                     meal_request.save()

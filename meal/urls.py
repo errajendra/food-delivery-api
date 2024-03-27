@@ -30,6 +30,7 @@ urlpatterns = [
     
     path('daily-meal-request-list/', daily_meal_request_list, name='daily_meal_request_list'),
     path('add-daily-meal/', add_daily_meal, name='add_daily_meal'),
+    path('update-daily-meal/<int:id>/', update_daily_meal, name='update_daily_meal'),
     
     path('transaction-list/', transaction_list, name='transaction_list'),
     
@@ -48,6 +49,11 @@ urlpatterns = [
     path('add-banner/', add_banner, name='add_banner'),
     path('edit-banner/<int:id>/', banner_edit, name='edit_banner'),
     path('delete-banner/<int:id>/', banner_delete, name='delete_banner'),
+    
+    # Sales Connect Urls
+    path('sales_connect-list/', sales_connect_list, name='sales_connect_list'),
+    path('edit-sales-connect/<int:id>/', sales_connect_edit, name='edit_sales_connect'),
+    path('delete-sales-connect/<int:id>/', sales_connect_delete, name='delete_sales_connect'),
     
     # Support Urls
     path('supports/', supprt_list, name="supports"),
