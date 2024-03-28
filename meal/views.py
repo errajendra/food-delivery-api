@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.utils import timezone
 from .forms import (
     Meal, MealForm, MealTypeForm,
     Plan, PlanForm, MealRequestForm, MealRequestUpdateForm,
@@ -196,20 +197,38 @@ def plan_purchese_add(request):
 def daily_meal_request_list(request):
     user = request.user
     
+    daily_meal_request = MealRequestDaily.objects.select_related().all()
+    
+    date_filters = ["ALL", "TODAY", "WEEK", "MONTH", "THIS-YEAR"]
+    
+    date_filter = request.GET.get('date', 'ALL')
+    
+    date = timezone.datetime.now().date()
+    
+    if date_filter != 'ALL':
+        if date_filter == 'TODAY':
+            daily_meal_request = daily_meal_request.filter(date__date=date.today())
+        elif date_filter == 'WEEK':
+            daily_meal_request = daily_meal_request.filter(date__date__range=[date.today()-timedelta(days=7), date.today()])
+        elif date_filter == 'MONTH':
+            daily_meal_request = daily_meal_request.filter(date__date__range=[date.today()-timedelta(days=30), date.today()])
+        elif date_filter == 'THIS-YEAR':
+            daily_meal_request = daily_meal_request.filter(date__year=date.today().year)
+    
     if request.user.is_staff:
-        daily_meal_request = MealRequestDaily.objects.select_related().all()
         context = {
-            "daily_meal_request": daily_meal_request,
             'title': "Daily Meal Request",
+            "daily_meal_request": daily_meal_request,
             "plan_names": set(daily_meal_request.values_list('plan__plan__name__name', flat=True).distinct()),
             "meal_types": set(daily_meal_request.values_list('meal__eating_type', flat=True).distinct()),
             "statuss": set(daily_meal_request.values_list('status', flat=True).distinct()),
+            "date_filters": date_filters,
         }
         return render(request, 'meal/meal-request/list.html', context)
     
     elif user.is_cook:
         today = (datetime.now(timezone.utc) + timedelta(hours=5, minutes=30)).date()
-        daily_meal_request = MealRequestDaily.objects.select_related().filter(
+        daily_meal_request = daily_meal_request.filter(
             status="Requested", 
             date__date = today
         ).order_by("date")

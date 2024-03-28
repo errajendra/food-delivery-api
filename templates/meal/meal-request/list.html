@@ -15,6 +15,16 @@
             </div>
             <div id="filterDiv" class="m-3 row ">
                 <!-- Search -->
+                
+                <div class="col">
+                    <label for="searchDate">Date</label>
+                    <select id="searchDate">
+                      {% for s in date_filters %}
+                      <option value={{s}} {% if request.GET.date == s %} selected {% endif %}>{{s}}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+                
                 <div class="col">
                   <label for="searchUser">Mobile</label>
                   <input id="searchUser">
@@ -204,7 +214,7 @@
             buttons: [
                 'excel', 'pdf', 'print'
             ],
-          });
+        });
        
 
         $(document).on('change', '.mealRequestStatus', function (e) {
@@ -249,6 +259,12 @@
             });
         });
 
+        
+        $(document).on('change', '#searchDate', function (e) {
+            var selected_val = $(this).val();
+            location.href='?date=' + selected_val; 
+
+        });
     });
 </script>
 
