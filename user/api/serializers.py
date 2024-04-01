@@ -100,8 +100,10 @@ class SendOtpSerializer(serializers.Serializer):
             else:
                 # user = User.objects.create(email=data)
                 raise serializers.ValidationError("User Does not exits.")
-        except Exception as ex:
-            raise serializers.ValidationError(f"Error - {ex}")
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User Does not exits.")
+        finally:
+            raise serializers.ValidationError(f"Error")
 
 
 
