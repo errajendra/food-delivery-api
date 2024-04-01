@@ -98,9 +98,8 @@ class SendOtpSerializer(serializers.Serializer):
             if qs.exists():
                 return qs.first()
             else:
-                user = User.objects.create(email=data)
-            print(user)
-            return user
+                # user = User.objects.create(email=data)
+                raise serializers.ValidationError("User Does not exits.")
         except Exception as ex:
             raise serializers.ValidationError(f"Error - {ex}")
 

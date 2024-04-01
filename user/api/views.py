@@ -127,7 +127,8 @@ class LoginView(ModelViewSet):
         if serializer.is_valid():
             user = serializer.validated_data['email']
             user.fcm_token = serializer.validated_data.get('fcm_token', user.fcm_token)
-            user.is_active = True
+            if not user.is_active:
+                user.is_active = True
             user.save()
             token, _created = Token.objects.get_or_create(
                 user = user
