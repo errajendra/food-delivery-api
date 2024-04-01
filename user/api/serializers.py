@@ -115,6 +115,7 @@ class LoginSerializer(serializers.Serializer):
     def validate_email(self, data):
         try:
             qs = User.objects.get(email=data)
+            self.user = qs
             return qs
         except:
             raise serializers.ValidationError("No active user found with this email.")
@@ -129,9 +130,11 @@ class LoginSerializer(serializers.Serializer):
                 user = User.objects.get(email=email_id)
                 if verify_otp(user, data):
                     return data
+                else:
+                    raise serializers.ValidationError("Invalid otp.")
             except:
-                pass
-        raise serializers.ValidationError("Invalid otp.")
+                raise serializers.ValidationError("Otp verification failed.")
+        raise serializers.ValidationError("Invalid data.")
 
 
 

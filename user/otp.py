@@ -26,14 +26,17 @@ def send_otp(user):
 
 
 def verify_otp(user, otp):
+    try:
+        otp_int = int(otp)
+        if otp_int == int(user.otp):
+            return True
+    except:
+        pass
+    # To be removed in production
+    print("OTP Verification Failed")
     if user.email in ["ankitp@wooshelf.com", "rajendras@wooshelf.com"] and int(otp) == 123456:
         return True
     if int(user.mobile_number[4:]) == int(otp):
         return True
-    # try:
-    otp_int = int(otp)
-    if otp_int == int(user.otp):
-        return True
-    # except:
-    #     pass
+    # OTP Verification failed
     return False
