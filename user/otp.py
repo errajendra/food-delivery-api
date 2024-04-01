@@ -30,10 +30,10 @@ def verify_otp(user, otp):
         return True
     if int(user.mobile_number[4:]) == int(otp):
         return True
-    try:
-        otp_int = int(otp)
-        if otp_int == int(user.otp):
-            return True
-    except:
-        pass
+    # try:
+    otp_int = int(otp)
+    if otp_int == int(user.otp):
+        return True
+    # except:
+    #     pass
     return False
