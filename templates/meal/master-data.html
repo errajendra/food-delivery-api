@@ -1,0 +1,128 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <!-- Card header -->
+            <div class="card-header border-0">
+                <h3 class="mb-0">{{ title }}
+                </h3>
+            </div>
+            <!-- Light table -->
+            <div class="table-responsive">
+                <table class="table table-hover" id="example1">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col" class="sort">SN</th>
+                            <th scope="col" class="sort">User Name</th>
+                            <th scope="col" class="sort">User Email</th>
+                            <th scope="col" class="sort">Mobile</th>
+                            <th scope="col" class="sort">Purchased Breakfast</th>
+                            <th scope="col" class="sort">Consumed Breakfast</th>
+                            <th scope="col" class="sort">Pending Breakfast</th>
+                            <th scope="col" class="sort">Purchased Quick</th>
+                            <th scope="col" class="sort">Consumed Quick</th>
+                            <th scope="col" class="sort">Pending Quick</th>
+                            <th scope="col" class="sort">Purchased Regular</th>
+                            <th scope="col" class="sort">Consumed Regular</th>
+                            <th scope="col" class="sort">Pending Regular</th>
+                            <th scope="col" class="sort">Purchased Jumbo</th>
+                            <th scope="col" class="sort">Consumed Jumbo</th>
+                            <th scope="col" class="sort">Pending Jumbo</th>
+                            <th scope="col" class="sort">Purchased Premium</th>
+                            <th scope="col" class="sort">Consumed Premium</th>
+                            <th scope="col" class="sort">Pending Premium</th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody class="list">
+                        {% for i in master_data %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                {% if i.name %} {{i.name}} {% endif %}
+                            </td>
+                            <td>
+                                {% if i.email %} {{i.email}} {% endif %}
+                            </td>
+                            <td> {% if i.mobile_number %} {{ i.mobile_number }} {% endif %} </td>
+                            <td>{{ i.breakfast.purchese }}</td>
+                            <td>{{ i.breakfast.consumed }}</td>
+                            <td>{{ i.breakfast.pending }}</td>
+                            <td>{{ i.quick.purchese }}</td>
+                            <td>{{ i.quick.consumed }}</td>
+                            <td>{{ i.quick.pending }}</td>
+                            <td>{{ i.regular.purchese }}</td>
+                            <td>{{ i.regular.consumed }}</td>
+                            <td>{{ i.regular.pending }}</td>
+                            <td>{{ i.jumbo.purchese }}</td>
+                            <td>{{ i.jumbo.consumed }}</td>
+                            <td>{{ i.jumbo.pending }}</td>
+                            <td>{{ i.premium.purchese }}</td>
+                            <td>{{ i.premium.consumed }}</td>
+                            <td>{{ i.premium.pending }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock content %}
+
+{% block javascripts %}
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
+
+{% comment %} Print  Button {% endcomment %}
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // DataTables initialization
+       
+        $('#example1').dataTable( {
+            "columns": [
+                {"data": "SN"},
+                {"data": "User Name"},
+                {"data": "User Email"},
+                {"data": "Mobile"},
+                {"data": "Purchased Breakfast"},
+                {"data": "Consumed Breakfast"},
+                {"data": "Pending Breakfast"},
+                {"data": "Purchased Quick"},
+                {"data": "Consumed Quick"},
+                {"data": "Pending Quick"},
+                {"data": "Purchased Regular"},
+                {"data": "Consumed Regular"},
+                {"data": "Pending Regular"},
+                {"data": "Purchased Jumbo"},
+                {"data": "Consumed Jumbo"},
+                {"data": "Pending Jumbo"},
+                {"data": "Purchased Premium"},
+                {"data": "Consumed Premium"},
+                {"data": "Pending Premium"},
+            ],
+            dom: 'Bfrtip',
+            buttons: [
+                'excel', 'pdf', 'print'
+            ],
+        });
+
+    });
+</script>
+
+{% comment %} Search JS {% endcomment %}
+<script src="{% static 'assets/js/custom-js/daily-meal-request.js' %}"></script>
+{% endblock javascripts %}

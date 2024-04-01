@@ -92,6 +92,11 @@ class PlanPurchase(BaseModel):
         verbose_name = "Number of Meals Remaining",
         help_text = "It will update automaticaly when order is created or canceled."
     )
+    consumed_meals = models.PositiveIntegerField(
+        default = 0,
+        verbose_name = "Number of Meals Consummed",
+        help_text = "It will update automaticaly when save."
+    )
     status = models.BooleanField(
         default = False,
         help_text =_(
@@ -100,13 +105,17 @@ class PlanPurchase(BaseModel):
             "False if not purchesd yet."
         )
     )
-    # address = models.CharField(
-    #     max_length=255, verbose_name="User Address to Deliver Meal",
-    #     null = True, blank = True
-    # )
+    
+    def save(self, *args, **kwargs):
+        self.consumed_meals = self.total_meals - self.remaining_meals
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.user} - {self.plan.name}"
+    
+    @property
+    def pending_meals(self):
+        return self.total_meals - self.remaining_meals
 
 
 

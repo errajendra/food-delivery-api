@@ -58,5 +58,8 @@ urlpatterns = [
     # Support Urls
     path('supports/', supprt_list, name="supports"),
     
+    # Master Data 
+    path("masterdata/", master_data, name='masterdata'),
+    
     
 ]

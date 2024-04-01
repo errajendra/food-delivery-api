@@ -133,6 +133,15 @@
           </a>
         </li>
 
+        <li class="nav-item {% if request.resolver_match.view_name == 'masterdata'  %} active {% endif %}">
+          <a href="{% url 'masterdata' %}" class="nav-link">
+            <span class="sidebar-icon">
+              <i class="fas fa-industry"></i>
+            </span>
+            <span class="sidebar-text">Master Data</span>
+          </a>
+        </li>
+
         <li class="nav-item {% if request.resolver_match.view_name == 'supports'  %} active {% endif %}">
           <a href="{% url 'supports' %}" class="nav-link">
             <span class="sidebar-icon">

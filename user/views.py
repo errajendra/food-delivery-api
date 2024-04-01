@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import CustomUser as User
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from datetime import datetime
+from django.db.models import Sum
 from .models import *
 from meal.models import *
 from datetime import date

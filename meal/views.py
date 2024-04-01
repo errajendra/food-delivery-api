@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.utils import timezone
+from django.db.models import Sum
 from .forms import (
     Meal, MealForm, MealTypeForm,
     Plan, PlanForm, MealRequestForm, MealRequestUpdateForm,
@@ -479,3 +480,55 @@ def sales_connect_edit(request, id):
     }
     return render(request, 'meal/form.html', context)
 
+
+
+
+"""
+Master Data of user  and meals are stored in database with following models
+"""
+@login_required
+def master_data(request):
+    users = User.objects.prefetch_related().filter(
+        is_active=True, is_cook=False, is_staff=False)
+    master_data = []
+    all_purchese = PlanPurchase.objects.select_related("plan").filter(status=True)
+    for user in users:
+        user_purcheses = all_purchese.filter(user=user)
+        
+        if not user_purcheses.exists():
+            continue
+        
+        user_data = {
+            "email": user.email,
+            "mobile_number": user.mobile_number,
+            "name": user.name,
+            
+            "breakfast": {
+                "purchese": user_purcheses.filter(plan__name__name__icontains="breakfast").aggregate(Sum('total_meals'))['total_meals__sum'] or 0,
+                "pending": user_purcheses.filter(plan__name__name__icontains="breakfast").aggregate(Sum('remaining_meals'))['remaining_meals__sum'] or 0,
+                "consumed": user_purcheses.filter(plan__name__name__icontains="breakfast").aggregate(Sum('consumed_meals'))['consumed_meals__sum'] or 0,
+            },
+            "quick": {
+                "purchese": user_purcheses.filter(plan__name__name__icontains="quick").aggregate(Sum('total_meals'))['total_meals__sum'] or 0,
+                "pending": user_purcheses.filter(plan__name__name__icontains="quick").aggregate(Sum('remaining_meals'))['remaining_meals__sum'] or 0,
+                "consumed": user_purcheses.filter(plan__name__name__icontains="quick").aggregate(Sum('consumed_meals'))['consumed_meals__sum'] or 0,
+            },
+            "regular": {
+                "purchese": user_purcheses.filter(plan__name__name__icontains="regular").aggregate(Sum('total_meals'))['total_meals__sum'] or 0,
+                "pending": user_purcheses.filter(plan__name__name__icontains="regular").aggregate(Sum('remaining_meals'))['remaining_meals__sum'] or 0,
+                "consumed": user_purcheses.filter(plan__name__name__icontains="regular").aggregate(Sum('consumed_meals'))['consumed_meals__sum'] or 0,
+            },
+            "jumbo": {
+                "purchese": user_purcheses.filter(plan__name__name__icontains="jumbo").aggregate(Sum('total_meals'))['total_meals__sum'] or 0,
+                "pending": user_purcheses.filter(plan__name__name__icontains="jumbo").aggregate(Sum('remaining_meals'))['remaining_meals__sum'] or 0,
+                "consumed": user_purcheses.filter(plan__name__name__icontains="jumbo").aggregate(Sum('consumed_meals'))['consumed_meals__sum'] or 0,
+            },
+            "premium": {
+                "purchese": user_purcheses.filter(plan__name__name__icontains="premium").aggregate(Sum('total_meals'))['total_meals__sum'] or 0,
+                "pending": user_purcheses.filter(plan__name__name__icontains="premium").aggregate(Sum('remaining_meals'))['remaining_meals__sum'] or 0,
+                "consumed": user_purcheses.filter(plan__name__name__icontains="premium").aggregate(Sum('consumed_meals'))['consumed_meals__sum'] or 0,
+            }
+        }
+        master_data.append(user_data)
+    context = {"master_data": master_data, "title": "Master Data"}
+    return render(request, 'meal/master-data.html', context)
