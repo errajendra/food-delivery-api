@@ -90,7 +90,7 @@ class SendLoginOtpView(ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.validated_data['email']
+            user = serializer.validated_data['mobile_number']
             
             if send_otp(user):
                 return Response(
@@ -125,7 +125,7 @@ class LoginView(ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data, context={"request": request})
         if serializer.is_valid():
-            user = serializer.validated_data['email']
+            user = serializer.validated_data['mobile_number']
             user.fcm_token = serializer.validated_data.get('fcm_token', user.fcm_token)
             if not user.is_active:
                 user.is_active = True

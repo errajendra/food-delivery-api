@@ -89,12 +89,18 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
 # User Login and Register Serializer
 class SendOtpSerializer(serializers.Serializer):
-    mobile_number = serializers.CharField(required=False)
-    email = serializers.EmailField()
+    mobile_number = serializers.CharField()
+    email = serializers.EmailField(required=False)
 
     def validate_email(self, data):
         try:
             return User.objects.get(email=data)
+        except:
+            raise serializers.ValidationError("User Does not exits.")
+        
+    def validate_mobile_number(self, data):
+        try:
+            return User.objects.get(mobile_number=data)
         except:
             raise serializers.ValidationError("User Does not exits.")
 
@@ -103,7 +109,8 @@ class SendOtpSerializer(serializers.Serializer):
 
 # User Login Serializer
 class LoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+    email = serializers.EmailField(required=False)
+    mobile_number = serializers.CharField()
     otp = serializers.CharField()
     fcm_token = serializers.CharField(required=False)
 
@@ -115,14 +122,20 @@ class LoginSerializer(serializers.Serializer):
         except:
             raise serializers.ValidationError("No active user found with this email.")
 
+    def validate_mobile_number(self, data):
+        try:
+            return User.objects.get(mobile_number=data)
+        except:
+            raise serializers.ValidationError("No active user found.")
+
     def validate_otp(self, data):
         try:
-            email_id = self.context['request'].data['email']
+            mobile_number = self.context['request'].data['mobile_number']
         except:
-            email_id = None
-        if email_id:
+            mobile_number = None
+        if mobile_number:
             try:
-                user = User.objects.get(email=email_id)
+                user = User.objects.get(mobile_number=mobile_number)
                 if verify_otp(user, data):
                     return data
                 else:
