@@ -89,7 +89,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
 # User Login and Register Serializer
 class SendOtpSerializer(serializers.Serializer):
-    mobile_number = serializers.CharField()
+    mobile_number = serializers.CharField(required=False)
     email = serializers.EmailField(required=False)
 
     def validate_email(self, data):
