@@ -333,7 +333,7 @@ class SalesConnect(BaseModel):
 
 
 class Coupan(BaseModel):
-    users = models.ManyToManyField(User, on_delete=models.CASCADE, related_name="coupons")
+    users = models.ManyToManyField(User, related_name="coupons")
     code = models.CharField(max_length=50, unique=True)
     discount = models.FloatField()
     expiration_date = models.DateTimeField()
