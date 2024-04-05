@@ -110,7 +110,7 @@ class SendOtpSerializer(serializers.Serializer):
 # User Login Serializer
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField(required=False)
-    mobile_number = serializers.CharField()
+    mobile_number = serializers.CharField(required=False)
     otp = serializers.CharField()
     fcm_token = serializers.CharField(required=False)
 
@@ -133,9 +133,18 @@ class LoginSerializer(serializers.Serializer):
             mobile_number = self.context['request'].data['mobile_number']
         except:
             mobile_number = None
-        if mobile_number:
+            
+        try:
+            email = self.context['request'].data['email']
+        except:
+            email = None
+            
+        if mobile_number or email:
             try:
-                user = User.objects.get(mobile_number=mobile_number)
+                if mobile_number:
+                    user = User.objects.get(mobile_number=mobile_number)
+                elif email:
+                    user = User.objects.get(email=email)
                 if verify_otp(user, data):
                     return data
                 else:

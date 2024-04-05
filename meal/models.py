@@ -329,3 +329,14 @@ class SalesConnect(BaseModel):
     
     def __str__(self) -> str:
         return str(self.employee_id)
+
+
+
+class Coupan(BaseModel):
+    users = models.ManyToManyField(User, on_delete=models.CASCADE, related_name="coupons")
+    code = models.CharField(max_length=50, unique=True)
+    discount = models.FloatField()
+    expiration_date = models.DateTimeField()
+
+    def __str__(self) -> str:
+        return self.code

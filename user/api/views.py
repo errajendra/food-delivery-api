@@ -128,7 +128,10 @@ class LoginView(ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data, context={"request": request})
         if serializer.is_valid():
-            user = serializer.validated_data['mobile_number']
+            try:
+                user = serializer.validated_data['mobile_number']
+            except:
+                user = serializer.validated_data['email']
             user.fcm_token = serializer.validated_data.get('fcm_token', user.fcm_token)
             if not user.is_active:
                 user.is_active = True

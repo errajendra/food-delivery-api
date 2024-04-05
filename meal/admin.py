@@ -70,3 +70,10 @@ class SalesConnectAdmin(admin.ModelAdmin):
     list_display = ("user", "employee_id", "status", "created_at")
     list_filter = ("status", "created_at")
     search_fields = ("user__email", "user__mobile_number", "employee_id")
+
+
+@admin.register(Coupan)
+class CoupanAdmin(admin.ModelAdmin):
+    list_display = ("id", "code", "discount", "expiration_date", "created_at")
+    list_filter = ("expiration_date", "created_at")
+    search_fields = ("code", "discount")
