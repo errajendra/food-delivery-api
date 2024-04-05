@@ -19,11 +19,12 @@
                     <tr>
                         <th scope="col" class="sort">SN</th>
                         <th scope="col" class="sort">Plan</th>
-                        <th scope="col" class="sort">User</th>
+                        <th scope="col" class="sort">User Name</th>
+                        <th scope="col" class="sort">User Mobile</th>
+                        <th scope="col" class="sort">User Email</th>
                         <th scope="col" class="sort">Tnx ID</th>
                         <th scope="col" class="sort">Reamining Meal</th>
                         <th scope="col" class="sort">Status</th>
-                        {% comment %} <th scope="col" class="sort">Address</th> {% endcomment %}
                         <th scope="col">Date</th>
                     </tr>
                 </thead>
@@ -37,8 +38,13 @@
                             {{plan.plan}}
                         </td>
                         <td>
-                            <p class="mb-0"> {{plan.user.name}} </p>
-                            <p class="mb-0"> {{plan.user.email}} </p>
+                            <p class="mb-0"> {% if plan.user.name %} {{plan.user.name}} {% endif %}</p>
+                        </td>
+                        <td>
+                            <p class="mb-0"> {% if plan.user.mobile_number %} {{plan.user.mobile_number}} {% endif %} </p>
+                        </td>
+                        <td>
+                            <p class="mb-0"> {% if plan.user.email %} {{plan.user.email}} {% endif %}</p>
                         </td>
                         <td>
                             {{plan.transaction.id}}
@@ -72,36 +78,61 @@
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js"></script>
+
+{% comment %} Print  Button {% endcomment %}
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+
 <script>
-new DataTable('#example1', {
-    responsive: false,
-});
-</script>
-    <script>
-        console.log("dd")
-        $(document).on('change', '.planPurchaseStatus', function(e) {
-            var plan_id = $(this).data('plan-id');
-            var new_status = $(this).val();
-            var url = "{% url 'update-plan-purchase-active-ajax' %}";
-            
-            $.ajax({
-                url: url,
-                type: 'post',
-                data: {
-                    'plan_id': plan_id,
-                    'new_status': new_status,
-                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
-                },
-                dataType: 'json',
-                success: function(data) {
-                    if (data.success) {
-                        console.log('User status updated successfully');
-                    
-                    } else {
-                        console.error('Error updating user status:', data.error);
-                    }
-                }
-            });
+    $(document).ready(function () {
+        // DataTables initialization
+       
+        $('#example1').dataTable( {
+            "columns": [
+                {"data": "SN"},
+                {"data": "Plan"},
+                {"data": "User Name"},
+                {"data": "User Mobile"},
+                {"data": "User Email"},
+                {"data": "Tnx ID"},
+                {"data": "Reamining Meal"},
+                {"data": "Status"},
+                {"data": "Date"},
+            ],
+            dom: 'Bfrtip',
+            buttons: [
+                'excel', 'pdf', 'print'
+            ],
         });
-    </script>
+    });
+</script>
+
+<script>
+    $(document).on('change', '.planPurchaseStatus', function(e) {
+        var plan_id = $(this).data('plan-id');
+        var new_status = $(this).val();
+        var url = "{% url 'update-plan-purchase-active-ajax' %}";
+        
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: {
+                'plan_id': plan_id,
+                'new_status': new_status,
+                'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+            },
+            dataType: 'json',
+            success: function(data) {
+                if (data.success) {
+                    console.log('User status updated successfully');
+                
+                } else {
+                    console.error('Error updating user status:', data.error);
+                }
+            }
+        });
+    });
+</script>
 {% endblock javascripts %}

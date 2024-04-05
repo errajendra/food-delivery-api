@@ -153,29 +153,30 @@ class Address(BaseModel):
     house_number = models.CharField(
         verbose_name="House/Street Number",
         default="",
-        max_length=20
+        max_length=30
     )
     address1 = models.CharField(
         verbose_name="Address 1",
         default="",
-        max_length=36
+        max_length=50
     )
     address2 = models.CharField(
         verbose_name="Address 2",
         default="",
-        max_length=36
+        max_length=50
     )
     city = models.CharField(
         verbose_name="City",
-        max_length=36
+        max_length=50
     )
     state = models.CharField(
         verbose_name="State",
-        max_length=20
+        max_length=50
     )
     zip = models.CharField(
         verbose_name="Zip/Pin Code",
-        validators=[zip_validator]
+        validators=[zip_validator],
+        max_length=10
     )
     latitude = models.DecimalField(
         max_digits=16, decimal_places=10,
