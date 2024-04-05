@@ -26,6 +26,21 @@
                 </div>
                 
                 <div class="col">
+                    <!-- Search by date range -->
+                    <div class="form-group">
+                        <label>Search By Date:</label>
+                        <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                            <i class="far fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                        <input type="text" class="form-control float-right" id="reservation" name="daterange">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col">
                   <label for="searchUser">Mobile</label>
                   <input id="searchUser">
                 </div>
@@ -59,24 +74,7 @@
                     {% endfor %}
                   </select>
                 </div>
-
-                <!-- Search by date range -->
-                {% comment %} <div class="form-group">
-                    <label>Search By Date:</label>
-                    <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">
-                        <i class="far fa-calendar-alt"></i>
-                        </span>
-                    </div>
-                    <input type="text" class="form-control float-right" id="reservation" name="daterange">
-                    </div>
-                </div> {% endcomment %}
-                
-                {% comment %} <div class="col">
-                    <label for="searchDate">Date</label>
-                    <input type="date" id="searchDate"/>
-                </div> {% endcomment %}
+               
 
             </div>
 
@@ -113,10 +111,10 @@
                             <td>
                                 {% if meal.requester.email %} {{meal.requester.email}} {% endif %}
                             </td>
-                            <td> {% if meal.mobile_number %} {{ meal.mobile_number }} {% endif %} </td>
+                            <td> {% if meal.mobile_number %} {{ meal.mobile_number }} {% elif meal.requester.mobile_number %} {{meal.requester.mobile_number}} {% endif %} </td>
                             <td>{{ meal.plan.plan.name }}</td>
                             <td>{{ meal.meal }}</td>
-                            <td>{{ meal.date }}</td>
+                            <td>{{ meal.date|date }}</td>
                             <td>
                                 {{meal.status}}
                                 {% comment %} <select class="border-0 mealRequestStatus" data-meal-id="{{ meal.id }}">
@@ -187,6 +185,9 @@
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+
+
+<script src="{% static 'assets/daterangepicker/daterangepicker.js' %}"></script>
 
 <script>
     $(document).ready(function () {
@@ -265,9 +266,23 @@
             location.href='?date=' + selected_val; 
 
         });
-    });
+    });  
 </script>
 
 {% comment %} Search JS {% endcomment %}
 <script src="{% static 'assets/js/custom-js/daily-meal-request.js' %}"></script>
 {% endblock javascripts %}
+
+{% block stylesheets %}
+
+
+<!-- Date range picker -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" type="text/css" href="{% static "assets/daterangepicker/daterangepicker.css" %}" />
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" />
+
+
+{% endblock stylesheets %}
