@@ -108,7 +108,7 @@ class PlanPurcheseView(viewsets.ModelViewSet):
         coupan = None
         if coupan_code:
             try:
-                coupan = Coupan.objects.get(code=coupan_code)
+                coupan = Coupan.objects.get(code=coupan_code, expiration_date__gte=datetime.now().date())
             except Coupan.DoesNotExist:
                 return  Response(
                     {
