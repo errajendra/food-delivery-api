@@ -333,10 +333,18 @@ class SalesConnect(BaseModel):
 
 
 class Coupan(BaseModel):
-    users = models.ManyToManyField(User, related_name="coupons")
+    # users = models.ManyToManyField(User, related_name="coupons")
     code = models.CharField(max_length=50, unique=True)
-    discount = models.FloatField()
-    expiration_date = models.DateTimeField()
+    discount_type = models.CharField(
+        _('Discount Type'),
+        max_length=10,
+        choices=(
+            ('percentage','Percentage'),
+            ('fixed','Fixed Amount')
+        ),
+    )
+    value = models.PositiveIntegerField()
+    expiration_date = models.DateField()
 
     def __str__(self) -> str:
         return self.code

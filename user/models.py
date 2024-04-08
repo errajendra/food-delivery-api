@@ -235,6 +235,8 @@ class Transaction(BaseModel):
         max_length=12, choices=PAYMENT_STATUS_CHOICES,
         default=PENDING)
     remark = models.CharField(max_length=100, null=True, blank=True)
+    discount_code = models.CharField(max_length=50, null=True, blank=True)
+    discount_amount = models.PositiveIntegerField(default=0)
     status_message = models.CharField(
         verbose_name="CC Avenue order status message",
         max_length=100, null=True, blank=True)

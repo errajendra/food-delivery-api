@@ -13,7 +13,7 @@ from razor_pay.utils import (
 from ..models import (
     MealType, Meal, Plan, PlanPurchase, Transaction, MealRequestDaily,
     DailyMealMenu, CustomerSupport, Banner,
-    SalesConnect,
+    SalesConnect, Coupan,
 )
 from .serializers import (
     MealTypeSerilizer, MealSerializer,MealTypeMenuSerilizer,
@@ -104,15 +104,44 @@ class PlanPurcheseView(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data
         ids = data['plans']
+        coupan_code = data.get("coupan_code", None)
+        coupan = None
+        if coupan_code:
+            try:
+                coupan = Coupan.objects.get(code=coupan_code)
+            except Coupan.DoesNotExist:
+                return  Response(
+                    {
+                        "status": 400,
+                        "message": "Coupon code is invalid."
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                ) 
         plans = Plan.objects.filter(id__in=ids)
         if plans:
             price = plans.aggregate(Sum('price'))['price__sum']
+            
+            # Applying Discount
+            if coupan:
+                discount_type = coupan.discount_type 
+                if discount_type == 'percentage':
+                    discount_price = price * float(coupan.value) / 100 
+                else:
+                    discount_price = float(coupan.value)
+                price = price - discount_price
             if not price or price < 1:
-                raise APIException({'error': ("No plans selected")})
-            tnx = Transaction.objects.create(
+                raise APIException({'error': ("No plans selected or zero price")})
+            
+            # Create Transaction
+            tnx = Transaction(
                 user = request.user,
-                amount = price
+                amount = price,
             )
+            if coupan:
+                tnx.discount_code = coupan_code
+                tnx.discount_amount = discount_price
+            tnx.save()
+            
             plan_purchage = []
             for plan in plans:
                 plan_purchage.append(PlanPurchase(

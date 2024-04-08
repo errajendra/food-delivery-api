@@ -3,6 +3,7 @@ from .models import (
     MealType, Meal, PlanPurchase,
     Plan, MealRequestDaily, DailyMealMenu,
     Banner, SalesConnect,
+    Coupan,
 )
 
 
@@ -147,4 +148,21 @@ class SalesConnectForm(forms.ModelForm):
         widgets = {
             'user': forms.Select(attrs={'class':'form-control'}),
             'employee_id': forms.TextInput(attrs={'class':'form-control'}),
+        }
+
+
+
+"""
+Coupan Form
+"""
+class CoupanForm(forms.ModelForm):
+    class Meta:
+        model = Coupan
+        fields = "__all__"
+        
+        widgets = {
+            "code": forms.TextInput(attrs={"class": "form-control"}),
+            "discount_type": forms.Select(attrs={"class": "form-control"}),
+            "value": forms.TextInput(attrs={"class": "form-control"}),
+            "expiration_date": forms.DateInput(attrs={"class": "form-control", "type": "date"})
         }

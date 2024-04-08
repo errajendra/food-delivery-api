@@ -177,6 +177,15 @@
             <span class="sidebar-text">Sales Connect</span>
           </a>
         </li>
+        
+        <li class="nav-item {% if request.resolver_match.view_name == 'coupan_list'  %} active {% endif %}">
+          <a href="{% url 'coupan_list' %}" class="nav-link">
+            <span class="sidebar-icon">
+              <i class="fas fa-exchange-alt"></i>
+            </span>
+            <span class="sidebar-text">Coupan</span>
+          </a>
+        </li>
 
       {% elif request.user.is_staff %}
         <li class="nav-item {% if request.resolver_match.view_name == 'index' %} active {% endif %}">

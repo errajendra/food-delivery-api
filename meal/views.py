@@ -5,7 +5,7 @@ from .forms import (
     Meal, MealForm, MealTypeForm,
     Plan, PlanForm, MealRequestForm, MealRequestUpdateForm,
     DailyMealMenuForm, PlanPurchaseForm,
-    SalesConnectForm,
+    SalesConnectForm, CoupanForm
 )
 from .models import *
 from user.models import *
@@ -441,6 +441,55 @@ def banner_edit(request, id):
             return redirect('banner_list')
     context = {
         "title": "Update Banner",
+        "form": form,
+    }
+    return render(request, 'meal/form.html', context)
+
+
+
+
+""" 
+Coupan Code Views    
+"""
+# Add coupan
+def add_coupan(request):
+    form = CoupanForm(data=request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('coupan_list')
+    context = {
+        "form": form,
+        "title": "Add coupan",
+    }
+    return render(request, 'meal/form.html', context)
+
+
+# List of coupans
+def coupan_list(request):
+    context = {
+        'title': "Coupans List",
+        "coupans": Coupan.objects.all()
+    }
+    return render(request, 'meal/coupans.html', context)
+
+
+def coupan_delete(request, id):
+    instance = get_object_or_404(Coupan, id=id)
+    instance.delete()
+    return redirect('coupan_list')
+
+
+def coupan_edit(request, id):
+    instance = get_object_or_404(Coupan, id=id)
+    form = CoupanForm(
+        instance=instance, data=request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return redirect('coupan_list')
+    context = {
+        "title": "Update Coupan",
         "form": form,
     }
     return render(request, 'meal/form.html', context)

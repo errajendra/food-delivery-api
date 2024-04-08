@@ -74,6 +74,6 @@ class SalesConnectAdmin(admin.ModelAdmin):
 
 @admin.register(Coupan)
 class CoupanAdmin(admin.ModelAdmin):
-    list_display = ("id", "code", "discount", "expiration_date", "created_at")
-    list_filter = ("expiration_date", "created_at")
-    search_fields = ("code", "discount")
+    list_display = ("id", "code", "discount_type", "value", "expiration_date", "created_at")
+    list_filter = ("expiration_date", "discount_type", "created_at")
+    search_fields = ("code", "discount_type")

@@ -32,4 +32,9 @@ class AddressAdmin(admin.ModelAdmin):
 
 @admin.register(Transaction)
 class AddressAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'amount', 'tracking_id', 'status')
+    list_display = (
+        'id', 'user', 'amount', 'tracking_id', 'discount_code', 'discount_amount',
+        'status'
+    )
+    list_filter = ('status', 'created_at')
+    search_fields = ('tracking_id',)
