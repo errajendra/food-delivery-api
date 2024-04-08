@@ -103,7 +103,7 @@ class PlanPurcheseView(viewsets.ModelViewSet):
     
     def create(self, request, *args, **kwargs):
         data = request.data
-        ids = json.loads(data['plans'])
+        ids = data['plans']
         plans = Plan.objects.filter(id__in=ids)
         if plans:
             price = plans.aggregate(Sum('price'))['price__sum']
