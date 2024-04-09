@@ -170,6 +170,12 @@ class MealRequestDailySerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         data['meal'] = MealSerializer(instance.meal).data
+        try:
+            data["meal_name"] = instance.plan.plan.name.name
+            data["meal_description"] = instance.plan.plan.name.description
+            data["eating_type"] = instance.plan.plan.eating_type
+        except:
+            pass
         return data
 
 
