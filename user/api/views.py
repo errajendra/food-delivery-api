@@ -14,6 +14,61 @@ from meal.models import PlanPurchase, Plan
 
 
 
+# Check User Exist
+class CheckUserExists(ModelViewSet):
+    http_method_names = ("post", )
+    
+    def create(self, request, *args, **kwargs):
+        mobile_number = request.data.get("mobile_number", None)
+        if not mobile_number:
+            return Response(
+                {
+                    "status": status.HTTP_400_BAD_REQUEST,
+                    "error": "Missing data : 'mobile_number' is required",
+                }, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if User.objects.filter(mobile_number=mobile_number).exists():
+            return Response(
+                {
+                    "status": status.HTTP_200_OK,
+                    "message": "User exists."
+                },
+                status=status.HTTP_200_OK)
+        else:
+            raise UserNotFound()
+    
+
+
+# Get User Auth Token or Login through WhatsApp Token
+class GetUserAuthToken(ModelViewSet):
+    http_method_names = ("post", )
+    
+    def create(self, request, *args, **kwargs):
+        serializer = GetUserAuthTokenSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['mobile_number']
+            token, _created = Token.objects.get_or_create(
+                user = user
+            )
+            return Response(
+                {   'status': status.HTTP_200_OK,
+                    'message': "Login Success.",
+                    'token': token.key,
+                    'data': UserProfileSerializer(user).data
+                }
+            )
+        return Response(
+            data={
+                "status": status.HTTP_400_BAD_REQUEST,
+                "message": "BAD REQUEST",
+                "errors": serializer.errors
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+
+
 # User Registration Api
 class UserRegisterView(ModelViewSet):
     serializer_class = UserRegisterSerializer

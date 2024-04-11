@@ -8,3 +8,12 @@ class InvaliedToken(APIException):
         'message': "Invalid token"
     }
     default_code = 'invalid_token'
+
+
+class UserNotFound(APIException):
+    status_code = 404
+    default_detail = {
+        'status': 404,
+        'message': "User not found"
+    }
+    default_code = "user_not_found"

@@ -11,12 +11,17 @@ from .views import (
     TransactionListView,
     UserAddByFile,
     UserMealPlanPurcheseAddByFile,
+    CheckUserExists,
+    GetUserAuthToken,
 )
 
 router = DefaultRouter()
 
 """ User Register, Login and Profile Urls. """
-router.register('register', UserRegisterView, basename="user-register-api") # Not Using
+router.register('check-user-exist', CheckUserExists, basename="check-user-exist")
+router.register('get-user-token', GetUserAuthToken, basename="get-user-token-by-token")
+
+router.register('register', UserRegisterView, basename="user-register-api")
 router.register('verify-account-with-otp', UserVerifyAccountView,
                 basename="verify-account-with-otp") # Not Using
 router.register('send-login-otp', SendLoginOtpView, basename="send-login-otp-api")

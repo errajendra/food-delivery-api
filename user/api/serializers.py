@@ -259,6 +259,7 @@ class UserAddressSerializer(serializers.ModelSerializer):
         data['full_address'] = instance.full_address
         return data
     
+    
 # User Address Update Serializer
 class UserAddressUpdateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -272,3 +273,21 @@ class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields = "__all__"
+
+
+
+# Get User Auth Token Serializer
+class GetUserAuthTokenSerializer(serializers.Serializer):
+    whatsapp_token = serializers.CharField(max_length=256)
+    mobile_number = serializers.CharField(max_length=12)
+    
+    def validate_mobile_number(self, data):
+        try:
+            return User.objects.get(mobile_number=data)
+        except:
+            raise serializers.ValidationError("User Does not exits.")
+    
+    def validate_whatsapp_token(self, token):
+        if token == "iu&^5v7HysrYUtB&bu":
+            return token
+        raise serializers.ValidationError("Invailid Token.")
