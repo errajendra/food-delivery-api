@@ -406,11 +406,10 @@ class CancelMealRequest(viewsets.ModelViewSet):
             hour=20, minute=0
         )
         if c_time < ins_pre_date:
-            instance.status = "Cancelled"
-            instance.save()
             plan = instance.plan
             plan.remaining_meals = plan.remaining_meals + 1
             plan.save()
+            instance.delete()
         else:
             return Response(
                 status=401,

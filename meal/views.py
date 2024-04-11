@@ -160,7 +160,7 @@ Plan Purchese
 """
 
 def plan_purchase_list(request):
-    plan_purchase = PlanPurchase.objects.select_related().all()
+    plan_purchase = PlanPurchase.objects.select_related().filter(status=True)
     context = {"plan_purchase": plan_purchase, 'title': "Plan Purchase List"}
     return render(request, 'meal/plan-purchase-list.html', context)
 
