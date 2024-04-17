@@ -69,11 +69,11 @@ class UserVerifyAccountSerializer(serializers.Serializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'name', 'mobile_number', 'image', 'fcm_token')
+        fields = ('id', 'name', 'email', 'image', 'fcm_token')
         
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['email'] = instance.email
+        data['mobile_number'] = instance.mobile_number
         return data
 
 
