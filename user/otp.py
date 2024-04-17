@@ -14,6 +14,7 @@ def send_otp(user):
     otp_sent = False
     
     # Send Code On WhatsApp 
+    print(user.mobile_number)
     if user.mobile_number:
         url = "https://api.versal.one/f8fea0d3-2c4c-478b-99e8-c9f88383d71f"
         headers = {
@@ -27,7 +28,7 @@ def send_otp(user):
         }
 
         response = requests.post(url, headers=headers, json=row)
-        
+        # print(response.json())
         if response.status_code == 200:
             otp_sent = True
     

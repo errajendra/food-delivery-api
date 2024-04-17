@@ -3,7 +3,8 @@ from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q, Sum
 from django.shortcuts import get_object_or_404
-import json
+from django.http import JsonResponse
+from django.utils import timezone as ptz
 from datetime import datetime, timedelta
 from pytz import timezone
 from razor_pay.utils import (
@@ -22,6 +23,7 @@ from .serializers import (
     DailyMealMenuSerializer, MealTypePurcheseSerilizer,
     CustomerSupportSerializer,
     SalesConnectSerializer,
+    CouponSerializer,
 )
 from django.db.utils import IntegrityError
 from rest_framework.views import APIView
@@ -524,3 +526,38 @@ class CustomerSupportView(viewsets.ModelViewSet):
             }
         )
 
+
+
+""" Check Coupan Code  Views """
+class CheckCouponCode(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request, *args, **kwargs):
+        try:
+            coupon_code = request.data.get('coupan_code')
+            
+            # Get the Coupon from DB by code
+            coupon = Coupan.objects.filter(code__iexact=coupon_code).first()
+
+            # If there is no such coupon in DB raise an error
+            if not coupon :
+                return JsonResponse({'status': 400, 'error': 'No Such Coupon'}, status=400)  
+            
+            # If there is no such coupon in DB raise an error
+            if coupon.expiration_date  < ptz.now().date():
+                return JsonResponse({'status':status.HTTP_410_GONE, 'error':'Expired Coupon'}, status=410)             
+
+            else:
+                context = {
+                    'status': 200,
+                    'valid': True,
+                    'detail': CouponSerializer(coupon).data
+                }
+                amount = request.data.get('amount', None)
+                if amount and type(amount) == int:
+                    applied_amount = coupon.apply_discount_price(amount)
+                    context['detail']['applied_amount'] = applied_amount
+                return JsonResponse(context)
+
+        except KeyError as e:
+            return JsonResponse({'status': 400, 'error': f"Missing field: {e}"}, status=400)

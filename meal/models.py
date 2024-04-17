@@ -348,3 +348,17 @@ class Coupan(BaseModel):
 
     def __str__(self) -> str:
         return self.code
+    
+    class Meta:
+        verbose_name = "Coupon Code"
+        
+    def apply_discount_price(self, amt):
+        if amt < 1 :
+            raise ValueError("Invalid amount.")
+        
+        if self.discount_type == "percentage":
+            amount  = (amt * self.value)/100
+        else:
+            amount = self.value
+            
+        return round(float(amt - amount),2)

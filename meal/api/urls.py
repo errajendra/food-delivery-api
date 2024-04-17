@@ -10,6 +10,7 @@ from .views import(
     DailyMealMenuView,
     CustomerSupportView,
     SalesConnectViews,
+    CheckCouponCode,
 )
 
 router = DefaultRouter()
@@ -35,5 +36,6 @@ router.register('sales-connect', SalesConnectViews,
 urlpatterns = [
     path('', include(router.urls)),
     path('banners/', BannerView.as_view(), name='banner-api'),
+    path('check-coupon/', CheckCouponCode.as_view(), name='check-coupon-api'),
 
 ]

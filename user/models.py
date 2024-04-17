@@ -92,7 +92,7 @@ class CustomUser(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        return str(self.email)
+        return str(self.mobile_number)
     
     def save(self, *args, **kwargs):
         """ This method is used to modify the password field

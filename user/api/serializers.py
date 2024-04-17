@@ -100,7 +100,8 @@ class SendOtpSerializer(serializers.Serializer):
         
     def validate_mobile_number(self, data):
         try:
-            return User.objects.get(mobile_number=data)
+            user, _created = User.objects.get_or_create(mobile_number=data)
+            return user
         except:
             raise serializers.ValidationError("User Does not exits.")
 

@@ -6,6 +6,7 @@ from ..models import (
     CustomerSupport,
     Banner,
     SalesConnect,
+    Coupan as Coupon,
 )
 from user.models import Address
 from user.api.serializers import TransactionSerializer
@@ -205,3 +206,10 @@ class SalesConnectSerializer(serializers.ModelSerializer):
     class Meta:
         model = SalesConnect
         fields = "__all__"
+
+
+
+class CouponSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Coupon
+        fields = ("code", "discount_type", "value", "expiration_date")
