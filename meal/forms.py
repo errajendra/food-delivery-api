@@ -3,7 +3,7 @@ from .models import (
     MealType, Meal, PlanPurchase,
     Plan, MealRequestDaily, DailyMealMenu,
     Banner, SalesConnect,
-    Coupan,
+    Coupan, KitchenOffModel,
 )
 
 
@@ -165,4 +165,25 @@ class CoupanForm(forms.ModelForm):
             "discount_type": forms.Select(attrs={"class": "form-control"}),
             "value": forms.TextInput(attrs={"class": "form-control"}),
             "expiration_date": forms.DateInput(attrs={"class": "form-control", "type": "date"})
+        }
+
+
+
+""" Kitchen Off Form. """
+class KitchenOffForm(forms.ModelForm):
+    EATING_TYPE_CHOICES = [
+        ('Breakfast', 'Breakfast'),
+        ('Lunch', 'Lunch'),
+        ('Dinner', 'Dinner')
+    ]
+    eating_types = forms.MultipleChoiceField(
+        choices=EATING_TYPE_CHOICES,
+        widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
+    )
+    class Meta:
+        model = KitchenOffModel
+        fields = "__all__"
+        
+        widgets = {
+            'date': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
         }

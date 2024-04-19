@@ -16,7 +16,7 @@ from razor_pay.utils import (
 from ..models import (
     MealType, Meal, Plan, PlanPurchase, Transaction, MealRequestDaily,
     DailyMealMenu, CustomerSupport, Banner,
-    SalesConnect, Coupan,
+    SalesConnect, Coupan, KitchenOffModel,
 )
 from .serializers import (
     MealTypeSerilizer, MealSerializer,MealTypeMenuSerilizer,
@@ -283,6 +283,12 @@ class PlanMeal(viewsets.ModelViewSet):
                     meal = Meal.objects.get(pk=meal_id)
                 except Meal.DoesNotExist:
                     raise MealDoesNotExist()
+                
+                # check the date if kicken is closed or not for this day
+                if KitchenOffModel.objects.filter(date=datetime, eating_types__icontains=str(meal.eating_type)).exists():
+                    print(f"checking kick out for {datetime}")
+                    continue
+                
                 try:
                     meal_request = MealRequestDaily(
                         requester=requester,
@@ -451,10 +457,15 @@ class DailyMealMenuView(viewsets.ModelViewSet):
         data = {}
         for d in dates:
             date_qs = qs.filter(date=d)
-            # date_meal_type = MealType.objects.filter(
+            
+            meal_type = request.GET.get("meal_type", None)
+            if meal_type:
+                date_qs = date_qs.filter(
+                    meal_type__name = meal_type
+                )
+            # meal_type_filter_option = MealType.objects.filter(
             #     id__in = date_qs.values_list('meal_type', flat=True)
             #     ).values_list('name', flat=True)
-            
             # data[f"{d}"] = {
             #     "meal_types": date_meal_type,
             #     "list": DailyMealMenuSerializer(date_qs, many=True).data
@@ -581,7 +592,7 @@ def get_distance(request, format=None):
         
     else:
         allowed = False
-        message = "Sorry! Too long distance, our delivery service is not avalable for this location."
+        message = "Sorry! Too long distance, our delivery service is not avalable for this location. (Only 15KM of redius from shop are avalable)"
     
     return Response({
         "status": 200,

@@ -57,9 +57,16 @@ urlpatterns = [
     path('delete-coupan/<int:id>/', coupan_delete, name='delete_coupan'),
     
     # Sales Connect Urls
-    path('sales_connect-list/', sales_connect_list, name='sales_connect_list'),
+    path('sales-connect-list/', sales_connect_list, name='sales_connect_list'),
     path('edit-sales-connect/<int:id>/', sales_connect_edit, name='edit_sales_connect'),
     path('delete-sales-connect/<int:id>/', sales_connect_delete, name='delete_sales_connect'),
+    
+    
+    # Kitchen Off Urls
+    path('add-kitchen-off/', add_kitchen_off, name='add_kitchen_off'),
+    path('kitchen-off-list/', kitchen_off_list, name='kitchen_off_list'),
+    path('edit-kitchen-off/<int:id>/', kitchen_off_edit, name='edit_kitchen_off'),
+    path('delete-kitchen-off/<int:id>/', kitchen_off_delete, name='delete_kitchen_off'),
     
     # Support Urls
     path('supports/', supprt_list, name="supports"),

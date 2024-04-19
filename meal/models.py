@@ -362,3 +362,12 @@ class Coupan(BaseModel):
             amount = self.value
             
         return round(float(amt - amount),2)
+
+
+
+""" Closing Dates or Leave of Kitchen with Eating Type"""
+class KitchenOffModel(BaseModel):
+    date = models.DateField(unique=True)
+    eating_types = models.CharField(
+        verbose_name = "Eating Types",
+        max_length = 50)

@@ -77,3 +77,9 @@ class CoupanAdmin(admin.ModelAdmin):
     list_display = ("id", "code", "discount_type", "value", "expiration_date", "created_at")
     list_filter = ("expiration_date", "discount_type", "created_at")
     search_fields = ("code", "discount_type")
+
+
+@admin.register(KitchenOffModel)
+class KitchenOffModelAdmin(admin.ModelAdmin):
+    list_display = ("date", "eating_types", "created_at")
+    list_filter = ("date", "created_at")

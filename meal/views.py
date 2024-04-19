@@ -5,7 +5,7 @@ from .forms import (
     Meal, MealForm, MealTypeForm,
     Plan, PlanForm, MealRequestForm, MealRequestUpdateForm,
     DailyMealMenuForm, PlanPurchaseForm,
-    SalesConnectForm, CoupanForm
+    SalesConnectForm, CoupanForm, KitchenOffForm,
 )
 from .models import *
 from user.models import *
@@ -500,7 +500,7 @@ def coupan_edit(request, id):
 """ 
     Sales Connect view on App    
 """
-# List of Banners
+# List of Sales Connect
 def sales_connect_list(request):
     context = {
         'title': "Sales Connects List",
@@ -529,6 +529,55 @@ def sales_connect_edit(request, id):
     }
     return render(request, 'meal/form.html', context)
 
+
+
+
+""" 
+    Block user to book the meal for purticular date and eating type entry view  
+    Kitchen Off Views  
+"""
+# Add coupan
+def add_kitchen_off(request):
+    form = KitchenOffForm(data=request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('kitchen_off_list')
+    context = {
+        "form": form,
+        "title": "Add Kitchen Off Data",
+    }
+    return render(request, 'meal/form.html', context)
+
+
+# List of Dates to Kitchen Off
+def kitchen_off_list(request):
+    context = {
+        'title': "Kitchen Off List",
+        "kitchen_offs": KitchenOffModel.objects.all()
+    }
+    return render(request, 'meal/kitchen_offs.html', context)
+
+
+def kitchen_off_delete(request, id):
+    instance = get_object_or_404(KitchenOffModel, id=id)
+    instance.delete()
+    return redirect('kitchen_off_list')
+
+
+def kitchen_off_edit(request, id):
+    instance = get_object_or_404(KitchenOffModel, id=id)
+    form = KitchenOffForm(
+        instance=instance, data=request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return redirect('kitchen_off_list')
+    context = {
+        "title": "Update Kitchen Off",
+        "form": form,
+    }
+    return render(request, 'meal/form.html', context)
 
 
 
