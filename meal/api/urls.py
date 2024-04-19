@@ -11,6 +11,7 @@ from .views import(
     CustomerSupportView,
     SalesConnectViews,
     CheckCouponCode,
+    get_distance,
 )
 
 router = DefaultRouter()
@@ -37,5 +38,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('banners/', BannerView.as_view(), name='banner-api'),
     path('check-coupon/', CheckCouponCode.as_view(), name='check-coupon-api'),
+    path('check-distance/', get_distance, name='check-distance-api'),
 
 ]

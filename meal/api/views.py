@@ -1,5 +1,6 @@
 from rest_framework.response import Response
 from rest_framework import status, viewsets
+from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q, Sum
 from django.shortcuts import get_object_or_404
@@ -7,6 +8,7 @@ from django.http import JsonResponse
 from django.utils import timezone as ptz
 from datetime import datetime, timedelta
 from pytz import timezone
+from geopy import distance
 from razor_pay.utils import (
     client as razorpay_client,
     RAZOR_PAY_API_KEY
@@ -561,3 +563,30 @@ class CheckCouponCode(APIView):
 
         except KeyError as e:
             return JsonResponse({'status': 400, 'error': f"Missing field: {e}"}, status=400)
+
+
+@api_view(["POST"])
+def get_distance(request, format=None):
+    lat = float(request.data.get("lat"))
+    lon = float(request.data.get("lon"))
+    
+    your_location = (lat, lon)
+    atmkaro_location = (12.9131241,77.6073953)
+    
+    d = round(distance.distance(your_location, atmkaro_location).km, 2)
+    
+    if d <= 15:
+        allowed = True
+        message = "OK"
+        
+    else:
+        allowed = False
+        message = "Sorry! Too long distance, our delivery service is not avalable for this location."
+    
+    return Response({
+        "status": 200,
+        "distance": d,
+        "distance_unit": "KM",
+        "allowed": allowed,
+        "message": message,
+    })
