@@ -357,6 +357,10 @@ class BannerView(APIView):
         serializer = BannerSerializer(banners, many=True, context={'request':request})
         
         try:
+            zip_code = request.GET.get("zip_code", None)
+            if zip_code:
+                request.user.zip_code = zip_code
+                request.user.save()
             zip = request.user.zip_code
             service_area = [int(i) for i in settings.ALLOWED_SERVICE_AREA_ZIP_CODES.strip(',').split(',')]
             allowed = False
