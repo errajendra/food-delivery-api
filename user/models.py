@@ -52,6 +52,7 @@ class CustomUser(AbstractUser):
         _("Full Name"), max_length=100, validators=[name_validator], null=True, blank=True
     )
     otp = models.CharField(max_length=8, null=True, blank=True)
+    zip_code = models.CharField(max_length=8, null=True, blank=True, help_text="Only check for service area")
     image = models.ImageField(
         default="default.png",
         upload_to="user/image/",

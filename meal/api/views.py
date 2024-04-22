@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework import status, viewsets
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q, Sum
 from django.shortcuts import get_object_or_404
@@ -30,6 +30,7 @@ from .serializers import (
 from django.db.utils import IntegrityError
 from rest_framework.views import APIView
 from .exceptions import *
+from django.conf import settings
 
 
 """ MealType Listing View."""
@@ -349,16 +350,36 @@ class PlanMeal(viewsets.ModelViewSet):
 
 
 """ Home Page View. """
+@permission_classes([IsAuthenticated])
 class BannerView(APIView):
     def get(self, request, format=None):
         banners = Banner.objects.filter(status=True)
         serializer = BannerSerializer(banners, many=True, context={'request':request})
+        
+        try:
+            zip = request.user.zip_code
+            service_area = [int(i) for i in settings.ALLOWED_SERVICE_AREA_ZIP_CODES.strip(',').split(',')]
+            allowed = False
+            
+            if int(zip) in service_area:
+                allowed = True
+                message = "OK"
+                    
+            else:
+                allowed = False
+                message = "Out of our service area."
+        except Exception as e:
+            allowed = False
+            message = f"error: {e}"
+        
+    
         return Response(
             data={
                 "status": status.HTTP_200_OK,
-                "message": "Success.",
+                "message": message,
                 "data": {
                     "banner": serializer.data,
+                    "service_allowed_on_location": allowed,
                 }
             },
             status=status.HTTP_200_OK
@@ -451,6 +472,7 @@ class DailyMealMenuView(viewsets.ModelViewSet):
         ).order_by('date')
         return qs
 
+
     def list(self, request, *args, **kwargs):
         qs = self.get_queryset()
         dates = qs.values_list('date', flat=True)
@@ -458,20 +480,26 @@ class DailyMealMenuView(viewsets.ModelViewSet):
         for d in dates:
             date_qs = qs.filter(date=d)
             
-            meal_type = request.GET.get("meal_type", None)
-            if meal_type:
-                date_qs = date_qs.filter(
-                    meal_type__name = meal_type
-                )
-            # meal_type_filter_option = MealType.objects.filter(
-            #     id__in = date_qs.values_list('meal_type', flat=True)
-            #     ).values_list('name', flat=True)
-            # data[f"{d}"] = {
-            #     "meal_types": date_meal_type,
-            #     "list": DailyMealMenuSerializer(date_qs, many=True).data
-            # }
+            date_meal_data = []
+            meal_types_date = set(MealType.objects.filter(
+                id__in = date_qs.values_list('meal_type', flat=True)
+                ).values_list('name', flat=True))
             
-            data[f"{d}"] = DailyMealMenuSerializer(date_qs, many=True).data
+            for meal_type in meal_types_date:
+                meal_type_data = []
+                meal_type_date_qs = date_qs.filter(meal_type__name = meal_type)
+                for meal_type_ins in meal_type_date_qs:
+                    meal_type_data.append({
+                        "meal_name": meal_type,
+                        "eating_type": meal_type_ins.eating_type,
+                        "description": meal_type_ins.items
+                    })
+                date_meal_data.append({
+                    f"{meal_type}": meal_type_data
+                })
+            data[f"{d}"] = date_meal_data
+            
+            # data[f"{d}"] = DailyMealMenuSerializer(date_qs, many=True).data
         context = {
             "status": status.HTTP_200_OK,
             "message":"Successfully fetched daily meal menu.",
@@ -598,6 +626,32 @@ def get_distance(request, format=None):
         "status": 200,
         "distance": d,
         "distance_unit": "KM",
+        "allowed": allowed,
+        "message": message,
+    })
+
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def get_service_area_by_zipcode(request, format=None):
+    user = request.user
+    zip_code = request.data.get("zip_code")
+    service_area = [i for i in settings.ALLOWED_SERVICE_AREA_ZIP_CODES.strip(',').split(',')]
+    allowed = False
+    
+    user.zip_code = zip_code
+    user.save()
+    if zip_code in service_area:
+        allowed = True
+        message = "OK"
+            
+    else:
+        allowed = False
+        message = "Out of our service area."
+    
+    return Response({
+        "status": 200,
         "allowed": allowed,
         "message": message,
     })
