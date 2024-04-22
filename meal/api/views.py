@@ -384,6 +384,7 @@ class BannerView(APIView):
                 "data": {
                     "banner": serializer.data,
                     "service_allowed_on_location": allowed,
+                    "zip_code": request.user.zip_code
                 }
             },
             status=status.HTTP_200_OK
