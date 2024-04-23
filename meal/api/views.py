@@ -46,9 +46,10 @@ class MealTypeView(viewsets.ModelViewSet):
         plan_type_purchese = MealType.objects.filter(
             id__in = Plan.objects.filter(id__in=plan_purchese).values_list('name')
         )
-        other_plan_types = MealType.objects.exclude(
-            id__in = plan_type_purchese.values_list('id')
-        )
+        # other_plan_types = MealType.objects.exclude(
+        #     id__in = plan_type_purchese.values_list('id')
+        # )
+        plan_types = MealType.objects.all()
         data = {
             "status": status.HTTP_200_OK,
             "message": "OK",
@@ -57,7 +58,7 @@ class MealTypeView(viewsets.ModelViewSet):
                     plan_type_purchese, many= True,
                     context={'user':request.user}).data,
                 "other_meal_types": MealTypeSerilizer(
-                    other_plan_types, many= True).data
+                    plan_types, many= True).data
             }
         }
         # data = super().list(request, *args, **kwargs)
