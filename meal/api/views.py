@@ -31,6 +31,7 @@ from django.db.utils import IntegrityError
 from rest_framework.views import APIView
 from .exceptions import *
 from django.conf import settings
+from constance import config
 
 
 """ MealType Listing View."""
@@ -111,6 +112,7 @@ class PlanPurcheseView(viewsets.ModelViewSet):
         data = request.data
         ids = data['plans']
         coupan_code = data.get("coupan_code", None)
+        
         coupan = None
         if coupan_code:
             try:
@@ -124,6 +126,7 @@ class PlanPurcheseView(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST
                 ) 
         plans = Plan.objects.filter(id__in=ids)
+        
         if plans:
             price = plans.aggregate(Sum('price'))['price__sum']
             
@@ -158,15 +161,72 @@ class PlanPurcheseView(viewsets.ModelViewSet):
                     remaining_meals = plan.number_of_meals,
                 ))
             PlanPurchase.objects.bulk_create(plan_purchage, batch_size=3)
-            # Create payment urls here
+            
+            # check where it is using if pay_by == WhatsApp give the payment url of razor pay
+            pay_by = data.get("pay_by", "Script") 
+            
+            if pay_by == "Link": # Pay by clicking on a link provided here
+                
+                host = request.build_absolute_uri('/')
+                # call_back_url = "{}payment/check-payment-by-link/".format(host)
+                call_back_url = "https://webhook.botpress.cloud/41f8cce5-d1f5-44bd-9370-4e85e5eb4963"
+                
+                try:
+                    pay_link_payload = {
+                        "upi_link": False,
+                        "amount": tnx.amount * 100,
+                        "currency": "INR",
+                        "accept_partial": False,
+                        # "first_min_partial_amount": 100,
+                        "description": "For the purpose of purchese the meal plans",
+                        "customer": {
+                            "name": f"{request.user.name}",
+                            "email": f"{request.user.email}",
+                            "contact": f"{request.user.mobile_number}"
+                        },
+                        "notify": {
+                            "sms": False,
+                            "email": False
+                        },
+                        "reminder_enable": True,
+                        "notes": {
+                            "receipt": str(data['plans'])
+                        },
+                        "callback_url": call_back_url,
+                        "callback_method": "get"
+                    }
+                    pay_data = razorpay_client.payment_link.create(pay_link_payload)
+                            
+                    tnx.tracking_id = pay_data['id']
+                    tnx.save()
+                    
+                    return Response(
+                        data={
+                            "status": status.HTTP_200_OK,
+                            "message": "Complete your payment using given link.",
+                            "data": {
+                                "pay_data": pay_data,
+                            }
+                        }
+                    )
+                
+                except Exception as ex:
+                    return Response(
+                        {"status":status.HTTP_500_INTERNAL_SERVER_ERROR, "message": f"{ex}"},
+                        status.HTTP_500_INTERNAL_SERVER_ERROR
+                    )
+            
+            # Create payment payload here using script
             merchant_data={
                 "currency" : "INR" ,
                 'amount': tnx.amount * 100,
                 'receipt': str(data['plans']),
             }
+            
             payment = razorpay_client.order.create(merchant_data)
             tnx.tracking_id = payment['id']
             tnx.save()
+            
             return Response(
                 data={
                     "status": status.HTTP_200_OK,
@@ -179,6 +239,7 @@ class PlanPurcheseView(viewsets.ModelViewSet):
                     }
                 }
             )
+        
         return Response(
             status=status.HTTP_400_BAD_REQUEST,
             data={
@@ -187,6 +248,7 @@ class PlanPurcheseView(viewsets.ModelViewSet):
                 "errors": """Pass valid plans ids in "{'plans':[1,2]}" formate."""
             }
         )       
+
 
     def list(self, request, *args, **kwargs):
         self.serializer_class = PlanPurcheseListSerializer
@@ -363,7 +425,7 @@ class BannerView(APIView):
                 request.user.zip_code = zip_code
                 request.user.save()
             zip = request.user.zip_code
-            service_area = [int(i) for i in settings.ALLOWED_SERVICE_AREA_ZIP_CODES.strip(',').split(',')]
+            service_area = [int(i) for i in config.SERVICEABLE_AREA_ZIPCODE.strip(',').split(',')]
             allowed = False
             
             if int(zip) in service_area:
@@ -643,7 +705,7 @@ def get_distance(request, format=None):
 def get_service_area_by_zipcode(request, format=None):
     user = request.user
     zip_code = request.data.get("zip_code")
-    service_area = [i for i in settings.ALLOWED_SERVICE_AREA_ZIP_CODES.strip(',').split(',')]
+    service_area = [i for i in config.SERVICEABLE_AREA_ZIPCODE.strip(',').split(',')]
     allowed = False
     
     user.zip_code = zip_code

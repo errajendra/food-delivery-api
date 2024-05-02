@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'user.apps.UserConfig',
     'meal',
+    'constance',
 ]
 
 MIDDLEWARE = [
@@ -113,6 +114,15 @@ DATABASES = {
     }
 }
 
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+
+# https://django-constance.readthedocs.io/en/latest/
+CONSTANCE_CONFIG = {
+    'SERVICEABLE_AREA_ZIPCODE': ("560076,560068", 'Enter comman separated zip codes of your serviceable area'),
+}
+CONSTANCE_CONFIG_FIELDSETS = {
+    'General Options': ('SERVICEABLE_AREA_ZIPCODE',),
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
