@@ -5,7 +5,7 @@ from .forms import (
     Meal, MealForm, MealTypeForm,
     Plan, PlanForm, MealRequestForm, MealRequestUpdateForm,
     DailyMealMenuForm, PlanPurchaseForm,
-    SalesConnectForm, CoupanForm, KitchenOffForm,
+    SalesConnectForm, CouponForm, KitchenOffForm,
 )
 from .models import *
 from user.models import *
@@ -449,47 +449,47 @@ def banner_edit(request, id):
 
 
 """ 
-Coupan Code Views    
+Coupon Code Views    
 """
-# Add coupan
-def add_coupan(request):
-    form = CoupanForm(data=request.POST or None)
+# Add coupon
+def add_coupon(request):
+    form = CouponForm(data=request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-            return redirect('coupan_list')
+            return redirect('coupon_list')
     context = {
         "form": form,
-        "title": "Add coupan",
+        "title": "Add coupon",
     }
     return render(request, 'meal/form.html', context)
 
 
-# List of coupans
-def coupan_list(request):
+# List of coupons
+def coupon_list(request):
     context = {
-        'title': "Coupans List",
-        "coupans": Coupan.objects.all()
+        'title': "Coupon List",
+        "coupons": Coupan.objects.all()
     }
-    return render(request, 'meal/coupans.html', context)
+    return render(request, 'meal/coupons.html', context)
 
 
-def coupan_delete(request, id):
+def coupon_delete(request, id):
     instance = get_object_or_404(Coupan, id=id)
     instance.delete()
-    return redirect('coupan_list')
+    return redirect('coupon_list')
 
 
-def coupan_edit(request, id):
+def coupon_edit(request, id):
     instance = get_object_or_404(Coupan, id=id)
-    form = CoupanForm(
+    form = CouponForm(
         instance=instance, data=request.POST or None)
     if request.method == "POST":
         if form.is_valid():
             form.save()
-            return redirect('coupan_list')
+            return redirect('coupon_list')
     context = {
-        "title": "Update Coupan",
+        "title": "Update Coupon",
         "form": form,
     }
     return render(request, 'meal/form.html', context)
@@ -536,7 +536,7 @@ def sales_connect_edit(request, id):
     Block user to book the meal for purticular date and eating type entry view  
     Kitchen Off Views  
 """
-# Add coupan
+# Add coupon
 def add_kitchen_off(request):
     form = KitchenOffForm(data=request.POST or None)
     if request.method == 'POST':

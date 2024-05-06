@@ -178,21 +178,30 @@
           </a>
         </li>
         
-        <li class="nav-item {% if request.resolver_match.view_name == 'coupan_list'  %} active {% endif %}">
-          <a href="{% url 'coupan_list' %}" class="nav-link">
+        <li class="nav-item {% if request.resolver_match.view_name == 'coupon_list'  %} active {% endif %}">
+          <a href="{% url 'coupon_list' %}" class="nav-link">
             <span class="sidebar-icon">
-              <i class="fas fa-exchange-alt"></i>
+              <i class="fas fa-gift"></i>
             </span>
-            <span class="sidebar-text">Coupan</span>
+            <span class="sidebar-text">Coupon</span>
           </a>
         </li>
 
         <li class="nav-item {% if request.resolver_match.view_name == 'kitchen_off_list'  %} active {% endif %}">
           <a href="{% url 'kitchen_off_list' %}" class="nav-link">
             <span class="sidebar-icon">
-              <i class="fas fa-exchange-alt"></i>
+              <i class="fas fa-calendar"></i>
             </span>
             <span class="sidebar-text">Kitchen Off's</span>
+          </a>
+        </li>
+        
+        <li class="nav-item{% if request.resolver_match.url_name == 'update-constance' %}active{% endif %}">
+          <a href="{% url 'update-constance' %}" class="nav-link">
+              <span class="sidebar-icon">
+                  <i class="fas fa-cog"></i>
+              </span>
+              <span class="sidebar-text">Setting</span>
           </a>
         </li>
 

@@ -153,9 +153,9 @@ class SalesConnectForm(forms.ModelForm):
 
 
 """
-Coupan Form
+Coupon Form
 """
-class CoupanForm(forms.ModelForm):
+class CouponForm(forms.ModelForm):
     class Meta:
         model = Coupan
         fields = "__all__"

@@ -337,10 +337,13 @@ class PlanMeal(viewsets.ModelViewSet):
                 raise PlanPurchaseDoesNotExist()
             if len(meal_plan_data) > plan_purchase.remaining_meals:
                 raise NoRemainMealsAvlSubscription()
+            
             total_meal_comsumed = 0
+            
             for meal_data in meal_plan_data:
-                datetime = meal_data['datetime']
+                request_datetime = meal_data['datetime']
                 meal_id = meal_data['meal']
+                
 
                 # Fetch the Meal instance based on meal_id
                 try:
@@ -349,8 +352,8 @@ class PlanMeal(viewsets.ModelViewSet):
                     raise MealDoesNotExist()
                 
                 # check the date if kicken is closed or not for this day
-                if KitchenOffModel.objects.filter(date=datetime, eating_types__icontains=str(meal.eating_type)).exists():
-                    print(f"checking kick out for {datetime}")
+                if KitchenOffModel.objects.filter(date=request_datetime, eating_types__icontains=str(meal.eating_type)).exists():
+                    print(f"checking kick out for {request_datetime}")
                     continue
                 
                 try:
@@ -358,7 +361,7 @@ class PlanMeal(viewsets.ModelViewSet):
                         requester=requester,
                         plan=plan_purchase,
                         meal=meal,
-                        date=datetime,
+                        date=request_datetime,
                         mobile_number = address.mobileNo,
                         address = address.full_address,
                         latitude = address.latitude,
@@ -377,6 +380,7 @@ class PlanMeal(viewsets.ModelViewSet):
                         "status": meal_request.status,
                         "instruction": instruction,
                     })
+                
                 except IntegrityError:
                     # Handle the integrity error and provide a custom message
                     return Response(
@@ -386,7 +390,8 @@ class PlanMeal(viewsets.ModelViewSet):
                             "message": "Meal request already exists for this date and requester.",
                             "errors": {"meal_request": ["Meal request already exists for this date and requester."]}
                         }
-                    )    
+                    )   
+         
         else:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
@@ -508,13 +513,14 @@ class CancelMealRequest(viewsets.ModelViewSet):
             plan = instance.plan
             plan.remaining_meals = plan.remaining_meals + 1
             plan.save()
-            instance.delete()
+            instance.status = "Cancelled"
+            instance.save()
         else:
             return Response(
                 status=401,
                 data={
                     "status":401,
-                    "message": "You can cancel before 8 PM",})
+                    "message": "You can cancel after 8 PM",})
         serializer = MealRequestDailySerializer(instance)
         return Response({"status":200, "message": "OK", "data": serializer.data})
 

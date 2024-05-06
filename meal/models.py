@@ -232,6 +232,7 @@ class MealRequestDaily(BaseModel):
             ('Prepared', 'Prepared'), 
             ('Packed', 'Packed'),
             ('Delivered', 'Delivered'),
+            ('Cancelled', 'Cancelled'),
         ),
         max_length=20,
         default="Requested"
@@ -339,8 +340,8 @@ class Coupan(BaseModel):
         _('Discount Type'),
         max_length=10,
         choices=(
-            ('percentage','Percentage'),
-            ('fixed','Fixed Amount')
+            ('percentage','percentage'),
+            ('fixed','percentage')
         ),
     )
     value = models.PositiveIntegerField()

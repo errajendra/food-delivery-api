@@ -8,7 +8,7 @@
             <!-- Card header -->
             <div class="card-header border-0">
                 <h3 class="mb-0">{{title}} </h3>
-                <a href="{% url "add_coupan" %}" class="bg-success btn float-end">+Add</a>
+                <a href="{% url "add_coupon" %}" class="bg-success btn float-end">+Add</a>
             </div>
             {% csrf_token %}
             <!-- Light table -->
@@ -26,38 +26,38 @@
                     </tr>
                 </thead>
                 <tbody class="list">
-                    {% for coupan in coupans %}
+                    {% for coupon in coupons %}
                     <tr>
                         <td class="budget">
                             {{forloop.counter}}
                         </td>
                         <td>
-                            {{coupan.code}}
+                            {{coupon.code}}
                         </td>
                         <td>
-                            {{coupan.discount_type}}
+                            {{coupon.discount_type}}
                         </td>
                         <td>
-                            {{coupan.value}}
+                            {{coupon.value}}
                         </td>
                         <td>
-                            {{coupan.expiration_date}}
+                            {{coupon.expiration_date}}
                         </td>
                         <td>
-                            {{coupan.created_at}}
+                            {{coupon.created_at}}
                         </td>
                         <td>
-                            <a class="" href="{% url "edit_coupan" coupan.id %}"><i class="fa fa-edit " title="Update" ></i></a>
-                            <i class="fa fa-trash-alt" type="button" data-bs-toggle="modal" href="#deletecoupanModal{{coupan.id}}" style="background:transparent;"></i>
+                            <a class="" href="{% url "edit_coupon" coupon.id %}"><i class="fa fa-edit " title="Update" ></i></a>
+                            <i class="fa fa-trash-alt" type="button" data-bs-toggle="modal" href="#deletecouponModal{{coupon.id}}" style="background:transparent;"></i>
                         </td>
                     </tr>
                      <!-- Modal -->
                     
-                     <div class="modal fade" id="deletecoupanModal{{coupan.id}}" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+                     <div class="modal fade" id="deletecouponModal{{coupon.id}}" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
                         <div class="modal-dialog">
                           <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="deleteModalLabel{{coupan.id}}">Delete coupan</h5>
+                                <h5 class="modal-title" id="deleteModalLabel{{coupon.id}}">Delete coupon</h5>
 
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
@@ -66,7 +66,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <a class="btn btn-danger" href="{% url 'delete_coupan' coupan.id %}">Delete</a>
+                                <a class="btn btn-danger" href="{% url 'delete_coupon' coupon.id %}">Delete</a>
                             </div>
                           </div>
                         </div>

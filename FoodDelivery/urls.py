@@ -3,6 +3,7 @@ from django.urls import path, include
 from user.utils import render_index_page
 from django.conf import settings
 from django.conf.urls.static import static
+from .constance_config_view import update_confi_setting
 
 admin.site.site_header = 'Food Delivery (ATM) Adminsitration'
 admin.site.index_title = ''
@@ -14,6 +15,7 @@ urlpatterns = [
     path('meal/', include("meal.urls")),
     path('payment/', include("razor_pay.urls")),
     path('delivery/', include("delivery.urls")),
+    path('update-constance-setting/', update_confi_setting, name="update-constance"),
     path("", render_index_page),
 ]
 

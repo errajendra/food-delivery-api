@@ -1,0 +1,110 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+<body style="margin:12px;">
+    <div class="mt-5">
+
+       {% comment %} <div class="page-content__header mt-4 bg-white" style="    margin-bottom: 0px !important;">
+         <div>
+           <h2 class="page-content__header-heading"></h2>
+         </div>
+       </div> {% endcomment %}
+     <div class="card">
+     <div class="card-body cus_form table-responsive">
+        
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+            <ul class="errorlist">
+                {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% if form.errors %}
+            <ul class="errorlist">
+            {% endif %}
+            {% for field in form.hidden_fields %}
+            {% for error in field.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+            {{ field }}
+            {% endfor %}
+            {% if form.errors %}
+            </ul>
+            {% endif %}
+            
+            {% if fieldsets %}
+                {% for fieldset in fieldsets %}
+                <fieldset class="module{% if fieldset.collapse %} collapse{% endif %}">
+                    <h2>{{ fieldset.title }}</h2>
+                    <table class="table constance_table">
+                    <thead>
+                        <tr>
+                        <th><div class="text">Name</div></th>
+                        <th><div class="text">Default</div></th>
+                        <th><div class="text">Value</div></th>
+                        <th><div class="text">Is modified</div></th>
+                        </tr>
+                    </thead>
+                    {% for item in fieldset.config_values %}
+                    <tr class="row1">
+                        <th>
+                        <span class="item-name" id="{{ item.name|slugify }}">
+                            {{ item.name }}
+                        </span>
+                        <div class="help-text">{{ item.help_text|linebreaksbr }}</div>
+                        </th>
+                        <td>
+                        {{ item.default|linebreaks }}
+                        </td>
+                        <td>
+                        {{ item.form_field.errors }}
+                        {{ item.form_field }}
+                        {% if not item.is_file %}
+                            <br>
+                            <a href="#" class="reset-link"
+                            data-field-id="{{ item.form_field.auto_id }}"
+                            data-field-type="{% spaceless %}
+                            {% if item.is_checkbox %}checkbox
+                            {% elif item.is_date %}date
+                            {% elif item.is_datetime %}datetime
+                            {% endif %}
+                            {% endspaceless %}"
+                            data-default="{% spaceless %}
+                            {% if item.is_checkbox %}{% if item.raw_default %} true {% else %} false {% endif %}
+                            {% elif item.is_date %}{{ item.raw_default|date:"U" }}
+                            {% elif item.is_datetime %}{{ item.raw_default|date:"U" }}
+                            {% else %}{{ item.default }}
+                            {% endif %}
+                            {% endspaceless %}">Reset to default</a>
+                        {% endif %}
+                        </td>
+                        <td>
+                            {% if item.modified %}
+                            <img src="{% static 'admin/img/icon-yes.svg' %}" alt="True">
+                            {% else %}
+                            <img src="{% static 'admin/img/icon-no.svg' %}" alt="True">
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </table>
+                </fieldset>
+                {% endfor %}
+            {% endif %}
+            <button type="submit" class='btn btn-primary'>Submit</button>
+            <button class="btn btn-primary"  onClick="javascript:history.go(-1);" type="button" >Cancel</button>
+        </form>
+    </div>
+ </div>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+ <script src="{% static 'custom-js/django-constance.js' %}"> </script>
+ </div>
+</body>
+
+
+
+
+{% endblock content %}

@@ -50,11 +50,11 @@ urlpatterns = [
     path('edit-banner/<int:id>/', banner_edit, name='edit_banner'),
     path('delete-banner/<int:id>/', banner_delete, name='delete_banner'),
     
-    # coupan Urls
-    path('coupan-list/', coupan_list, name='coupan_list'),
-    path('add-coupan/', add_coupan, name='add_coupan'),
-    path('edit-coupan/<int:id>/', coupan_edit, name='edit_coupan'),
-    path('delete-coupan/<int:id>/', coupan_delete, name='delete_coupan'),
+    # coupon Urls
+    path('coupon-list/', coupon_list, name='coupon_list'),
+    path('add-coupon/', add_coupon, name='add_coupon'),
+    path('edit-coupon/<int:id>/', coupon_edit, name='edit_coupon'),
+    path('delete-coupon/<int:id>/', coupon_delete, name='delete_coupon'),
     
     # Sales Connect Urls
     path('sales-connect-list/', sales_connect_list, name='sales_connect_list'),
