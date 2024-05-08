@@ -25,7 +25,7 @@ from .serializers import (
     DailyMealMenuSerializer, MealTypePurcheseSerilizer,
     CustomerSupportSerializer,
     SalesConnectSerializer,
-    CouponSerializer,
+    CouponSerializer, KitchenOffSerializer,
 )
 from django.db.utils import IntegrityError
 from rest_framework.views import APIView
@@ -523,6 +523,23 @@ class CancelMealRequest(viewsets.ModelViewSet):
                     "message": "You can cancel after 8 PM",})
         serializer = MealRequestDailySerializer(instance)
         return Response({"status":200, "message": "OK", "data": serializer.data})
+
+
+
+"""
+Kitchen Off Date View
+"""
+class KitchenOffDateView(viewsets.ModelViewSet):
+    http_method_names = ("get",)
+    serializer_class = KitchenOffSerializer
+    pagination_class = None
+    
+    def get_queryset(self):
+        qs = KitchenOffModel.objects.all().order_by('-date')
+        et = self.request.GET.get("eating_type", None)
+        if et:
+            qs = qs.filter(eating_types__icontains=et)
+        return qs
 
 
 

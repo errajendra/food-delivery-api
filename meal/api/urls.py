@@ -11,6 +11,7 @@ from .views import(
     CustomerSupportView,
     SalesConnectViews,
     CheckCouponCode,
+    KitchenOffDateView,
     get_distance, get_service_area_by_zipcode,
 )
 
@@ -32,7 +33,7 @@ router.register('customer-support', CustomerSupportView,
                 basename='customer-support-api')
 router.register('sales-connect', SalesConnectViews,
                 basename='sales-connect-api')
-
+router.register('kitchen-off-dates', KitchenOffDateView, basename='kitchen-off-dates-api')
 
 urlpatterns = [
     path('', include(router.urls)),

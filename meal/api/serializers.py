@@ -7,6 +7,7 @@ from ..models import (
     Banner,
     SalesConnect,
     Coupan as Coupon,
+    KitchenOffModel,
 )
 from user.models import Address
 from user.api.serializers import TransactionSerializer
@@ -218,3 +219,10 @@ class CouponSerializer(serializers.ModelSerializer):
     class Meta:
         model = Coupon
         fields = ("code", "discount_type", "value", "expiration_date")
+
+
+
+class KitchenOffSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = KitchenOffModel
+        fields = ("date", "eating_types",)
