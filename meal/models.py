@@ -341,8 +341,9 @@ class Coupan(BaseModel):
         max_length=10,
         choices=(
             ('percentage','percentage'),
-            ('fixed','percentage')
+            # ('fixed','percentage')
         ),
+        default="percentage"
     )
     value = models.PositiveIntegerField()
     expiration_date = models.DateField()
