@@ -106,9 +106,9 @@ AUTH_USER_MODEL = 'user.CustomUser'
 
 CRONJOBS = [
     # ('*/2 * * * *', 'user.cron.send_notification_job', '>> /home/ubuntu/project/food-delivery/cron_log.log >2&1'), # each 2 minutes
-    ('30 19 * * *', 'user.cron.send_notification_job', '>> /home/ubuntu/project/food-delivery/cron_log.log >2&1'), #at 7:30 PM
-    ('0 8 * * *', 'user.cron.send_notification_job', '>> /home/ubuntu/project/food-delivery/cron_log.log >2&1'), # at 8 AM
-    ('30 13 * * *', 'user.cron.send_notification_job', '>> /home/ubuntu/project/food-delivery/cron_log.log >2&1'), # at 1:30 PM
+    ('30 19 * * *', 'user.cron.send_notification_morning_job', '>> /home/ubuntu/project/food-delivery/cron_log.log >2&1'), #at 7:30 PM
+    ('0 8 * * *', 'user.cron.send_notification_noon_job', '>> /home/ubuntu/project/food-delivery/cron_log.log >2&1'), # at 8 AM
+    ('30 13 * * *', 'user.cron.send_notification_evenning_job', '>> /home/ubuntu/project/food-delivery/cron_log.log >2&1'), # at 1:30 PM
 ]
 
 # Database
