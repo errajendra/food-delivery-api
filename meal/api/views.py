@@ -190,7 +190,8 @@ class PlanPurcheseView(viewsets.ModelViewSet):
                         },
                         "reminder_enable": True,
                         "notes": {
-                            "receipt": str(data['plans'])
+                            "receipt": str(data['plans']),
+                            "mobile_number": f"{request.user.mobile_number}"
                         },
                         "callback_url": call_back_url,
                         "callback_method": "get"
