@@ -101,7 +101,10 @@ class SendOtpSerializer(serializers.Serializer):
     def validate_mobile_number(self, data):
         try:
             user, _created = User.objects.get_or_create(mobile_number=data)
-            return user
+            if user.is_active:
+                return user
+            else:
+                raise serializers.ValidationError("User is not active or deleted plese contact to customer support.")
         except:
             raise serializers.ValidationError("User Does not exits.")
 
