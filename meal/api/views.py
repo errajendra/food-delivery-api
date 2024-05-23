@@ -168,7 +168,7 @@ class PlanPurcheseView(viewsets.ModelViewSet):
             if pay_by == "Link": # Pay by clicking on a link provided here
                 
                 # host = request.build_absolute_uri('/')
-                call_back_url = f"https://wa.me/91{request.user.mobile_number}"
+                call_back_url = f"https://wa.me/+91{request.user.mobile_number}"
                 # call_back_url = "https://webhook.botpress.cloud/41f8cce5-d1f5-44bd-9370-4e85e5eb4963"
                 
                 try:
