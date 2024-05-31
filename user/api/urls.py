@@ -13,6 +13,7 @@ from .views import (
     UserMealPlanPurcheseAddByFile,
     CheckUserExists,
     GetUserAuthToken,
+    UserAddressAddByFile,
 )
 
 router = DefaultRouter()
@@ -51,6 +52,7 @@ router.register('transactions', TransactionListView,
 
 # Upload User by CSV
 router.register('user-upload', UserAddByFile, basename="user-upload")
+router.register('user-address-upload', UserAddressAddByFile, basename="user-address-upload")
 router.register('user-meal-plan-upload',
                 UserMealPlanPurcheseAddByFile, basename="user-meal-plan-upload")
 

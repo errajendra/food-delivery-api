@@ -535,12 +535,12 @@ class UserAddByFile(ModelViewSet):
             reader = pd.read_csv(file)
             create_objs = []
             for _, row in reader.iterrows():
-                mobile_number = row["Contact Number"]
+                mobile_number = row["Mobile"]
                 try:
                     obj = User(
                         mobile_number = mobile_number,
                         email = f"{mobile_number}@atmkaro.in",
-                        name = row['Customer Name'],
+                        name = row['User Name'],
                         is_active = True,
                     )
                     create_objs.append(obj)
@@ -562,6 +562,57 @@ class UserAddByFile(ModelViewSet):
 
 
 
+""" User Address add by CSV upload. """
+class UserAddressAddByFile(ModelViewSet):
+    http_method_names = ['post']
+    
+    def create(self, request, *args, **kwargs):
+        serializer = FileUploadSerializer(data=request.data)
+        if serializer.is_valid():
+            file = serializer.validated_data['file']
+            reader = pd.read_csv(file)
+            create_objs = []
+            for _, row in reader.iterrows():
+                mobile_number = row["Mobile"]
+                try:
+                    user = User.objects.get(mobile_number=mobile_number)
+                except:
+                    user = None
+                
+                if user:
+                    obj = Address(
+                        user = user,
+                        fullName = row["Name"],
+                        mobileNo = ["Contact"],
+                        type = ["Type"],
+                        house_number = ["House Number"],
+                        address1 = ["Address1"],
+                        address2 = row['Address2'],
+                        city = row['City'],
+                        state = row['State'],
+                        zip = row['Zip'],
+                        latitude = row['Lat'],
+                        longitude = row['Long'],
+                    )
+                    create_objs.append(obj)
+            
+            Address.objects.bulk_create(
+                objs = create_objs,
+                batch_size = 100,
+                ignore_conflicts = True,
+            )
+            return Response({"status": "success"}, status=201)
+        
+        return Response(
+            status=status.HTTP_400_BAD_REQUEST,
+            data={
+                "status": status.HTTP_400_BAD_REQUEST,
+                "errors": serializer.errors
+            }
+        )
+
+
+
 """ User Meal Purchese data add by CSV upload. """
 class UserMealPlanPurcheseAddByFile(ModelViewSet):
     http_method_names = ['post']
@@ -573,9 +624,9 @@ class UserMealPlanPurcheseAddByFile(ModelViewSet):
             reader = pd.read_csv(file)
             create_plan_purchese_objs = []
             for _, row in reader.iterrows():
-                mobile_number = row["Contact Number"]
+                mobile_number = row["Mobile"]
                 try:
-                    user = User.objects.get(email = f"{mobile_number}@atmkaro.in")
+                    user = User.objects.get(mobile_number = mobile_number)
                 except User.DoesNotExist:
                     user = None
                 if user:
