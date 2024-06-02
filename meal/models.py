@@ -111,7 +111,7 @@ class PlanPurchase(BaseModel):
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.user} - {self.plan.name}"
+        return f"{self.user} - {self.plan.name} ({self.remaining_meals})"
     
     @property
     def pending_meals(self):
@@ -143,7 +143,7 @@ class Meal(BaseModel):
         unique_together = ('name', 'meal_type', 'eating_type')
     
     def __str__(self):
-        return f"{self.meal_type} ({self.eating_type})"
+        return f"{self.meal_type} ({self.eating_type}) > {self.name}"
     
 
 

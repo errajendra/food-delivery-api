@@ -79,13 +79,15 @@ class PlanPurchaseForm(forms.ModelForm):
 class MealRequestForm(forms.ModelForm):
     class Meta:
         model = MealRequestDaily
-        fields = ["plan", "meal", "status", "mobile_number", "address", "latitude", "longitude"]
+        fields = ["plan", "meal", "date", "status", "mobile_number", "address",  "latitude", "longitude", "instruction"]
         
         widgets = {
             'plan': forms.Select(attrs={'class':'form-control'}),
             'meal': forms.Select(attrs={'class':'form-control'}),
+            'date': forms.DateInput(attrs={'class':'form-control', 'type': 'date'}),
             'status': forms.Select(attrs={'class': 'form-control'}),
             'address': forms.TextInput(attrs={'class': 'form-control'}),
+            'instruction': forms.TextInput(attrs={'class': 'form-control'}),
             'mobile_number': forms.TextInput(attrs={'class': 'form-control'}),
             'latitude': forms.NumberInput(attrs={'class': 'form-control'}),
             'longitude': forms.NumberInput(attrs={'class': 'form-control'}),

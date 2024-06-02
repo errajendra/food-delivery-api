@@ -357,6 +357,19 @@ class PlanMeal(viewsets.ModelViewSet):
                     print(f"checking kick out for {request_datetime}")
                     continue
                 
+                # Check time for today 12 PM for same date booking
+                # today_time = ptz.datetime.now()
+                # today_12pm = datetime(
+                #     today_time.year,
+                #     today_time.month, 
+                #     today_time.day,
+                #     today_time.hour,
+                #     today_time.minute,
+                #     today_time.second
+                # )
+                # if request_datetime < today_12pm:
+                #     continue
+                
                 try:
                     meal_request = MealRequestDaily(
                         requester=requester,

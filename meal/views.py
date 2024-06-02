@@ -274,6 +274,8 @@ def add_daily_meal(request):
         if form.is_valid():
             plan = PlanPurchase.objects.get(id=form.data['plan'])
             form.instance.requester = plan.user
+            plan.remaining_meals = plan.remaining_meals + 1
+            plan.save()
             form.save()
             return redirect('daily_meal_request_list')
     context = {
