@@ -602,9 +602,9 @@ def master_data(request):
             "name": user.name,
             
             "breakfast": {
-                "purchese": user_purcheses.filter(plan__name__name__icontains="breakfast").aggregate(Sum('total_meals'))['total_meals__sum'] or 0,
-                "pending": user_purcheses.filter(plan__name__name__icontains="breakfast").aggregate(Sum('remaining_meals'))['remaining_meals__sum'] or 0,
-                "consumed": user_purcheses.filter(plan__name__name__icontains="breakfast").aggregate(Sum('consumed_meals'))['consumed_meals__sum'] or 0,
+                "purchese": user_purcheses.filter(plan__name__name__icontains="healthy").aggregate(Sum('total_meals'))['total_meals__sum'] or 0,
+                "pending": user_purcheses.filter(plan__name__name__icontains="healthy").aggregate(Sum('remaining_meals'))['remaining_meals__sum'] or 0,
+                "consumed": user_purcheses.filter(plan__name__name__icontains="healthy").aggregate(Sum('consumed_meals'))['consumed_meals__sum'] or 0,
             },
             "quick": {
                 "purchese": user_purcheses.filter(plan__name__name__icontains="quick").aggregate(Sum('total_meals'))['total_meals__sum'] or 0,
