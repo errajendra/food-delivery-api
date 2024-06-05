@@ -76,6 +76,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
         data['mobile_number'] = instance.mobile_number
         return data
 
+    def validate(self, data):
+        if 'name' not in data:
+            raise serializers.ValidationError("Name is required")
+        if 'email' not in data:
+            raise serializers.ValidationError("Email is required")
+        return data
+
 
 
 """" User Info Serializer for other user 
