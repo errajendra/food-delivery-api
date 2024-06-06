@@ -13,6 +13,8 @@ from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .forms import BannerForm
+from datetime import datetime, timedelta
+from pytz import timezone as tz
 
 
 """
@@ -294,6 +296,27 @@ def update_daily_meal(request, id):
     form = MealRequestUpdateForm(instance=instance)
     if request.method == 'POST':
         form = MealRequestUpdateForm(instance=instance, data=request.POST)
+
+        # reduce meal
+        status_value = request.POST.get("status", None)
+        if status_value == "Cancelled":
+            # now = datetime.now(tz("Asia/Kolkata"))
+            # ipd = instance.date - timedelta(days=1)
+            # c_time = datetime(
+            #     year=now.year, month=now.month, day=now.day,
+            #     hour=now.hour, minute=now.minute, second=now.second
+            # )
+            # ins_pre_date = datetime(
+            #     year=ipd.year, month=ipd.month, day=ipd.day,
+            #     hour=20, minute=0
+            # )
+            # print(c_time, ins_pre_date)
+            # if c_time < ins_pre_date:
+            plan = instance.plan
+            plan.remaining_meals = plan.remaining_meals + 1
+            plan.save()
+            print("hello")
+
         if form.is_valid():
             form.save()
             return redirect('daily_meal_request_list')
