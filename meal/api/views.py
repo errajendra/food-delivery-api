@@ -45,7 +45,7 @@ class MealTypeView(viewsets.ModelViewSet):
             user=request.user, remaining_meals__gte=1, status=True
         ).values_list('plan')
         plan_type_purchese = MealType.objects.filter(
-            id__in = Plan.objects.filter(id__in=plan_purchese, status="Active").values_list('name')
+            id__in = Plan.objects.filter(id__in=plan_purchese).values_list('name')
         )
         # other_plan_types = MealType.objects.exclude(
         #     id__in = plan_type_purchese.values_list('id')
@@ -98,7 +98,7 @@ class PlanListingView(viewsets.ModelViewSet):
     
     def get_queryset(self):
         name = self.request.GET.get('name')
-        queryset = Plan.objects.filter(name__id=name).order_by('-created_at')
+        queryset = Plan.objects.filter(name__id=name, status="Active").order_by('-created_at')
         return queryset
 
 
