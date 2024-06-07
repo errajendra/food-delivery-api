@@ -218,9 +218,9 @@ def daily_meal_request_list(request):
         elif date_filter == 'THIS-YEAR':
             daily_meal_request = daily_meal_request.filter(date__year=date.today().year)
 
-    today_breakfast = True if daily_meal_request.filter(meal__eating_type="Breakfast", date=date.today(), status="Success") else False
-    today_lunch = True if daily_meal_request.filter(meal__eating_type="Lunch", date=date.today(), status="Success") else False
-    today_dinner = True if daily_meal_request.filter(meal__eating_type="Dinner", date=date.today(), status="Success") else False
+    today_breakfast = True if daily_meal_request.filter(meal__eating_type="Breakfast", date__date=date.today(), status="Success") else False
+    today_lunch = True if daily_meal_request.filter(meal__eating_type="Lunch", date__date=date.today(), status="Success") else False
+    today_dinner = True if daily_meal_request.filter(meal__eating_type="Dinner", date__date=date.today(), status="Success") else False
 
     if request.user.is_staff:
         context = {
@@ -281,7 +281,7 @@ def today_success_meal(request, eat_type):
 
     if eat_type in [1, 2, 3]:
         eating_type = {1: "Breakfast", 2: "Lunch", 3: "Dinner"}[eat_type]
-        filter_eat = MealRequestDaily.objects.filter(date=today.date(), meal__eating_type=eating_type, status="Requested")
+        filter_eat = MealRequestDaily.objects.filter(date__date=today.date(), meal__eating_type=eating_type, status="Requested")
 
     if filter_eat:
         filter_eat.update(status="Success")
