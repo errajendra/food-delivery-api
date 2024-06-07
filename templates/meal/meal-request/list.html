@@ -16,68 +16,75 @@
             <div id="filterDiv" class="m-3 row ">
                 <!-- Search -->
                 
-                <div class="col">
-                    <label for="searchDate">Date</label>
-                    <select id="searchDate">
+                <div class="col-md-2 mb-3">
+                    <label for="searchDate" class="form-label">Date</label>
+                    <select id="searchDate" class="form-select">
                       {% for s in date_filters %}
                       <option value={{s}} {% if request.GET.date == s %} selected {% endif %}>{{s}}</option>
                       {% endfor %}
                     </select>
                 </div>
                 
-                <div class="col">
+                <div class="col-md-3 mb-3">
                     <!-- Search by date range -->
-                    <div class="form-group">
-                        <label>Search By Date:</label>
-                        <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                            <i class="far fa-calendar-alt"></i>
-                            </span>
-                        </div>
+                    <label class="form-label">Search By Date:</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                         <input type="text" class="form-control float-right" id="reservation" name="daterange">
-                        </div>
                     </div>
                 </div>
                 
-                <div class="col">
-                  <label for="searchUser">Mobile</label>
-                  <input id="searchUser">
+                <div class="col-md-2 mb-3">
+                    <label for="searchUser" class="form-label">Mobile</label>
+                    <input id="searchUser" class="form-control">
                 </div>
 
-                <div class="col">
-                  <label for="searchPlan">Meal Plan </label>
-                  <select id="searchPlan">
+                <div class="col-md-2 mb-3">
+                  <label for="searchPlan" class="form-label">Meal Plan </label>
+                  <select id="searchPlan" class="form-select">
                     <option selected value>All</option>
                     {% for name in plan_names %}
-                    <option>{{name}} </option>
+                        <option>{{name}} </option>
                     {% endfor %}
                   </select>
                 </div>
 
-                <div class="col">
-                  <label for="searchType">Eating Type</label>
-                  <select id="searchType">
+                <div class="col-md-2 mb-3">
+                  <label for="searchType" class="form-label">Eating Type</label>
+                  <select id="searchType" class="form-select">
                     <option selected value>All</option>
                     {% for t in meal_types %}
-                    <option>{{t}} </option>
+                        <option>{{t}} </option>
                     {% endfor %}
                   </select>
                 </div>
 
-                <div class="col">
-                  <label for="searchStatus">Status</label>
-                  <select id="searchStatus">
+                <div class="col-md-1 mb-3">
+                  <label for="searchStatus" class="form-label">Status</label>
+                  <select id="searchStatus" class="form-select">
                     <option selected value>All</option>
                     {% for s in statuss %}
-                    <option>{{s}} </option>
+                        <option>{{s}} </option>
                     {% endfor %}
                   </select>
                 </div>
-               
-
             </div>
-
+            <div class="card-header border-0">
+                <h5 class="mb-0">Today Success Order</h5>
+                <div class="row g-2">
+                    <div class="col-12 d-flex btn-container">
+                        <button class="btn btn-warning btn-half mx-2"
+                                onclick="window.location.href='{% url 'today_success_meal' 1 %}'"
+                                {% if today_breakfast %}disabled{% endif %}>Breakfast</button>
+                        <button class="btn btn-secondary btn-half mx-2"
+                                onclick="window.location.href='{% url 'today_success_meal' 2 %}'"
+                                {% if today_lunch %}disabled{% endif %}>Lunch</button>
+                        <button class="btn btn-secondary btn-half mx-2"
+                                onclick="window.location.href='{% url 'today_success_meal' 3 %}'"
+                                {% if today_dinner %}disabled{% endif %}>Dinner</button>
+                    </div>
+                </div>
+            </div>
             {% csrf_token %}
             <!-- Light table -->
             <div class="table-responsive">

@@ -31,7 +31,8 @@ urlpatterns = [
     path('daily-meal-request-list/', daily_meal_request_list, name='daily_meal_request_list'),
     path('add-daily-meal/', add_daily_meal, name='add_daily_meal'),
     path('update-daily-meal/<int:id>/', update_daily_meal, name='update_daily_meal'),
-    
+    path('today-meal-success/<int:eat_type>/', today_success_meal, name='today_success_meal'),
+
     path('transaction-list/', transaction_list, name='transaction_list'),
     
     path('update-delivery-person/', update_delivery_person, name='update_delivery_person'),

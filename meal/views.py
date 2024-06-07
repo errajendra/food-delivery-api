@@ -217,7 +217,11 @@ def daily_meal_request_list(request):
             daily_meal_request = daily_meal_request.filter(date__date__range=[date.today()-timedelta(days=30), date.today()])
         elif date_filter == 'THIS-YEAR':
             daily_meal_request = daily_meal_request.filter(date__year=date.today().year)
-    
+
+    today_breakfast = True if daily_meal_request.filter(meal__eating_type="Breakfast", date=date.today(), status="Success") else False
+    today_lunch = True if daily_meal_request.filter(meal__eating_type="Lunch", date=date.today(), status="Success") else False
+    today_dinner = True if daily_meal_request.filter(meal__eating_type="Dinner", date=date.today(), status="Success") else False
+
     if request.user.is_staff:
         context = {
             'title': "Daily Meal Request",
@@ -226,6 +230,9 @@ def daily_meal_request_list(request):
             "meal_types": set(daily_meal_request.values_list('meal__eating_type', flat=True).distinct()),
             "statuss": set(daily_meal_request.values_list('status', flat=True).distinct()),
             "date_filters": date_filters,
+            "today_breakfast": today_breakfast,
+            "today_lunch": today_lunch,
+            "today_dinner": today_dinner,
         }
         return render(request, 'meal/meal-request/list.html', context)
     
@@ -266,8 +273,20 @@ def daily_meal_request_list(request):
     #     daily_meal_request = MealRequestDaily.objects.select_related().filter(delivery_person=user)
     #     context = {"daily_meal_request": daily_meal_request, 'title': "Daily Meal Request"}
     #     return render(request, 'meal/meal-request/list-delivery-person.html', context)
-    
-            
+
+
+def today_success_meal(request, eat_type):
+    today = datetime.now(timezone.utc) + timedelta(hours=5, minutes=30)
+    filter_eat = None
+
+    if eat_type in [1, 2, 3]:
+        eating_type = {1: "Breakfast", 2: "Lunch", 3: "Dinner"}[eat_type]
+        filter_eat = MealRequestDaily.objects.filter(date=today.date(), meal__eating_type=eating_type)
+
+    if filter_eat:
+        filter_eat.update(status="Success")
+
+    return redirect("daily_meal_request_list")
 
 
 def add_daily_meal(request):
@@ -315,7 +334,6 @@ def update_daily_meal(request, id):
             plan = instance.plan
             plan.remaining_meals = plan.remaining_meals + 1
             plan.save()
-            print("hello")
 
         if form.is_valid():
             form.save()
