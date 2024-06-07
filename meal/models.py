@@ -52,6 +52,9 @@ class Plan(BaseModel):
     # benifits = RichTextField(null=True, blank=True)
     validity = models.PositiveIntegerField(
         verbose_name = "Validity in Days", default=180)
+    status = models.CharField(max_length=8, choices={
+        ("Active", "Active"), ("Inactive", "Inactive")
+    }, default="Active")
     
     def __str__(self):
         return str(self.name) + " -> " + str(self.number_of_meals)

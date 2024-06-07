@@ -50,6 +50,7 @@ class PlanForm(forms.ModelForm):
     class Meta:
         model = Plan
         fields = "__all__"
+        exclude = ("status",)
         
         widgets = {
             'name': forms.Select(attrs={'class':'form-control'}),
@@ -58,6 +59,14 @@ class PlanForm(forms.ModelForm):
             'tag': forms.Select(attrs={'class':'form-control'}),
             'validity': forms.NumberInput(attrs={'class':'form-control'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:  # Editing an existing instance
+            self.fields['number_of_meals'].widget.attrs['readonly'] = True
+            self.fields['number_of_meals'].widget.attrs['disabled'] = True
+            # Optional: Add a class for styling
+            self.fields['number_of_meals'].widget.attrs['class'] += ' readonly'
 
 
 

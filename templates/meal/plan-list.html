@@ -22,6 +22,7 @@
                         <th scope="col" class="sort">Tag</th>
                         <th scope="col" class="sort">Price</th>
                         <th scope="col" class="sort">Number of Meals</th>
+                        <th scope="col" class="sort">Status</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -47,8 +48,21 @@
                             {{plan.number_of_meals}}
                         </td>
                         <td>
+                            {% if plan.status == "Active" %}
+                                <select class="border-0 PlanStatus" data-plan-id="{{ plan.id }}">
+                                    <option value="Active" {% if plan.status == 'Active' %}selected{% endif %}>Active</option>
+                                    <option value="Inactive" {% if plan.status == "Inactive" %}selected{% endif %}>Inactive</option>
+                                </select>
+                            {% else %}
+                                <select class="border-0 PlanStatus" data-plan-id="{{ plan.id }}">
+                                    <option value="Active" {% if plan.status == 'Active' %}selected{% endif %}>Active</option>
+                                    <option value="Inactive" {% if plan.status == "Inactive" %}selected{% endif %}>Inactive</option>
+                                </select>
+                            {% endif %}
+                        </td>
+                        <td>
                             <a href="{% url 'edit_plan' plan.id %}" ><i class="fa fa-edit " title="Update" ></i></a>
-                            <i class="fa fa-trash-alt" type="button" data-bs-toggle="modal" href="#deleteModal{{plan.id}}" style="background:transparent;"></i>
+<!--                            <i class="fa fa-trash-alt" type="button" data-bs-toggle="modal" href="#deleteModal{{plan.id}}" style="background:transparent;"></i>-->
                         </td>
                     </tr>
                     <!-- Modal -->
@@ -80,5 +94,32 @@
         </div>  
     </div>
 </div>
-
 {% endblock content %}
+{% block javascripts %}
+<script>
+    $(document).on('change', '.PlanStatus', function(e) {
+        var plan_id = $(this).data('plan-id');
+        var new_status = $(this).val();
+        var url = "{% url 'update_plan_active_ajax' %}";
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: {
+                'plan_id': plan_id,
+                'new_status': new_status,
+                'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+            },
+            dataType: 'json',
+            success: function(data) {
+                if (data.success) {
+                    console.log('User status updated successfully');
+
+                } else {
+                    console.error('Error updating user status:', data.error);
+                }
+            }
+        });
+    });
+</script>
+{% endblock javascripts %}
