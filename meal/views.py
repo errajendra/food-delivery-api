@@ -281,7 +281,7 @@ def today_success_meal(request, eat_type):
 
     if eat_type in [1, 2, 3]:
         eating_type = {1: "Breakfast", 2: "Lunch", 3: "Dinner"}[eat_type]
-        filter_eat = MealRequestDaily.objects.filter(date=today.date(), meal__eating_type=eating_type)
+        filter_eat = MealRequestDaily.objects.filter(date=today.date(), meal__eating_type=eating_type, status="Requested")
 
     if filter_eat:
         filter_eat.update(status="Success")
