@@ -174,7 +174,7 @@ class MealRequestDailySerializer(serializers.ModelSerializer):
         data['meal'] = MealSerializer(instance.meal).data
         try:
             data["meal_name"] = instance.plan.plan.name.name
-            data["meal_description"] = instance.plan.plan.name.description
+            data["meal_description"] = f"{instance.plan.plan.name.description (instance.meal.eating_type)}"
             data["eating_type"] = instance.plan.plan.eating_type
         except:
             pass
