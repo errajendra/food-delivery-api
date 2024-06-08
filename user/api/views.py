@@ -660,7 +660,7 @@ class UserMealPlanPurcheseAddByFile(ModelViewSet):
                         quick = row["Purchased Quick"]
                         if quick > 0:
                             plan = Plan.objects.filter(
-                                name__name__icontains = "Quick",
+                                name__name__icontains = "Lite",
                                 number_of_meals__gte = quick
                             ).order_by('number_of_meals').first()
                             tnx = Transaction.objects.create(
