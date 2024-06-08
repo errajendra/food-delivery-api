@@ -624,7 +624,7 @@ class UserMealPlanPurcheseAddByFile(ModelViewSet):
             reader = pd.read_csv(file)
             create_plan_purchese_objs = []
             for _, row in reader.iterrows():
-                mobile_number = row["Mobile"]
+                mobile_number = row["Contact Number"]
                 try:
                     user = User.objects.get(mobile_number = mobile_number)
                 except User.DoesNotExist:
