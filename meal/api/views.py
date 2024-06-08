@@ -287,7 +287,7 @@ class MenuListOfPlan(viewsets.ModelViewSet):
         eating_types = plan.plan.eating_type.split(',')
         eating_type_list = [eating.strip() for eating in eating_types]
         meals = Meal.objects.filter(
-            eating_type__in = eating_type_list,
+            eating_type__in = eating_type_list, meal_type=plan.plan.name
         )
         if eating_type:
             meals = meals.filter(eating_type=eating_type)
