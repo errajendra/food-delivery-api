@@ -729,6 +729,31 @@ class UserMealPlanPurcheseAddByFile(ModelViewSet):
                             # create_plan_purchese_objs.append(obj)
                     except:
                         pass
+
+                    # For Healthy
+                    try:
+                        healthy = row["Purchased Healthy"]
+                        if healthy > 0:
+                            plan = Plan.objects.filter(
+                                name__name__icontains="Healthy",
+                                number_of_meals__gte=healthy
+                            ).order_by('number_of_meals').first()
+                            tnx = Transaction.objects.create(
+                                user=user,
+                                amount=plan.price,
+                                status="Success"
+                            )
+                            obj = PlanPurchase.objects.create(
+                                plan=plan,
+                                user=user,
+                                transaction=tnx,
+                                total_meals=healthy,
+                                remaining_meals=row["Pending Healthy"],
+                                status=True
+                            )
+                            # create_plan_purchese_objs.append(obj)
+                    except:
+                        pass
                     
                     # For Premium
                     try:
