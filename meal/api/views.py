@@ -376,7 +376,7 @@ class PlanMeal(viewsets.ModelViewSet):
                         plan=plan_purchase,
                         meal=meal,
                         date=request_datetime,
-                        mobile_number = address.mobileNo,
+                        mobile_number = requester.mobile_number,
                         address = address.full_address,
                         latitude = address.latitude,
                         longitude = address.longitude,
