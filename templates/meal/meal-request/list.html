@@ -121,7 +121,7 @@
                             <td> {% if meal.mobile_number %} {{ meal.mobile_number }} {% elif meal.requester.mobile_number %} {{meal.requester.mobile_number}} {% endif %} </td>
                             <td>{{ meal.plan.plan.name }}</td>
                             <td>{{ meal.meal.eating_type }}</td>
-                            <td>{{meal.date|date}} {{ meal.adjusted_time|date:"h:i A" }}</td>
+                            <td>{{ meal.date|date }}</td>
                             <td>
                                 {{meal.status}}
                                 {% comment %} <select class="border-0 mealRequestStatus" data-meal-id="{{ meal.id }}">
