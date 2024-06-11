@@ -223,6 +223,8 @@ def daily_meal_request_list(request):
     today_dinner = True if daily_meal_request.filter(meal__eating_type="Dinner", date__date=date.today(), status="Success") else False
 
     if request.user.is_staff:
+        for meal in daily_meal_request:
+            meal.adjusted_time = meal.created_at + timedelta(hours=5, minutes=30)
         context = {
             'title': "Daily Meal Request",
             "daily_meal_request": daily_meal_request,
