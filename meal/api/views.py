@@ -380,7 +380,8 @@ class PlanMeal(viewsets.ModelViewSet):
                         address = address.full_address,
                         latitude = address.latitude,
                         longitude = address.longitude,
-                        instruction = instruction
+                        instruction = instruction,
+                        address_type=address.type
                     )
                     meal_request.save()
                     plan_purchase.remaining_meals = plan_purchase.remaining_meals - 1
