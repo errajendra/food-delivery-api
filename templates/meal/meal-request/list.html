@@ -99,7 +99,6 @@
                             <th scope="col" class="sort">Eating Type</th>
                             <th scope="col" class="sort">Date</th>
                             <th scope="col" class="sort">Status</th>
-                            <th scope="col" class="sort">Address Type</th>
                             <th scope="col" class="sort">Address</th>
                             <th scope="col" class="sort">Lat, Long</th>
                             <th scope="col" class="sort">Meal</th>
@@ -133,8 +132,7 @@
                                     <option value="Delivered" {% if meal.status == 'Delivered' %}selected{% endif %}>Delivered</option>
                                 </select> {% endcomment %}
                             </td>
-                            <td>{{ meal.address_type }}</td>
-                            <td> {{ meal.address }} </td>
+                            <td> {{ meal.address }} ({{ meal.address_type }}) </td>
                             <td> {{ meal.latitude }}, {{ meal.longitude }} </td>
                             <td> {{ meal.meal_items|safe }}</td>
                             <td> {{ meal.meal.name }}</td>
