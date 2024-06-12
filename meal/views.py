@@ -218,9 +218,16 @@ def daily_meal_request_list(request):
         elif date_filter == 'THIS-YEAR':
             daily_meal_request = daily_meal_request.filter(date__year=date.today().year)
 
-    today_breakfast = True if daily_meal_request.filter(meal__eating_type="Breakfast", date__date=date.today(), status="Success") else False
-    today_lunch = True if daily_meal_request.filter(meal__eating_type="Lunch", date__date=date.today(), status="Success") else False
-    today_dinner = True if daily_meal_request.filter(meal__eating_type="Dinner", date__date=date.today(), status="Success") else False
+    def all_meals_successful(meal_type):
+        total_meals = daily_meal_request.filter(meal__eating_type=meal_type, date__date=date.today()).exclude(
+            status="Cancelled").count()
+        successful_meals = daily_meal_request.filter(meal__eating_type=meal_type, date__date=date.today(),
+                                                     status="Success").count()
+        return total_meals > 0 and total_meals == successful_meals
+
+    today_breakfast = all_meals_successful("Breakfast")
+    today_lunch = all_meals_successful("Lunch")
+    today_dinner = all_meals_successful("Dinner")
 
     if request.user.is_staff:
         context = {
